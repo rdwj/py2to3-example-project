@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SCADA System Configuration
+  Legacy Industrial Data Platform v2.4.1
+  Last modified: 2014-02-28 by J. Mueller
+-->
+<scada-config version="2.4" plant-code="PLT-07">
+
+  <plc-network>
+    <plc id="PLC-01" protocol="modbus-tcp" address="10.1.40.10" port="502">
+      <description>Hauptsteuerung Kessel (Boiler Master Controller)</description>
+      <registers start="40001" count="64" poll-interval-ms="500"/>
+      <registers start="40100" count="32" poll-interval-ms="1000"/>
+    </plc>
+    <plc id="PLC-02" protocol="modbus-tcp" address="10.1.40.11" port="502">
+      <description>制御装置タービンA (Turbine A Controller)</description>
+      <registers start="40001" count="128" poll-interval-ms="250"/>
+    </plc>
+    <plc id="PLC-03" protocol="modbus-rtu" address="/dev/ttyS1" baud="19200">
+      <description>Contrôleur Pompe Alimentaire</description>
+      <registers start="30001" count="16" poll-interval-ms="2000"/>
+    </plc>
+  </plc-network>
+
+  <sensors>
+    <sensor id="TEMP-001" plc="PLC-01" register="40001" type="temperature">
+      <name>Température Chaudière</name>
+      <unit>degC</unit>
+      <range min="0" max="500"/>
+      <alarm high="420" high-high="450" low="50"/>
+    </sensor>
+    <sensor id="PRES-001" plc="PLC-01" register="40003" type="pressure">
+      <name>Drück Kessel</name>
+      <unit>bar</unit>
+      <range min="0" max="50"/>
+      <alarm high="42" high-high="45" low="5"/>
+    </sensor>
+    <sensor id="PRES-002" plc="PLC-02" register="40001" type="pressure">
+      <name>圧力タンクA</name>
+      <unit>MPa</unit>
+      <range min="0" max="10"/>
+      <alarm high="8.5" high-high="9.2"/>
+    </sensor>
+    <sensor id="FLOW-001" plc="PLC-03" register="30001" type="flow">
+      <name>Débit Principal</name>
+      <unit>m3/h</unit>
+      <range min="0" max="5000"/>
+      <alarm low="200" high="4500"/>
+    </sensor>
+  </sensors>
+
+  <alarms>
+    <alarm-config priority="critical" escalation-minutes="5">
+      <recipients>ops-duty@plant07.example.com,shift-lead@plant07.example.com</recipients>
+      <description>Alarmes critiques — arrêt immédiat requis</description>
+    </alarm-config>
+    <alarm-config priority="warning" escalation-minutes="30">
+      <recipients>ops-duty@plant07.example.com</recipients>
+      <description>Предупреждения — требуется внимание оператора</description>
+    </alarm-config>
+  </alarms>
+
+  <network>
+    <mqtt broker="10.1.40.200" port="1883" keepalive="60">
+      <topic-prefix>plant/sensors</topic-prefix>
+      <client-id>scada-gw-plt07</client-id>
+    </mqtt>
+    <opcua endpoint="opc.tcp://10.1.40.201:4840" security="None">
+      <namespace>urn:plant07:opcua:server</namespace>
+    </opcua>
+  </network>
+
+  <reporting>
+    <schedule type="daily" hour="06" minute="00" timezone="Europe/Berlin"/>
+    <output format="html" directory="/opt/platform/reports"/>
+    <email enabled="true" smtp-host="mail.plant07.example.com" smtp-port="25">
+      <from>scada-reports@plant07.example.com</from>
+      <subject-prefix>[PLT-07 Tagesbericht]</subject-prefix>
+    </email>
+  </reporting>
+
+</scada-config>

@@ -1,0 +1,247 @@
+{
+  "export_timestamp": "2014-03-15T09:00:00Z",
+  "export_version": "2.4.1",
+  "plant_code": "PLT-07",
+  "records": [
+    {
+      "record_id": "REC-00001",
+      "sensor_id": "TEMP-001",
+      "sensor_name": "Temp\u00e9rature Chaudi\u00e8re",
+      "location": "Boiler Hall, Level 2",
+      "readings": {
+        "current": 87.3,
+        "min_1h": 84.1,
+        "max_1h": 89.7,
+        "average_1h": 86.9
+      },
+      "unit": "degC",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-01-15",
+        "manufacturer": "Endress+Hauser",
+        "model": "TR10-A",
+        "firmware": "3.2.1"
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00002",
+      "sensor_id": "PRES-001",
+      "sensor_name": "Dr\u00fcck Kessel",
+      "location": "Kesselhaus, Ebene 1",
+      "readings": {
+        "current": 14.72,
+        "min_1h": 14.50,
+        "max_1h": 15.01,
+        "average_1h": 14.68
+      },
+      "unit": "bar",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-02-01",
+        "manufacturer": "WIKA",
+        "model": "PG-23",
+        "firmware": null
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00003",
+      "sensor_id": "PRES-002",
+      "sensor_name": "\u5727\u529b\u30bf\u30f3\u30afA",
+      "location": "\u6771\u68df\u30bf\u30fc\u30d3\u30f3\u5ba4",
+      "readings": {
+        "current": 3.41,
+        "min_1h": 3.38,
+        "max_1h": 3.45,
+        "average_1h": 3.42
+      },
+      "unit": "MPa",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2013-12-20",
+        "manufacturer": "Yokogawa",
+        "model": "EJA530A",
+        "firmware": "R4.01"
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00004",
+      "sensor_id": "FLOW-001",
+      "sensor_name": "D\u00e9bit Principal",
+      "location": "Salle des pompes, Niveau 0",
+      "readings": {
+        "current": 1205.8,
+        "min_1h": 1180.2,
+        "max_1h": 1230.5,
+        "average_1h": 1204.1
+      },
+      "unit": "m3/h",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-01-30",
+        "manufacturer": "Siemens",
+        "model": "SITRANS FM MAG 5100W",
+        "firmware": "5.04"
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00005",
+      "sensor_id": "VIBR-001",
+      "sensor_name": "Vibration Motor 3",
+      "location": "Compressor Room, Bay C",
+      "readings": {
+        "current": 0.42,
+        "min_1h": 0.38,
+        "max_1h": 0.51,
+        "average_1h": 0.43
+      },
+      "unit": "mm/s",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-02-10",
+        "manufacturer": "SKF",
+        "model": "CMSS 2200",
+        "firmware": null
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00006",
+      "sensor_id": "TEMP-003",
+      "sensor_name": "\u6eab\u5ea6\u53cd\u61c9\u5668",
+      "location": "\u5316\u5b78\u53cd\u61c9\u5340 B",
+      "readings": {
+        "current": 341.7,
+        "min_1h": 335.2,
+        "max_1h": 348.9,
+        "average_1h": 340.1
+      },
+      "unit": "degC",
+      "quality": 128,
+      "alarm_active": true,
+      "metadata": {
+        "calibration_date": "2013-11-15",
+        "manufacturer": "Honeywell",
+        "model": "STT850",
+        "firmware": "2.1.0"
+      },
+      "alerts": [
+        {
+          "type": "quality_degraded",
+          "message": "Signal quality below threshold (128 < 192)",
+          "timestamp": "2014-03-15T07:45:00Z",
+          "acknowledged": false
+        }
+      ]
+    },
+    {
+      "record_id": "REC-00007",
+      "sensor_id": "LEVL-001",
+      "sensor_name": "F\u00fcllstand Tank 7",
+      "location": "Tanklager Nord, Tank 7",
+      "readings": {
+        "current": 78.4,
+        "min_1h": 77.9,
+        "max_1h": 78.8,
+        "average_1h": 78.3
+      },
+      "unit": "pct",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-03-01",
+        "manufacturer": "VEGA",
+        "model": "VEGAPULS 64",
+        "firmware": "1.3.0"
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00008",
+      "sensor_id": "VIBR-002",
+      "sensor_name": "Vibraci\u00f3n Bomba",
+      "location": "Sala de bombas auxiliar",
+      "readings": {
+        "current": 1.03,
+        "min_1h": 0.45,
+        "max_1h": 1.81,
+        "average_1h": 0.92
+      },
+      "unit": "mm/s",
+      "quality": 64,
+      "alarm_active": true,
+      "metadata": {
+        "calibration_date": "2013-10-22",
+        "manufacturer": "Br\u00fcel & Kj\u00e6r",
+        "model": "4394",
+        "firmware": null
+      },
+      "alerts": [
+        {
+          "type": "high_vibration",
+          "message": "Vibration exceeds warning threshold (1.03 > 1.0 mm/s)",
+          "timestamp": "2014-03-15T08:00:12Z",
+          "acknowledged": false
+        },
+        {
+          "type": "quality_degraded",
+          "message": "Signal quality critically low (64 < 128)",
+          "timestamp": "2014-03-15T07:30:00Z",
+          "acknowledged": true
+        }
+      ]
+    },
+    {
+      "record_id": "REC-00009",
+      "sensor_id": "PRES-004",
+      "sensor_name": "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u041b\u0438\u043d\u0438\u044f 2",
+      "location": "\u041d\u0430\u0441\u043e\u0441\u043d\u0430\u044f \u0441\u0442\u0430\u043d\u0446\u0438\u044f",
+      "readings": {
+        "current": 6.21,
+        "min_1h": 6.15,
+        "max_1h": 6.28,
+        "average_1h": 6.20
+      },
+      "unit": "bar",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-02-20",
+        "manufacturer": "Emerson",
+        "model": "Rosemount 3051",
+        "firmware": "9.5.01"
+      },
+      "alerts": []
+    },
+    {
+      "record_id": "REC-00010",
+      "sensor_id": "TEMP-007",
+      "sensor_name": "S\u0131cakl\u0131k F\u0131r\u0131n",
+      "location": "F\u0131r\u0131n Binas\u0131, Kat 1",
+      "readings": {
+        "current": 812.4,
+        "min_1h": 805.1,
+        "max_1h": 818.7,
+        "average_1h": 811.2
+      },
+      "unit": "degC",
+      "quality": 192,
+      "alarm_active": false,
+      "metadata": {
+        "calibration_date": "2014-01-08",
+        "manufacturer": "ABB",
+        "model": "TTF300",
+        "firmware": "2.0.3"
+      },
+      "alerts": []
+    }
+  ]
+}

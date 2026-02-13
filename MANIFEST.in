@@ -1,0 +1,8 @@
+include README.txt
+include requirements.txt
+include setup.py
+recursive-include config *.ini *.conf
+recursive-include data *.dat *.csv *.xml *.json
+recursive-include scripts *.py
+recursive-include src *.py
+recursive-include tests *.py

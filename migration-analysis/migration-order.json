@@ -1,0 +1,194 @@
+{
+  "conversion_order": [
+    {
+      "phase": 1,
+      "name": "Foundation leaves and gateway modules",
+      "modules": [
+        "src/core/exceptions.py",
+        "src/core/types.py",
+        "src/core/config_loader.py",
+        "src/core/string_helpers.py",
+        "src/core/utils.py",
+        "src/core/itertools_helpers.py",
+        "src/compat.py"
+      ],
+      "total_lines": 1316,
+      "rationale": "These are all leaf modules with zero internal dependencies. They form the foundation that every other package imports from. Converting them first means downstream modules can be tested against a working Python 3 core. The four gateway modules (exceptions fan_in=19, config_loader fan_in=8, types fan_in=7, string_helpers fan_in=6) are the highest-risk targets and should be validated thoroughly before proceeding."
+    },
+    {
+      "phase": 2,
+      "name": "IO protocol adapters",
+      "modules": [
+        "src/io_protocols/modbus_client.py",
+        "src/io_protocols/opcua_client.py",
+        "src/io_protocols/mqtt_listener.py",
+        "src/io_protocols/serial_sensor.py"
+      ],
+      "total_lines": 934,
+      "rationale": "Depend only on core/types and core/exceptions (both converted in phase 1). No cross-dependencies between these four modules, so they can be converted in parallel. Heavy use of struct packing and binary protocols makes bytes/str separation a key concern."
+    },
+    {
+      "phase": 3,
+      "name": "Data processing modules",
+      "modules": [
+        "src/data_processing/csv_processor.py",
+        "src/data_processing/xml_transformer.py",
+        "src/data_processing/text_analyzer.py",
+        "src/data_processing/mainframe_parser.py",
+        "src/data_processing/json_handler.py",
+        "src/data_processing/log_parser.py"
+      ],
+      "total_lines": 2119,
+      "rationale": "Depend on core/exceptions, core/string_helpers, core/config_loader, and core/types (all phase 1). No cross-dependencies within the package, so modules can be converted in parallel. Largest phase by line count; heavy string/encoding work (csv_processor, text_analyzer) and EBCDIC handling (mainframe_parser) require careful bytes/str migration."
+    },
+    {
+      "phase": 4,
+      "name": "Storage layer",
+      "modules": [
+        "src/storage/file_store.py",
+        "src/storage/database.py",
+        "src/storage/cache.py"
+      ],
+      "total_lines": 773,
+      "rationale": "Depend only on core/exceptions and core/types (phase 1). No cross-dependencies within the package. Database module uses buffer protocol patterns that need bytes migration."
+    },
+    {
+      "phase": 5,
+      "name": "Automation modules",
+      "modules": [
+        "src/automation/plugin_loader.py",
+        "src/automation/script_runner.py",
+        "src/automation/scheduler.py"
+      ],
+      "total_lines": 758,
+      "rationale": "Depend only on core/exceptions (phase 1). Simplest dependency profile. Plugin loader uses imp module which is removed in Python 3 (replace with importlib). No cross-dependencies."
+    },
+    {
+      "phase": 6,
+      "name": "Reporting modules",
+      "modules": [
+        "src/reporting/report_generator.py",
+        "src/reporting/email_sender.py",
+        "src/reporting/web_dashboard.py"
+      ],
+      "total_lines": 677,
+      "rationale": "Depend on core/types, core/string_helpers, core/config_loader, and core/exceptions (all phase 1). Broadest dependency surface among consumer packages. String encoding in email and web output requires careful validation."
+    },
+    {
+      "phase": 7,
+      "name": "Package __init__ files",
+      "modules": [
+        "src/core/__init__.py",
+        "src/io_protocols/__init__.py",
+        "src/data_processing/__init__.py",
+        "src/storage/__init__.py",
+        "src/automation/__init__.py",
+        "src/reporting/__init__.py"
+      ],
+      "total_lines": 78,
+      "rationale": "Re-export facades that import from sibling modules. Convert after all sibling modules are done so that re-exports remain valid. These are small files with only import statements; conversion is mostly mechanical."
+    },
+    {
+      "phase": 8,
+      "name": "Tests and test infrastructure",
+      "modules": [
+        "tests/conftest.py",
+        "tests/test_core_types.py",
+        "tests/test_csv_processor.py",
+        "tests/test_mainframe_parser.py",
+        "tests/test_modbus.py",
+        "tests/test_report_generator.py",
+        "tests/__init__.py"
+      ],
+      "total_lines": 695,
+      "rationale": "Tests depend on the modules they exercise. Convert after the corresponding source modules. Update unittest2/nose patterns to pytest. Tests serve as validation that earlier phase conversions are correct."
+    },
+    {
+      "phase": 9,
+      "name": "Scripts and entry points",
+      "modules": [
+        "scripts/batch_import.py",
+        "scripts/generate_ebcdic_data.py",
+        "scripts/run_platform.py",
+        "scripts/sensor_monitor.py"
+      ],
+      "total_lines": 570,
+      "rationale": "Top-level scripts that import from multiple packages. Convert last since they depend on everything else being stable. These are integration-level entry points and serve as final validation of the full migration."
+    }
+  ],
+  "clusters": [
+    {
+      "name": "core",
+      "phases": [1],
+      "module_count": 7,
+      "total_lines": 1324,
+      "risk": "high",
+      "risk_rationale": "Gateway modules with highest fan-in. Any regression here cascades to every other package. Key concerns: struct module bytes handling in types.py, sets.Set removal in utils.py, StringIO/cStringIO unification in string_helpers.py, ConfigParser rename in config_loader.py, __builtin__ rename in config_loader.py."
+    },
+    {
+      "name": "compat",
+      "phases": [1],
+      "module_count": 1,
+      "total_lines": 107,
+      "risk": "medium",
+      "risk_rationale": "Compatibility shim that may become unnecessary after migration. Review whether it can be removed entirely or simplified."
+    },
+    {
+      "name": "io_protocols",
+      "phases": [2, 7],
+      "module_count": 5,
+      "total_lines": 948,
+      "risk": "medium",
+      "risk_rationale": "Binary protocol handling with struct pack/unpack. The bytes/str split is the primary concern. No cross-module dependencies within the cluster."
+    },
+    {
+      "name": "data_processing",
+      "phases": [3, 7],
+      "module_count": 7,
+      "total_lines": 2136,
+      "risk": "high",
+      "risk_rationale": "Largest cluster. Heavy string encoding work, EBCDIC handling, and file I/O. csv_processor and mainframe_parser are the highest-risk individual modules due to encoding complexity."
+    },
+    {
+      "name": "storage",
+      "phases": [4, 7],
+      "module_count": 4,
+      "total_lines": 786,
+      "risk": "medium",
+      "risk_rationale": "Database buffer handling and file I/O. Moderate encoding concerns in file_store."
+    },
+    {
+      "name": "automation",
+      "phases": [5, 7],
+      "module_count": 4,
+      "total_lines": 770,
+      "risk": "medium",
+      "risk_rationale": "plugin_loader uses imp module (removed in Python 3, must migrate to importlib). script_runner and scheduler have simpler migration paths."
+    },
+    {
+      "name": "reporting",
+      "phases": [6, 7],
+      "module_count": 4,
+      "total_lines": 691,
+      "risk": "medium",
+      "risk_rationale": "String encoding in email output and web templates. Depends on the broadest set of core modules."
+    },
+    {
+      "name": "tests",
+      "phases": [8],
+      "module_count": 7,
+      "total_lines": 695,
+      "risk": "low",
+      "risk_rationale": "Tests follow their source modules. Main work is updating test framework patterns (unittest2 to pytest) and fixing string assertions for bytes/str split."
+    },
+    {
+      "name": "scripts",
+      "phases": [9],
+      "module_count": 4,
+      "total_lines": 570,
+      "risk": "low",
+      "risk_rationale": "Entry-point scripts. Convert last as integration-level validation."
+    }
+  ],
+  "estimated_conversion_units": 42
+}

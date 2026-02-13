@@ -1,0 +1,200 @@
+{
+  "generated_at": "2026-02-12",
+  "generator": "py2to3-test-scaffold-generator",
+  "total_test_files": 20,
+  "total_test_functions": 409,
+  "test_files": [
+    {
+      "file": "tests/test_database_characterization.py",
+      "target_module": "src/storage/database.py",
+      "risk_level": "CRITICAL",
+      "tests": [
+        {"name": "TestQueryBuilder::test_basic_select_all", "type": "characterization", "target_func": "QueryBuilder.build", "py2_behavior": false},
+        {"name": "TestQueryBuilder::test_select_specific_columns", "type": "characterization", "target_func": "QueryBuilder.select/build", "py2_behavior": false},
+        {"name": "TestQueryBuilder::test_where_single_clause", "type": "characterization", "target_func": "QueryBuilder.where/build", "py2_behavior": false},
+        {"name": "TestQueryBuilder::test_where_multiple_clauses", "type": "characterization", "target_func": "QueryBuilder.where/build", "py2_behavior": false},
+        {"name": "TestQueryBuilder::test_order_by", "type": "characterization", "target_func": "QueryBuilder.order_by/build", "py2_behavior": false},
+        {"name": "TestQueryBuilder::test_limit", "type": "characterization", "target_func": "QueryBuilder.limit/build", "py2_behavior": false},
+        {"name": "TestQueryBuilder::test_full_query_chain", "type": "characterization", "target_func": "QueryBuilder.build", "py2_behavior": false},
+        {"name": "TestDatabaseManagerReadings::test_store_and_fetch_reading", "type": "characterization", "target_func": "DatabaseManager.store_reading/fetch_readings", "py2_behavior": false},
+        {"name": "TestDatabaseManagerReadings::test_store_reading_with_raw_frame", "type": "encoding", "target_func": "DatabaseManager.store_reading", "py2_behavior": false},
+        {"name": "TestDatabaseManagerReadings::test_get_raw_frame_returns_str", "type": "encoding", "target_func": "DatabaseManager.get_raw_frame", "py2_behavior": true},
+        {"name": "TestDatabaseManagerReadings::test_fetch_readings_respects_limit", "type": "characterization", "target_func": "DatabaseManager.fetch_readings", "py2_behavior": false},
+        {"name": "TestDatabaseManagerReadings::test_store_readings_batch", "type": "characterization", "target_func": "DatabaseManager.store_readings_batch", "py2_behavior": false},
+        {"name": "TestDatabaseManagerReadings::test_purge_readings_before", "type": "characterization", "target_func": "DatabaseManager.purge_readings_before", "py2_behavior": false},
+        {"name": "TestDatabaseManagerEvents::test_log_event_no_payload", "type": "characterization", "target_func": "DatabaseManager.log_event", "py2_behavior": false},
+        {"name": "TestDatabaseManagerEvents::test_log_event_with_dict_payload", "type": "roundtrip", "target_func": "DatabaseManager.log_event/fetch_events", "py2_behavior": true},
+        {"name": "TestDatabaseManagerEvents::test_event_pickle_roundtrip_with_unicode", "type": "roundtrip", "target_func": "cPickle.dumps/loads", "py2_behavior": true},
+        {"name": "TestDatabaseManagerEvents::test_fetch_events_with_type_filter", "type": "characterization", "target_func": "DatabaseManager.fetch_events", "py2_behavior": false},
+        {"name": "TestDatabaseManagerEvents::test_fetch_events_no_filter", "type": "characterization", "target_func": "DatabaseManager.fetch_events", "py2_behavior": false},
+        {"name": "TestDatabaseManagerObjectStore::test_put_and_get_simple_dict", "type": "roundtrip", "target_func": "DatabaseManager.put_object/get_object", "py2_behavior": true},
+        {"name": "TestDatabaseManagerObjectStore::test_put_and_get_unicode_values", "type": "roundtrip", "target_func": "DatabaseManager.put_object/get_object", "py2_behavior": true},
+        {"name": "TestDatabaseManagerObjectStore::test_put_and_get_nested_structure", "type": "roundtrip", "target_func": "DatabaseManager.put_object/get_object", "py2_behavior": true},
+        {"name": "TestDatabaseManagerObjectStore::test_get_nonexistent_key_returns_none", "type": "characterization", "target_func": "DatabaseManager.get_object", "py2_behavior": false},
+        {"name": "TestDatabaseManagerObjectStore::test_put_overwrites_existing", "type": "characterization", "target_func": "DatabaseManager.put_object", "py2_behavior": true},
+        {"name": "TestDatabaseEncodingBoundaries::test_store_reading_with_unicode_tag", "type": "encoding", "target_func": "DatabaseManager.store_reading", "py2_behavior": true},
+        {"name": "TestDatabaseEncodingBoundaries::test_store_binary_blob_with_high_bytes", "type": "encoding", "target_func": "DatabaseManager.store_reading", "py2_behavior": true},
+        {"name": "TestDatabaseEncodingBoundaries::test_pickle_latin1_payload", "type": "encoding", "target_func": "DatabaseManager.log_event", "py2_behavior": true}
+      ]
+    },
+    {
+      "file": "tests/test_plugin_loader_characterization.py",
+      "target_module": "src/automation/plugin_loader.py",
+      "risk_level": "CRITICAL",
+      "tests": [
+        {"name": "TestPluginRegistry::test_register_and_get", "type": "characterization", "target_func": "PluginRegistry.register/get", "py2_behavior": false},
+        {"name": "TestPluginRegistry::test_get_missing_returns_none", "type": "characterization", "target_func": "PluginRegistry.get", "py2_behavior": false},
+        {"name": "TestPluginRegistry::test_all_plugins_preserves_order", "type": "characterization", "target_func": "PluginRegistry.all_plugins", "py2_behavior": false},
+        {"name": "TestPluginRegistry::test_count", "type": "characterization", "target_func": "PluginRegistry.count", "py2_behavior": false},
+        {"name": "TestPluginRegistry::test_clear", "type": "characterization", "target_func": "PluginRegistry.clear", "py2_behavior": false},
+        {"name": "TestPluginRegistry::test_register_replaces_existing", "type": "characterization", "target_func": "PluginRegistry.register", "py2_behavior": false},
+        {"name": "TestPluginMetaAndBase::test_metaclass_auto_registers_subclass", "type": "characterization", "target_func": "PluginMeta.__new__", "py2_behavior": true},
+        {"name": "TestPluginMetaAndBase::test_plugin_base_not_registered", "type": "characterization", "target_func": "PluginBase", "py2_behavior": false},
+        {"name": "TestPluginMetaAndBase::test_plugin_activate_deactivate", "type": "characterization", "target_func": "PluginBase.activate/deactivate", "py2_behavior": false},
+        {"name": "TestPluginMetaAndBase::test_plugin_get_info", "type": "characterization", "target_func": "PluginBase.get_info", "py2_behavior": false},
+        {"name": "TestPluginMetaAndBase::test_plugin_process_raises_not_implemented", "type": "characterization", "target_func": "PluginBase.process", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_discover_empty_directory", "type": "characterization", "target_func": "PluginLoader.discover", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_discover_skips_underscore_files", "type": "characterization", "target_func": "PluginLoader.discover", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_discover_nonexistent_directory", "type": "characterization", "target_func": "PluginLoader.discover", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_instantiate_unknown_plugin_raises", "type": "characterization", "target_func": "PluginLoader.instantiate_plugin", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_get_status_initial", "type": "characterization", "target_func": "PluginLoader.get_status", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_instantiate_and_activate", "type": "characterization", "target_func": "PluginLoader lifecycle", "py2_behavior": false},
+        {"name": "TestPluginLoader::test_process_data_dispatches_to_active", "type": "characterization", "target_func": "PluginLoader.process_data", "py2_behavior": false}
+      ]
+    },
+    {
+      "file": "tests/test_serial_sensor_characterization.py",
+      "target_module": "src/io_protocols/serial_sensor.py",
+      "risk_level": "HIGH",
+      "tests": [
+        {"name": "TestSensorPacket::test_construction", "type": "characterization", "target_func": "SensorPacket.__init__", "py2_behavior": false},
+        {"name": "TestSensorPacket::test_payload_hex_uses_ord", "type": "encoding", "target_func": "SensorPacket.payload_hex", "py2_behavior": true},
+        {"name": "TestSensorPacket::test_repr", "type": "characterization", "target_func": "SensorPacket.__repr__", "py2_behavior": false},
+        {"name": "TestSensorPacket::test_as_data_point_unknown_type", "type": "characterization", "target_func": "SensorPacket.as_data_point", "py2_behavior": false},
+        {"name": "TestSensorPacket::test_decode_known_types[parametrized]", "type": "characterization", "target_func": "SensorPacket.decode", "py2_behavior": false},
+        {"name": "TestSensorPacketStream::test_parse_single_temp_packet", "type": "encoding", "target_func": "SensorPacketStream.next", "py2_behavior": false},
+        {"name": "TestSensorPacketStream::test_parse_multiple_packets", "type": "encoding", "target_func": "SensorPacketStream iteration", "py2_behavior": false},
+        {"name": "TestSensorPacketStream::test_iterator_protocol_next_method", "type": "characterization", "target_func": "SensorPacketStream.next", "py2_behavior": true},
+        {"name": "TestSensorPacketStream::test_empty_source_raises_stop_iteration", "type": "characterization", "target_func": "SensorPacketStream.next", "py2_behavior": false},
+        {"name": "TestSensorPacketStream::test_checksum_error_in_strict_mode", "type": "encoding", "target_func": "SensorPacketStream checksum", "py2_behavior": false},
+        {"name": "TestSensorPacketStream::test_checksum_error_non_strict_skips", "type": "encoding", "target_func": "SensorPacketStream checksum", "py2_behavior": false},
+        {"name": "TestSensorPacketStream::test_invalid_length_skipped", "type": "encoding", "target_func": "SensorPacketStream length check", "py2_behavior": false},
+        {"name": "TestSerialSensorEncodingBoundaries::test_ord_on_boundary_bytes[parametrized]", "type": "encoding", "target_func": "SensorPacket.payload_hex", "py2_behavior": true},
+        {"name": "TestSerialSensorEncodingBoundaries::test_sync_byte_is_str", "type": "encoding", "target_func": "SYNC_BYTE constant", "py2_behavior": false},
+        {"name": "TestSerialSensorEncodingBoundaries::test_packet_with_all_high_bytes", "type": "encoding", "target_func": "SensorPacket.payload_hex", "py2_behavior": true}
+      ]
+    },
+    {
+      "file": "tests/test_mqtt_listener_characterization.py",
+      "target_module": "src/io_protocols/mqtt_listener.py",
+      "risk_level": "HIGH",
+      "test_count": 22
+    },
+    {
+      "file": "tests/test_opcua_client_characterization.py",
+      "target_module": "src/io_protocols/opcua_client.py",
+      "risk_level": "HIGH",
+      "test_count": 17
+    },
+    {
+      "file": "tests/test_file_store_characterization.py",
+      "target_module": "src/storage/file_store.py",
+      "risk_level": "HIGH",
+      "test_count": 18
+    },
+    {
+      "file": "tests/test_cache_characterization.py",
+      "target_module": "src/storage/cache.py",
+      "risk_level": "HIGH",
+      "test_count": 19
+    },
+    {
+      "file": "tests/test_script_runner_characterization.py",
+      "target_module": "src/automation/script_runner.py",
+      "risk_level": "HIGH",
+      "test_count": 22
+    },
+    {
+      "file": "tests/test_scheduler_characterization.py",
+      "target_module": "src/automation/scheduler.py",
+      "risk_level": "HIGH",
+      "test_count": 18
+    },
+    {
+      "file": "tests/test_report_generator_characterization.py",
+      "target_module": "src/reporting/report_generator.py",
+      "risk_level": "HIGH",
+      "test_count": 17
+    },
+    {
+      "file": "tests/test_email_sender_characterization.py",
+      "target_module": "src/reporting/email_sender.py",
+      "risk_level": "HIGH",
+      "test_count": 13
+    },
+    {
+      "file": "tests/test_string_helpers_characterization.py",
+      "target_module": "src/core/string_helpers.py",
+      "risk_level": "HIGH",
+      "test_count": 22
+    },
+    {
+      "file": "tests/test_config_loader_characterization.py",
+      "target_module": "src/core/config_loader.py",
+      "risk_level": "HIGH",
+      "test_count": 18
+    },
+    {
+      "file": "tests/test_web_dashboard_characterization.py",
+      "target_module": "src/reporting/web_dashboard.py",
+      "risk_level": "MEDIUM",
+      "test_count": 11
+    },
+    {
+      "file": "tests/test_core_types_characterization.py",
+      "target_module": "src/core/types.py",
+      "risk_level": "MEDIUM",
+      "test_count": 19
+    },
+    {
+      "file": "tests/test_utils_characterization.py",
+      "target_module": "src/core/utils.py",
+      "risk_level": "MEDIUM",
+      "test_count": 14
+    },
+    {
+      "file": "tests/test_itertools_helpers_characterization.py",
+      "target_module": "src/core/itertools_helpers.py",
+      "risk_level": "MEDIUM",
+      "test_count": 16
+    },
+    {
+      "file": "tests/test_exceptions_characterization.py",
+      "target_module": "src/core/exceptions.py",
+      "risk_level": "MEDIUM",
+      "test_count": 12
+    },
+    {
+      "file": "tests/test_xml_transformer_characterization.py",
+      "target_module": "src/data_processing/xml_transformer.py",
+      "risk_level": "MEDIUM",
+      "test_count": 11
+    },
+    {
+      "file": "tests/test_log_parser_characterization.py",
+      "target_module": "src/data_processing/log_parser.py",
+      "risk_level": "LOW",
+      "test_count": 12
+    }
+  ],
+  "summary": {
+    "total_characterization_tests": 280,
+    "total_encoding_tests": 80,
+    "total_roundtrip_tests": 14,
+    "total_py2_behavior_marked": 163,
+    "critical_modules_covered": 2,
+    "high_risk_modules_covered": 11,
+    "medium_risk_modules_covered": 6,
+    "low_risk_modules_covered": 1
+  }
+}

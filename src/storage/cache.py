@@ -11,6 +11,8 @@ configuration snapshots.  Uses Python 2-specific APIs:
 - ``hashlib.md5("string")`` accepts str implicitly (Py3 requires bytes)
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import time
 import hashlib

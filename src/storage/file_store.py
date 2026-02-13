@@ -9,6 +9,8 @@ the local filesystem.  Uses Python 2-specific APIs:
 - Octal literals ``0644`` (Py3 requires ``0o644``)
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import time
 import struct

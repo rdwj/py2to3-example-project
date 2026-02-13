@@ -1,0 +1,44 @@
+# pylintrc-phase4 -- Py2-to-3 Migration: Phase 4 (Strictest) Enforcement
+#
+# Phase 4 enables ALL custom Py2 idiom checks. This is the final gate
+# configuration: no Py2-isms should remain in the codebase.
+#
+# Additionally enables standard pylint checks that help validate the
+# migrated code works correctly under Python 3.
+#
+# Usage:
+#   pylint --rcfile=.lint-plugins/pylintrc-phase4 \
+#          --load-plugins=py2_idioms_checker \
+#          src/ tests/
+
+[MAIN]
+load-plugins=py2_idioms_checker
+init-hook='import sys; sys.path.insert(0, ".lint-plugins")'
+
+disable=all
+enable=
+    py2-missing-future-import,
+    py2-only-import,
+    py2-implicit-relative-import,
+    py2-print-statement,
+    py2-except-comma-syntax,
+    py2-xrange-usage,
+    py2-dict-iter-method,
+    py2-has-key,
+    py2-file-builtin,
+    py2-long-type,
+    py2-long-literal,
+    py2-string-type,
+    py2-buffer-builtin,
+    py2-ord-on-bytes,
+    fatal,
+    syntax-error,
+    import-error
+
+[FORMAT]
+max-line-length=120
+
+[REPORTS]
+output-format=text
+reports=no
+score=no

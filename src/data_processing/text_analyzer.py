@@ -13,6 +13,8 @@ extraction for classification, and similarity scoring for matching new
 fault descriptions against a library of known failure modes.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import re
 import hashlib
 import commands

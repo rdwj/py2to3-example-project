@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Main entry point for the Legacy Industrial Data Platform.
@@ -8,8 +8,10 @@ interactive command loop for operators.  Designed to run on
 Python 2.6+ under RHEL 5/6 on the plant floor servers.
 
 Usage:
-    python scripts/run_platform.py [--config PATH] [--batch] [--verbose]
+    python3 scripts/run_platform.py [--config PATH] [--batch] [--verbose]
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

@@ -9,6 +9,8 @@ centralises the messy encode/decode logic so that every other module
 does not have to reinvent it.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from StringIO import StringIO
 from cStringIO import StringIO as FastStringIO
 

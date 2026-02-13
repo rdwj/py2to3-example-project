@@ -1,16 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Legacy Industrial Data Platform -- distutils setup script.
+Legacy Industrial Data Platform -- setuptools setup script.
 
 Install:
-    python setup.py install
+    python3 setup.py install
 
 Create source distribution:
-    python setup.py sdist
+    python3 setup.py sdist
 """
 
-from distutils.core import setup
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from setuptools import setup, find_packages
 
 setup(
     name="legacy-industrial-platform",
@@ -20,7 +22,17 @@ setup(
     author_email="platform-dev@acme-industrial.example.com",
     url="http://intranet.acme-industrial.example.com/platform",
     license="Proprietary",
+    python_requires=">=3.12",
     platforms=["linux"],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Manufacturing",
+        "License :: Other/Proprietary License",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Scientific/Engineering :: Interface Engine/Protocol Translator",
+    ],
     packages=[
         "src",
         "src.core",

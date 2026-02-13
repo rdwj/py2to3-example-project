@@ -3,6 +3,9 @@
 Shared test fixtures and helpers for the platform test suite.
 These predate pytest adoption; plain functions called from setUp().
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import time

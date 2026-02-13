@@ -1,0 +1,2694 @@
+{
+  "scan_date": "2026-02-12",
+  "target_version": "3.12",
+  "total_files_scanned": 45,
+  "total_lines": 8074,
+  "total_issues": 699,
+  "categories": {
+    "SYNTAX_PRINT_STATEMENT": {
+      "description": "print statement without parentheses (Py2 syntax removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Convert to print() function call; handle trailing comma as end='' parameter",
+      "count": 185
+    },
+    "SYNTAX_PRINT_CHEVRON": {
+      "description": "print >>file syntax for redirecting print output",
+      "severity": "HIGH",
+      "fix_strategy": "Convert to print(..., file=sys.stderr) or print(..., file=f)",
+      "count": 3
+    },
+    "SYNTAX_EXCEPT_COMMA": {
+      "description": "except ExceptionType, variable: (comma syntax instead of 'as')",
+      "severity": "HIGH",
+      "fix_strategy": "Replace comma with 'as' keyword: except ExceptionType as variable:",
+      "count": 66
+    },
+    "SYNTAX_RAISE_TWO_ARG": {
+      "description": "raise Type, value[, traceback] two/three-arg raise syntax",
+      "severity": "HIGH",
+      "fix_strategy": "Convert to raise Type(value) or raise Type(value).with_traceback(tb)",
+      "count": 4
+    },
+    "SYNTAX_EXEC_STATEMENT": {
+      "description": "exec statement (exec code in namespace)",
+      "severity": "HIGH",
+      "fix_strategy": "Convert to exec() function call: exec(code, namespace)",
+      "count": 2
+    },
+    "SYNTAX_EXECFILE": {
+      "description": "execfile() builtin (removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace with exec(open(filename).read()) or exec(compile(...))",
+      "count": 1
+    },
+    "SYNTAX_BACKTICK_REPR": {
+      "description": "`obj` backtick repr syntax (removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace with repr(obj)",
+      "count": 1
+    },
+    "SYNTAX_DIAMOND_OPERATOR": {
+      "description": "<> inequality operator (removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace with != operator",
+      "count": 1
+    },
+    "SYNTAX_LONG_LITERAL": {
+      "description": "123L long integer literal suffix (removed in Py3, int/long unified)",
+      "severity": "HIGH",
+      "fix_strategy": "Remove the L suffix; Python 3 int handles arbitrary precision",
+      "count": 40
+    },
+    "SYNTAX_OCTAL_LITERAL": {
+      "description": "0755 old-style octal literal (Py3 requires 0o755)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace leading 0 with 0o prefix: 0755 -> 0o755",
+      "count": 4
+    },
+    "SEMANTIC_METACLASS_ATTR": {
+      "description": "__metaclass__ = Meta class attribute (Py2 metaclass declaration)",
+      "severity": "HIGH",
+      "fix_strategy": "Move to class declaration: class Foo(metaclass=Meta):",
+      "count": 2
+    },
+    "SEMANTIC_CMP": {
+      "description": "__cmp__ method, cmp() builtin, or sorted(cmp=) parameter",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace __cmp__ with __lt__/__eq__/etc via functools.total_ordering; replace cmp() with (a > b) - (a < b); replace sorted(cmp=) with sorted(key=functools.cmp_to_key(...))",
+      "count": 8
+    },
+    "SEMANTIC_NONZERO": {
+      "description": "__nonzero__ method (renamed to __bool__ in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Rename method from __nonzero__ to __bool__",
+      "count": 1
+    },
+    "SEMANTIC_DIV": {
+      "description": "__div__ method (replaced by __truediv__/__floordiv__ in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Rename to __truediv__ for float division or __floordiv__ for integer division",
+      "count": 1
+    },
+    "SEMANTIC_INTEGER_DIVISION": {
+      "description": "/ operator used for integer division (Py3 / always returns float)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace / with // where integer division is intended; verify each case",
+      "count": 7
+    },
+    "SEMANTIC_LONG_TYPE": {
+      "description": "long() builtin or isinstance(x, long) type checks",
+      "severity": "HIGH",
+      "fix_strategy": "Replace long with int; remove isinstance checks against long; int handles arbitrary precision in Py3",
+      "count": 29
+    },
+    "SEMANTIC_BASESTRING": {
+      "description": "basestring type (common base of str and unicode, removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace isinstance(x, basestring) with isinstance(x, str)",
+      "count": 12
+    },
+    "SEMANTIC_UNICODE_TYPE": {
+      "description": "unicode() builtin or isinstance(x, unicode) type checks",
+      "severity": "HIGH",
+      "fix_strategy": "Replace unicode with str; Py3 str is always Unicode. Replace unicode() calls with str()",
+      "count": 54
+    },
+    "SEMANTIC_DICT_ITERITEMS": {
+      "description": "dict.iteritems(), dict.iterkeys(), dict.itervalues() methods (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace .iteritems() with .items(), .iterkeys() with .keys(), .itervalues() with .values()",
+      "count": 23
+    },
+    "SEMANTIC_DICT_VIEWKEYS": {
+      "description": "dict.viewkeys(), dict.viewvalues(), dict.viewitems() methods (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace .viewkeys() with .keys(), .viewvalues() with .values(), .viewitems() with .items()",
+      "count": 4
+    },
+    "SEMANTIC_DICT_HAS_KEY": {
+      "description": "dict.has_key(k) method (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace d.has_key(k) with k in d",
+      "count": 20
+    },
+    "SEMANTIC_XRANGE": {
+      "description": "xrange() builtin (removed in Py3, range() is lazy in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace xrange() with range()",
+      "count": 14
+    },
+    "SEMANTIC_RAW_INPUT": {
+      "description": "raw_input() builtin (renamed to input() in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace raw_input() with input()",
+      "count": 2
+    },
+    "SEMANTIC_APPLY": {
+      "description": "apply(func, args) builtin (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace apply(func, args) with func(*args)",
+      "count": 2
+    },
+    "SEMANTIC_REDUCE": {
+      "description": "reduce() builtin (moved to functools.reduce in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Add from functools import reduce or use functools.reduce()",
+      "count": 8
+    },
+    "SEMANTIC_INTERN": {
+      "description": "intern() builtin (moved to sys.intern in Py3)",
+      "severity": "LOW",
+      "fix_strategy": "Replace intern(s) with sys.intern(s)",
+      "count": 1
+    },
+    "SEMANTIC_BUFFER": {
+      "description": "buffer() builtin (replaced by memoryview() in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace buffer() with memoryview()",
+      "count": 2
+    },
+    "SEMANTIC_ITERATOR_NEXT": {
+      "description": "iterator.next() method call (renamed to next(iterator) in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace obj.next() with next(obj)",
+      "count": 5
+    },
+    "SEMANTIC_ITERTOOLS_IZIP": {
+      "description": "itertools.izip, itertools.imap, itertools.ifilter (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace itertools.izip with zip, itertools.imap with map, itertools.ifilter with filter",
+      "count": 4
+    },
+    "SEMANTIC_MAP_FILTER_LIST": {
+      "description": "map()/filter() used where list result is expected (Py3 returns iterators)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Wrap in list() if list is needed: list(map(...)), list(filter(...)); or use list comprehensions",
+      "count": 4
+    },
+    "IMPORT_REMOVED_STDLIB": {
+      "description": "Imports of removed or renamed standard library modules",
+      "severity": "HIGH",
+      "fix_strategy": "Update to Py3 module names: ConfigParser->configparser, Queue->queue, cPickle->pickle, StringIO->io.StringIO, cStringIO->io.StringIO, httplib->http.client, urllib->urllib.parse/urllib.request, urllib2->urllib.request, xmlrpclib->xmlrpc.client, thread->_thread/threading, commands->subprocess, __builtin__->builtins, copy_reg->copyreg, repr->reprlib, BaseHTTPServer->http.server, Cookie->http.cookies, cookielib->http.cookiejar, imp->importlib, md5/sha->hashlib, sets->set builtin",
+      "count": 45
+    },
+    "IMPORT_DISTUTILS": {
+      "description": "from distutils.core import setup (distutils removed in Python 3.12)",
+      "severity": "CRITICAL",
+      "fix_strategy": "Migrate to setuptools or pyproject.toml based build system; distutils was deprecated in 3.10 and removed in 3.12",
+      "count": 1
+    },
+    "SEMANTIC_FILE_BUILTIN": {
+      "description": "file() builtin used as constructor (removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace file() with open()",
+      "count": 10
+    },
+    "SEMANTIC_SYS_MAXINT": {
+      "description": "sys.maxint attribute (removed in Py3, use sys.maxsize)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace sys.maxint with sys.maxsize",
+      "count": 1
+    },
+    "SEMANTIC_SYS_EXC_ATTRS": {
+      "description": "sys.exc_type, sys.exc_value, sys.exc_traceback (removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace with sys.exc_info() tuple unpacking",
+      "count": 5
+    },
+    "SEMANTIC_SYS_EXITFUNC": {
+      "description": "sys.exitfunc (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace with atexit.register(func)",
+      "count": 1
+    },
+    "SEMANTIC_SETS_MODULE": {
+      "description": "sets.Set from the 'sets' module (module removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace sets.Set with builtin set",
+      "count": 1
+    },
+    "SEMANTIC_OPERATOR_REMOVED": {
+      "description": "Removed operator module functions: isCallable, isSequenceType, isMappingType, sequenceIncludes",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace operator.isCallable with callable(), operator.isSequenceType with isinstance(x, collections.abc.Sequence), operator.isMappingType with isinstance(x, collections.abc.Mapping), operator.sequenceIncludes with operator.contains",
+      "count": 5
+    },
+    "SEMANTIC_FUNC_ATTRS": {
+      "description": "func_name, func_defaults, func_closure attributes (renamed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace func_name with __name__, func_defaults with __defaults__, func_closure with __closure__",
+      "count": 3
+    },
+    "SEMANTIC_METHOD_ATTRS": {
+      "description": "im_func, im_self, im_class bound method attributes (renamed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace im_func with __func__, im_self with __self__; im_class has no direct replacement (use type(method.__self__))",
+      "count": 4
+    },
+    "SEMANTIC_RELOAD": {
+      "description": "reload() builtin (moved to importlib.reload in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace reload(module) with importlib.reload(module)",
+      "count": 2
+    },
+    "SEMANTIC_IMP_MODULE": {
+      "description": "imp module usage (deprecated since 3.4, use importlib)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace imp.find_module/load_module with importlib.import_module or importlib.util.spec_from_file_location",
+      "count": 2
+    },
+    "SEMANTIC_COMMANDS_MODULE": {
+      "description": "commands.getoutput/getstatusoutput (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace with subprocess.getoutput() and subprocess.getstatusoutput()",
+      "count": 3
+    },
+    "SEMANTIC_OS_POPEN": {
+      "description": "os.popen() usage (deprecated, use subprocess)",
+      "severity": "LOW",
+      "fix_strategy": "Replace with subprocess.Popen or subprocess.run",
+      "count": 1
+    },
+    "SEMANTIC_OS_GETCWDU": {
+      "description": "os.getcwdu() (removed in Py3, os.getcwd() returns str/unicode in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace os.getcwdu() with os.getcwd()",
+      "count": 2
+    },
+    "SEMANTIC_JSON_ENCODING_PARAM": {
+      "description": "json.loads/dumps encoding= parameter (removed in Py3.9+)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Remove the encoding= parameter; ensure input is str or properly decoded bytes before calling json.loads",
+      "count": 6
+    },
+    "SEMANTIC_CPICKLE": {
+      "description": "cPickle module usage (merged into pickle in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace import cPickle with import pickle; the C accelerator is used automatically in Py3",
+      "count": 11
+    },
+    "SEMANTIC_COPY_REG": {
+      "description": "copy_reg module (renamed to copyreg in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace import copy_reg with import copyreg",
+      "count": 2
+    },
+    "SEMANTIC_MD5_SHA_MODULES": {
+      "description": "md5.new() and sha.new() standalone modules (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace md5.new(data) with hashlib.md5(data) and sha.new(data) with hashlib.sha1(data)",
+      "count": 2
+    },
+    "SEMANTIC_STANDARD_ERROR": {
+      "description": "StandardError base exception class (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace StandardError with Exception",
+      "count": 8
+    },
+    "SEMANTIC_IMPLICIT_RELATIVE_IMPORT": {
+      "description": "Implicit relative imports (from module import X without leading dot)",
+      "severity": "HIGH",
+      "fix_strategy": "Add leading dot for relative imports: from .module import X; or use absolute imports with full package path",
+      "count": 49
+    },
+    "SEMANTIC_TUPLE_PARAM_UNPACK": {
+      "description": "Tuple parameter unpacking in function definitions (PEP 3113, removed in Py3)",
+      "severity": "HIGH",
+      "fix_strategy": "Replace def f((a, b)): with def f(ab): a, b = ab",
+      "count": 2
+    },
+    "SEMANTIC_XREADLINES": {
+      "description": "file.xreadlines() method (removed in Py3, iterate file directly)",
+      "severity": "LOW",
+      "fix_strategy": "Replace f.xreadlines() with iterating the file object directly: for line in f:",
+      "count": 1
+    },
+    "SEMANTIC_HEX_DECODE": {
+      "description": "str.decode('hex') method (removed in Py3)",
+      "severity": "MEDIUM",
+      "fix_strategy": "Replace s.decode('hex') with bytes.fromhex(s)",
+      "count": 2
+    },
+    "SEMANTIC_TYPES_INSTANCETYPE": {
+      "description": "types.InstanceType (removed in Py3, old-style classes no longer exist)",
+      "severity": "LOW",
+      "fix_strategy": "Remove InstanceType checks; all classes are new-style in Py3",
+      "count": 1
+    },
+    "DATA_ENCODING_BOUNDARY": {
+      "description": "str/bytes/unicode confusion at I/O boundaries where Py2 str and Py3 str differ fundamentally",
+      "severity": "CRITICAL",
+      "fix_strategy": "Audit all I/O boundaries; use bytes for binary protocols and str for text; add explicit .encode()/.decode() at boundaries; this requires careful per-case analysis",
+      "count": 0,
+      "note": "Pervasive across io_protocols/, data_processing/, and storage/ packages. Not counted as discrete occurrences; flagged as a cross-cutting concern requiring manual audit of every I/O boundary."
+    },
+    "DATA_SOCKET_RECV": {
+      "description": "Socket recv() returns bytes in Py3 but str in Py2; code treats result as str",
+      "severity": "HIGH",
+      "fix_strategy": "Add .decode() after recv() for text protocols, or handle as bytes for binary protocols",
+      "count": 5
+    },
+    "DATA_STRUCT_MIXED": {
+      "description": "struct.pack/unpack results mixed with string operations (bytes vs str confusion)",
+      "severity": "HIGH",
+      "fix_strategy": "Ensure struct operations work with bytes; do not concatenate struct output with str; use bytes literals (b'...') where appropriate",
+      "count": 0,
+      "note": "Pervasive in io_protocols/ package. Not counted as discrete occurrences; requires per-file audit of struct usage patterns in modbus_client.py, mqtt_listener.py, serial_sensor.py, and file_store.py."
+    },
+    "DATA_ORD_ON_BYTES": {
+      "description": "ord() called on bytes indexing result (Py3 bytes[i] already returns int, making ord() redundant/broken)",
+      "severity": "HIGH",
+      "fix_strategy": "Remove ord() wrapper when indexing bytes objects; bytes[i] returns int in Py3. For Py2/3 compat: use indexing directly on bytes",
+      "count": 14
+    }
+  },
+  "by_file": {
+    "setup.py": {
+      "total_issues": 1,
+      "issues": [
+        {
+          "category": "IMPORT_DISTUTILS",
+          "lines": [
+            13
+          ],
+          "count": 1,
+          "detail": "from distutils.core import setup -- BLOCKER for Python 3.12 (distutils removed)"
+        }
+      ]
+    },
+    "src/core/types.py": {
+      "total_issues": 21,
+      "issues": [
+        {
+          "category": "SYNTAX_LONG_LITERAL",
+          "lines": [
+            168,
+            170,
+            171,
+            173,
+            179,
+            180,
+            183
+          ],
+          "count": 7,
+          "detail": "Long integer literals with L suffix"
+        },
+        {
+          "category": "SEMANTIC_METACLASS_ATTR",
+          "lines": [
+            96
+          ],
+          "count": 1,
+          "detail": "__metaclass__ = ABCMeta or similar"
+        },
+        {
+          "category": "SEMANTIC_CMP",
+          "lines": [
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            195,
+            200
+          ],
+          "count": 3,
+          "detail": "__cmp__ method definition (57-62), cmp() builtin usage (195), sorted(cmp=) usage (200)"
+        },
+        {
+          "category": "SEMANTIC_NONZERO",
+          "lines": [
+            64
+          ],
+          "count": 1,
+          "detail": "__nonzero__ method instead of __bool__"
+        },
+        {
+          "category": "SEMANTIC_DIV",
+          "lines": [
+            69
+          ],
+          "count": 1,
+          "detail": "__div__ method instead of __truediv__/__floordiv__"
+        },
+        {
+          "category": "SEMANTIC_LONG_TYPE",
+          "lines": [
+            171,
+            173,
+            179,
+            180,
+            185
+          ],
+          "count": 5,
+          "detail": "long() builtin and isinstance(x, long) checks"
+        },
+        {
+          "category": "SEMANTIC_BASESTRING",
+          "lines": [
+            210
+          ],
+          "count": 1,
+          "detail": "isinstance(x, basestring) check"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            215
+          ],
+          "count": 1,
+          "detail": "unicode type reference"
+        },
+        {
+          "category": "SEMANTIC_BUFFER",
+          "lines": [
+            231
+          ],
+          "count": 1,
+          "detail": "buffer() builtin usage"
+        }
+      ]
+    },
+    "src/core/utils.py": {
+      "total_issues": 13,
+      "issues": [
+        {
+          "category": "SYNTAX_BACKTICK_REPR",
+          "lines": [
+            92
+          ],
+          "count": 1,
+          "detail": "Backtick repr syntax `obj`"
+        },
+        {
+          "category": "SYNTAX_DIAMOND_OPERATOR",
+          "lines": [
+            101
+          ],
+          "count": 1,
+          "detail": "<> inequality operator"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            64,
+            74
+          ],
+          "count": 2,
+          "detail": "dict.has_key() method calls"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            114,
+            121
+          ],
+          "count": 2,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_RAW_INPUT",
+          "lines": [
+            136,
+            144
+          ],
+          "count": 2,
+          "detail": "raw_input() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_APPLY",
+          "lines": [
+            25,
+            26
+          ],
+          "count": 2,
+          "detail": "apply(func, args) builtin usage"
+        },
+        {
+          "category": "SEMANTIC_INTERN",
+          "lines": [
+            50
+          ],
+          "count": 1,
+          "detail": "intern() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_SETS_MODULE",
+          "lines": [
+            12
+          ],
+          "count": 1,
+          "detail": "sets.Set usage"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            12
+          ],
+          "count": 1,
+          "detail": "from sets import Set"
+        }
+      ]
+    },
+    "src/core/string_helpers.py": {
+      "total_issues": 22,
+      "issues": [
+        {
+          "category": "SEMANTIC_BASESTRING",
+          "lines": [
+            61,
+            69,
+            82,
+            124,
+            135
+          ],
+          "count": 5,
+          "detail": "isinstance(x, basestring) checks"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            59,
+            63,
+            69,
+            71,
+            72,
+            80,
+            81,
+            97,
+            120,
+            122,
+            124,
+            126,
+            127,
+            135,
+            171
+          ],
+          "count": 15,
+          "detail": "unicode() and isinstance(x, unicode) references"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            10,
+            11
+          ],
+          "count": 2,
+          "detail": "from StringIO import StringIO; from cStringIO import StringIO"
+        }
+      ]
+    },
+    "src/core/config_loader.py": {
+      "total_issues": 18,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            49,
+            56,
+            63,
+            86,
+            91,
+            102,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            170,
+            172,
+            173
+          ],
+          "count": 15,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            5,
+            6
+          ],
+          "count": 2,
+          "detail": "import ConfigParser; import __builtin__"
+        },
+        {
+          "category": "SEMANTIC_SYS_MAXINT",
+          "lines": [
+            20
+          ],
+          "count": 1,
+          "detail": "sys.maxint attribute reference"
+        }
+      ]
+    },
+    "src/core/itertools_helpers.py": {
+      "total_issues": 14,
+      "issues": [
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            100,
+            109
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() and/or iterkeys()/itervalues() usage"
+        },
+        {
+          "category": "SEMANTIC_DICT_VIEWKEYS",
+          "lines": [
+            123,
+            135,
+            142,
+            151
+          ],
+          "count": 4,
+          "detail": "dict.viewkeys(), viewvalues(), viewitems() usage"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            64
+          ],
+          "count": 1,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_ITERATOR_NEXT",
+          "lines": [
+            65,
+            223,
+            232
+          ],
+          "count": 3,
+          "detail": "iterator.next() method call instead of next(iterator)"
+        },
+        {
+          "category": "SEMANTIC_ITERTOOLS_IZIP",
+          "lines": [
+            44,
+            164,
+            173,
+            181
+          ],
+          "count": 4,
+          "detail": "itertools.izip, imap, ifilter usage"
+        }
+      ]
+    },
+    "src/core/exceptions.py": {
+      "total_issues": 12,
+      "issues": [
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            140,
+            143,
+            152,
+            154,
+            157
+          ],
+          "count": 5,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SYNTAX_RAISE_TWO_ARG",
+          "lines": [
+            130,
+            144,
+            156,
+            159
+          ],
+          "count": 4,
+          "detail": "raise Type, value[, traceback] syntax"
+        },
+        {
+          "category": "SEMANTIC_SYS_EXC_ATTRS",
+          "lines": [
+            116,
+            163,
+            165
+          ],
+          "count": 3,
+          "detail": "sys.exc_type, sys.exc_value attribute access"
+        }
+      ]
+    },
+    "src/core/compat.py": {
+      "total_issues": 13,
+      "issues": [
+        {
+          "category": "SEMANTIC_LONG_TYPE",
+          "lines": [
+            25
+          ],
+          "count": 1,
+          "detail": "long type reference"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            22,
+            23,
+            24,
+            94,
+            96,
+            103,
+            107
+          ],
+          "count": 7,
+          "detail": "unicode type references and string_types/text_type definitions"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "count": 5,
+          "detail": "import ConfigParser, import Queue, import cPickle, from cStringIO, from StringIO"
+        }
+      ]
+    },
+    "src/core/__init__.py": {
+      "total_issues": 3,
+      "issues": [
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            6,
+            7,
+            8
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/io_protocols/__init__.py": {
+      "total_issues": 4,
+      "issues": [
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            11,
+            12,
+            13,
+            14
+          ],
+          "count": 4,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/io_protocols/modbus_client.py": {
+      "total_issues": 27,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            126,
+            132,
+            142,
+            158,
+            168,
+            219,
+            220
+          ],
+          "count": 7,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            133,
+            141,
+            189,
+            191,
+            218
+          ],
+          "count": 5,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_INTEGER_DIVISION",
+          "lines": [
+            40,
+            42,
+            89
+          ],
+          "count": 3,
+          "detail": "/ used for integer division in CRC and register count calculations"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            38,
+            213
+          ],
+          "count": 2,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_BUFFER",
+          "lines": [
+            101
+          ],
+          "count": 1,
+          "detail": "buffer() builtin usage"
+        },
+        {
+          "category": "DATA_ORD_ON_BYTES",
+          "lines": [
+            36,
+            152,
+            153,
+            157,
+            164,
+            165
+          ],
+          "count": 6,
+          "detail": "ord() on bytes indexing (redundant in Py3)"
+        },
+        {
+          "category": "DATA_SOCKET_RECV",
+          "lines": [
+            201,
+            206
+          ],
+          "count": 2,
+          "detail": "Socket recv() returns bytes in Py3"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            8
+          ],
+          "count": 1,
+          "detail": "import thread"
+        }
+      ]
+    },
+    "src/io_protocols/opcua_client.py": {
+      "total_issues": 24,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            70,
+            108,
+            118,
+            130,
+            150,
+            186
+          ],
+          "count": 6,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            119,
+            129,
+            142,
+            160,
+            162,
+            185,
+            196,
+            215,
+            249
+          ],
+          "count": 9,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            39,
+            42,
+            74
+          ],
+          "count": 3,
+          "detail": "dict.has_key() method calls"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "count": 6,
+          "detail": "import httplib, urllib, urllib2, xmlrpclib, Queue, thread"
+        }
+      ]
+    },
+    "src/io_protocols/mqtt_listener.py": {
+      "total_issues": 27,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            50,
+            127,
+            142,
+            157,
+            170,
+            181,
+            187,
+            237,
+            278
+          ],
+          "count": 9,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            48,
+            132,
+            236,
+            277
+          ],
+          "count": 4,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_INTEGER_DIVISION",
+          "lines": [
+            211,
+            212
+          ],
+          "count": 2,
+          "detail": "/ used for integer division in variable-length encoding"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            91,
+            100,
+            242
+          ],
+          "count": 3,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_JSON_ENCODING_PARAM",
+          "lines": [
+            47
+          ],
+          "count": 1,
+          "detail": "json.loads/dumps with encoding= parameter"
+        },
+        {
+          "category": "DATA_ORD_ON_BYTES",
+          "lines": [
+            138,
+            246,
+            267
+          ],
+          "count": 3,
+          "detail": "ord() on bytes indexing"
+        },
+        {
+          "category": "DATA_SOCKET_RECV",
+          "lines": [
+            221,
+            229,
+            243
+          ],
+          "count": 3,
+          "detail": "Socket recv() returns bytes in Py3"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            6,
+            7
+          ],
+          "count": 2,
+          "detail": "import Queue; import thread"
+        }
+      ]
+    },
+    "src/io_protocols/serial_sensor.py": {
+      "total_issues": 17,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            42,
+            103,
+            107,
+            125,
+            166,
+            168,
+            181
+          ],
+          "count": 7,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            128
+          ],
+          "count": 1,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            167,
+            180
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            172
+          ],
+          "count": 1,
+          "detail": "dict.has_key() usage"
+        },
+        {
+          "category": "SEMANTIC_ITERATOR_NEXT",
+          "lines": [
+            75,
+            144
+          ],
+          "count": 2,
+          "detail": "iterator.next() method call"
+        },
+        {
+          "category": "DATA_ORD_ON_BYTES",
+          "lines": [
+            85,
+            93,
+            96
+          ],
+          "count": 3,
+          "detail": "ord() on bytes indexing"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            9
+          ],
+          "count": 1,
+          "detail": "from cStringIO import StringIO"
+        }
+      ]
+    },
+    "src/data_processing/__init__.py": {
+      "total_issues": 6,
+      "issues": [
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "count": 6,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/data_processing/csv_processor.py": {
+      "total_issues": 15,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            27,
+            53,
+            102
+          ],
+          "count": 3,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            181,
+            211
+          ],
+          "count": 2,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            71,
+            120,
+            194,
+            236
+          ],
+          "count": 4,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            124,
+            132
+          ],
+          "count": 2,
+          "detail": "dict.has_key() method calls"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            22,
+            23,
+            24
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            10
+          ],
+          "count": 1,
+          "detail": "from StringIO import StringIO"
+        }
+      ]
+    },
+    "src/data_processing/xml_transformer.py": {
+      "total_issues": 20,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            167,
+            175,
+            185,
+            188,
+            190
+          ],
+          "count": 5,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            258,
+            283
+          ],
+          "count": 2,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            61,
+            196,
+            221
+          ],
+          "count": 3,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            128,
+            134,
+            139,
+            291,
+            294
+          ],
+          "count": 5,
+          "detail": "dict.has_key() method calls"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            21,
+            22,
+            23
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            8,
+            9
+          ],
+          "count": 2,
+          "detail": "from HTMLParser import HTMLParser; import repr as reprlib_module"
+        }
+      ]
+    },
+    "src/data_processing/text_analyzer.py": {
+      "total_issues": 18,
+      "issues": [
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            67,
+            249
+          ],
+          "count": 2,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            161,
+            225
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            155
+          ],
+          "count": 1,
+          "detail": "dict.has_key() usage"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            195,
+            196
+          ],
+          "count": 2,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_REDUCE",
+          "lines": [
+            208
+          ],
+          "count": 1,
+          "detail": "reduce() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_MAP_FILTER_LIST",
+          "lines": [
+            144,
+            147,
+            278,
+            296
+          ],
+          "count": 4,
+          "detail": "map()/filter() used expecting list result"
+        },
+        {
+          "category": "SEMANTIC_COMMANDS_MODULE",
+          "lines": [
+            262
+          ],
+          "count": 1,
+          "detail": "commands.getoutput() usage"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            21,
+            22,
+            23
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            13,
+            14
+          ],
+          "count": 2,
+          "detail": "import commands; import __builtin__"
+        }
+      ]
+    },
+    "src/data_processing/mainframe_parser.py": {
+      "total_issues": 55,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            260,
+            263,
+            275,
+            287,
+            293,
+            382,
+            396,
+            406,
+            428
+          ],
+          "count": 9,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_LONG_LITERAL",
+          "lines": [
+            155,
+            162,
+            168,
+            201,
+            203,
+            207,
+            208,
+            214,
+            241,
+            246,
+            293,
+            325,
+            333,
+            346,
+            347,
+            435,
+            438
+          ],
+          "count": 17,
+          "detail": "Long integer literals with L suffix"
+        },
+        {
+          "category": "SYNTAX_OCTAL_LITERAL",
+          "lines": [
+            43
+          ],
+          "count": 1,
+          "detail": "0755 old-style octal literal"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            340,
+            380,
+            397,
+            427
+          ],
+          "count": 4,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_LONG_TYPE",
+          "lines": [
+            162,
+            168,
+            293,
+            325,
+            333,
+            346,
+            347
+          ],
+          "count": 7,
+          "detail": "long() builtin and isinstance(x, long) checks"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            84,
+            115
+          ],
+          "count": 2,
+          "detail": "dict.has_key() method calls"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            159,
+            206
+          ],
+          "count": 2,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_FILE_BUILTIN",
+          "lines": [
+            267,
+            373,
+            390,
+            412
+          ],
+          "count": 4,
+          "detail": "file() builtin as constructor"
+        },
+        {
+          "category": "SEMANTIC_OS_GETCWDU",
+          "lines": [
+            406
+          ],
+          "count": 1,
+          "detail": "os.getcwdu() usage"
+        },
+        {
+          "category": "SEMANTIC_CPICKLE",
+          "lines": [
+            376,
+            392
+          ],
+          "count": 2,
+          "detail": "cPickle module usage"
+        },
+        {
+          "category": "DATA_ORD_ON_BYTES",
+          "lines": [
+            156,
+            160
+          ],
+          "count": 2,
+          "detail": "ord() on bytes indexing"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            22,
+            23,
+            24
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            10
+          ],
+          "count": 1,
+          "detail": "import cPickle"
+        }
+      ]
+    },
+    "src/data_processing/json_handler.py": {
+      "total_issues": 20,
+      "issues": [
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            135,
+            281
+          ],
+          "count": 2,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            179,
+            200
+          ],
+          "count": 2,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            275,
+            304
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            64,
+            250,
+            278
+          ],
+          "count": 3,
+          "detail": "dict.has_key() method calls"
+        },
+        {
+          "category": "SEMANTIC_JSON_ENCODING_PARAM",
+          "lines": [
+            134,
+            170,
+            171,
+            195,
+            196
+          ],
+          "count": 5,
+          "detail": "json.loads/dumps with encoding= parameter"
+        },
+        {
+          "category": "SEMANTIC_CPICKLE",
+          "lines": [
+            220,
+            228
+          ],
+          "count": 2,
+          "detail": "cPickle module usage"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            22,
+            23
+          ],
+          "count": 2,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            9,
+            10
+          ],
+          "count": 2,
+          "detail": "import cPickle; from cStringIO import StringIO"
+        }
+      ]
+    },
+    "src/data_processing/log_parser.py": {
+      "total_issues": 15,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            202,
+            223,
+            242,
+            257,
+            265,
+            304
+          ],
+          "count": 6,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            231,
+            299
+          ],
+          "count": 2,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_DICT_HAS_KEY",
+          "lines": [
+            91
+          ],
+          "count": 1,
+          "detail": "dict.has_key() usage"
+        },
+        {
+          "category": "SEMANTIC_XREADLINES",
+          "lines": [
+            211
+          ],
+          "count": 1,
+          "detail": "file.xreadlines() usage"
+        },
+        {
+          "category": "SEMANTIC_COMMANDS_MODULE",
+          "lines": [
+            258
+          ],
+          "count": 1,
+          "detail": "commands.getoutput() usage"
+        },
+        {
+          "category": "SEMANTIC_OS_POPEN",
+          "lines": [
+            275
+          ],
+          "count": 1,
+          "detail": "os.popen() usage"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            21,
+            22
+          ],
+          "count": 2,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            12
+          ],
+          "count": 1,
+          "detail": "import commands"
+        }
+      ]
+    },
+    "src/storage/__init__.py": {
+      "total_issues": 3,
+      "issues": [
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            11,
+            12,
+            13
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/storage/file_store.py": {
+      "total_issues": 25,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            64,
+            98,
+            112,
+            136,
+            152,
+            211,
+            212,
+            230,
+            239
+          ],
+          "count": 9,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_LONG_LITERAL",
+          "lines": [
+            201,
+            207
+          ],
+          "count": 2,
+          "detail": "Long integer literals with L suffix"
+        },
+        {
+          "category": "SYNTAX_OCTAL_LITERAL",
+          "lines": [
+            25,
+            26,
+            27
+          ],
+          "count": 3,
+          "detail": "0755, 0644, 0600 old-style octal literals"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            38,
+            92,
+            129,
+            146
+          ],
+          "count": 4,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_FILE_BUILTIN",
+          "lines": [
+            90,
+            106,
+            121,
+            144,
+            162,
+            175
+          ],
+          "count": 6,
+          "detail": "file() builtin as constructor"
+        },
+        {
+          "category": "SEMANTIC_OS_GETCWDU",
+          "lines": [
+            37
+          ],
+          "count": 1,
+          "detail": "os.getcwdu() usage"
+        }
+      ]
+    },
+    "src/storage/database.py": {
+      "total_issues": 39,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            90,
+            97,
+            104,
+            106,
+            128,
+            142,
+            159,
+            171,
+            182,
+            205,
+            229,
+            248,
+            268,
+            276
+          ],
+          "count": 14,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            98,
+            105,
+            129,
+            143,
+            160,
+            184,
+            204,
+            228,
+            241,
+            269
+          ],
+          "count": 10,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_STANDARD_ERROR",
+          "lines": [
+            98,
+            105,
+            143,
+            204,
+            228,
+            241
+          ],
+          "count": 6,
+          "detail": "StandardError exception class usage"
+        },
+        {
+          "category": "SEMANTIC_CPICKLE",
+          "lines": [
+            203,
+            227,
+            240,
+            257
+          ],
+          "count": 4,
+          "detail": "cPickle module usage"
+        },
+        {
+          "category": "SEMANTIC_COPY_REG",
+          "lines": [
+            12,
+            28
+          ],
+          "count": 2,
+          "detail": "copy_reg module usage"
+        },
+        {
+          "category": "SEMANTIC_TYPES_INSTANCETYPE",
+          "lines": [
+            28
+          ],
+          "count": 1,
+          "detail": "types.InstanceType reference"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            10,
+            11
+          ],
+          "count": 2,
+          "detail": "import copy_reg; import cPickle"
+        }
+      ]
+    },
+    "src/storage/cache.py": {
+      "total_issues": 38,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            81,
+            89,
+            177,
+            207,
+            208,
+            231,
+            234,
+            244,
+            256
+          ],
+          "count": 9,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_LONG_LITERAL",
+          "lines": [
+            37,
+            39,
+            40,
+            42,
+            46,
+            49,
+            50,
+            69,
+            80,
+            104,
+            114
+          ],
+          "count": 11,
+          "detail": "Long integer literals with L suffix"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            206,
+            233,
+            244
+          ],
+          "count": 3,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_INTEGER_DIVISION",
+          "lines": [
+            74,
+            118
+          ],
+          "count": 2,
+          "detail": "/ used for integer division in bucket assignment and hit_rate"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            105,
+            193,
+            250
+          ],
+          "count": 3,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_STANDARD_ERROR",
+          "lines": [
+            206,
+            233
+          ],
+          "count": 2,
+          "detail": "StandardError exception class usage"
+        },
+        {
+          "category": "SEMANTIC_CPICKLE",
+          "lines": [
+            56,
+            198,
+            219
+          ],
+          "count": 3,
+          "detail": "cPickle module usage"
+        },
+        {
+          "category": "SEMANTIC_MD5_SHA_MODULES",
+          "lines": [
+            56,
+            73
+          ],
+          "count": 2,
+          "detail": "md5.new() and sha.new() standalone module usage"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            5,
+            6,
+            7
+          ],
+          "count": 3,
+          "detail": "import md5; import sha; import cPickle"
+        }
+      ]
+    },
+    "src/automation/__init__.py": {
+      "total_issues": 3,
+      "issues": [
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            10,
+            11,
+            12
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/automation/plugin_loader.py": {
+      "total_issues": 39,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            31,
+            63,
+            82,
+            107,
+            116,
+            131,
+            137,
+            158,
+            178,
+            192,
+            197,
+            213,
+            223,
+            230,
+            242,
+            263
+          ],
+          "count": 16,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            129,
+            199,
+            211,
+            228,
+            241
+          ],
+          "count": 5,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_METACLASS_ATTR",
+          "lines": [
+            69
+          ],
+          "count": 1,
+          "detail": "__metaclass__ attribute"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            224,
+            234
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_OPERATOR_REMOVED",
+          "lines": [
+            147,
+            151
+          ],
+          "count": 2,
+          "detail": "operator.isCallable usage"
+        },
+        {
+          "category": "SEMANTIC_FUNC_ATTRS",
+          "lines": [
+            164,
+            167,
+            170
+          ],
+          "count": 3,
+          "detail": "func_name, func_defaults, func_closure attribute access"
+        },
+        {
+          "category": "SEMANTIC_METHOD_ATTRS",
+          "lines": [
+            176,
+            178,
+            179,
+            181
+          ],
+          "count": 4,
+          "detail": "im_func, im_self, im_class attribute access"
+        },
+        {
+          "category": "SEMANTIC_RELOAD",
+          "lines": [
+            124,
+            254
+          ],
+          "count": 2,
+          "detail": "reload() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_IMP_MODULE",
+          "lines": [
+            16,
+            127
+          ],
+          "count": 2,
+          "detail": "imp module usage"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            20
+          ],
+          "count": 1,
+          "detail": "Implicit relative import without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            16
+          ],
+          "count": 1,
+          "detail": "import imp"
+        }
+      ]
+    },
+    "src/automation/script_runner.py": {
+      "total_issues": 25,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            108,
+            117,
+            123,
+            136,
+            145,
+            152,
+            155,
+            178,
+            190,
+            207
+          ],
+          "count": 10,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            150,
+            153
+          ],
+          "count": 2,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SYNTAX_EXEC_STATEMENT",
+          "lines": [
+            147
+          ],
+          "count": 1,
+          "detail": "exec statement with namespace"
+        },
+        {
+          "category": "SYNTAX_EXECFILE",
+          "lines": [
+            171
+          ],
+          "count": 1,
+          "detail": "execfile() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            65,
+            70,
+            197
+          ],
+          "count": 3,
+          "detail": "dict.iteritems() and/or iterkeys() usage"
+        },
+        {
+          "category": "SEMANTIC_OPERATOR_REMOVED",
+          "lines": [
+            113,
+            115,
+            122
+          ],
+          "count": 3,
+          "detail": "operator.isMappingType, isSequenceType, sequenceIncludes usage"
+        },
+        {
+          "category": "SEMANTIC_COMMANDS_MODULE",
+          "lines": [
+            191
+          ],
+          "count": 1,
+          "detail": "commands.getoutput() usage"
+        },
+        {
+          "category": "SEMANTIC_TUPLE_PARAM_UNPACK",
+          "lines": [
+            83,
+            91
+          ],
+          "count": 2,
+          "detail": "Tuple parameter unpacking in function definitions"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            20
+          ],
+          "count": 1,
+          "detail": "Implicit relative import without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            12
+          ],
+          "count": 1,
+          "detail": "import commands"
+        }
+      ]
+    },
+    "src/automation/scheduler.py": {
+      "total_issues": 29,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            98,
+            101,
+            117,
+            131,
+            136,
+            151,
+            175,
+            192,
+            205,
+            222,
+            246,
+            262,
+            275,
+            286
+          ],
+          "count": 14,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_LONG_LITERAL",
+          "lines": [
+            34,
+            39,
+            40
+          ],
+          "count": 3,
+          "detail": "Long integer literals with L suffix"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            100,
+            143
+          ],
+          "count": 2,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            254,
+            283
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_XRANGE",
+          "lines": [
+            171,
+            266
+          ],
+          "count": 2,
+          "detail": "xrange() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_SYS_EXC_ATTRS",
+          "lines": [
+            147,
+            148
+          ],
+          "count": 2,
+          "detail": "sys.exc_type, sys.exc_value attribute access"
+        },
+        {
+          "category": "SEMANTIC_SYS_EXITFUNC",
+          "lines": [
+            167
+          ],
+          "count": 1,
+          "detail": "sys.exitfunc assignment"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            19
+          ],
+          "count": 1,
+          "detail": "Implicit relative import without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            7,
+            8
+          ],
+          "count": 2,
+          "detail": "import thread; import Queue"
+        }
+      ]
+    },
+    "src/reporting/__init__.py": {
+      "total_issues": 3,
+      "issues": [
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            12,
+            13,
+            14
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/reporting/report_generator.py": {
+      "total_issues": 37,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            130,
+            157,
+            182,
+            193,
+            202
+          ],
+          "count": 5,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_PRINT_CHEVRON",
+          "lines": [
+            69,
+            72,
+            196
+          ],
+          "count": 3,
+          "detail": "print >>sys.stderr syntax"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            68,
+            71,
+            195,
+            218
+          ],
+          "count": 4,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SYNTAX_EXEC_STATEMENT",
+          "lines": [
+            67
+          ],
+          "count": 1,
+          "detail": "exec statement"
+        },
+        {
+          "category": "SEMANTIC_BASESTRING",
+          "lines": [
+            30,
+            38,
+            147,
+            207
+          ],
+          "count": 4,
+          "detail": "isinstance(x, basestring) checks"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            31,
+            33,
+            41,
+            64,
+            102,
+            104,
+            114,
+            124,
+            149,
+            171,
+            209
+          ],
+          "count": 11,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            109,
+            168
+          ],
+          "count": 2,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_REDUCE",
+          "lines": [
+            119,
+            121,
+            122,
+            175
+          ],
+          "count": 4,
+          "detail": "reduce() builtin usage"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            15,
+            16,
+            17
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/reporting/email_sender.py": {
+      "total_issues": 15,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            99,
+            112,
+            128,
+            132,
+            145,
+            246
+          ],
+          "count": 6,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            131,
+            134,
+            137
+          ],
+          "count": 3,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            71,
+            73,
+            175
+          ],
+          "count": 3,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            17,
+            18,
+            19
+          ],
+          "count": 3,
+          "detail": "Implicit relative imports without leading dot"
+        }
+      ]
+    },
+    "src/reporting/web_dashboard.py": {
+      "total_issues": 22,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            50,
+            85,
+            101,
+            142,
+            185,
+            187,
+            220,
+            244,
+            262,
+            265,
+            277
+          ],
+          "count": 11,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SYNTAX_EXCEPT_COMMA",
+          "lines": [
+            186
+          ],
+          "count": 1,
+          "detail": "except Type, e: comma syntax"
+        },
+        {
+          "category": "SEMANTIC_DICT_ITERITEMS",
+          "lines": [
+            80,
+            150,
+            190
+          ],
+          "count": 3,
+          "detail": "dict.iteritems() usage"
+        },
+        {
+          "category": "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+          "lines": [
+            24,
+            25
+          ],
+          "count": 2,
+          "detail": "Implicit relative imports without leading dot"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "count": 5,
+          "detail": "import thread; import BaseHTTPServer; import Cookie; import cookielib; import xmlrpclib"
+        }
+      ]
+    },
+    "tests/conftest.py": {
+      "total_issues": 6,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            38,
+            44
+          ],
+          "count": 2,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SEMANTIC_UNICODE_TYPE",
+          "lines": [
+            51,
+            56
+          ],
+          "count": 2,
+          "detail": "unicode type references"
+        },
+        {
+          "category": "SEMANTIC_HEX_DECODE",
+          "lines": [
+            21,
+            34
+          ],
+          "count": 2,
+          "detail": "str.decode('hex') usage"
+        }
+      ]
+    },
+    "tests/test_core_types.py": {
+      "total_issues": 15,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            30,
+            57,
+            78,
+            93,
+            119
+          ],
+          "count": 5,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SEMANTIC_CMP",
+          "lines": [
+            27,
+            28,
+            29,
+            34,
+            42
+          ],
+          "count": 5,
+          "detail": "cmp() builtin usage in tests"
+        },
+        {
+          "category": "SEMANTIC_LONG_TYPE",
+          "lines": [
+            63,
+            67,
+            81
+          ],
+          "count": 3,
+          "detail": "long type references in tests"
+        },
+        {
+          "category": "SEMANTIC_BASESTRING",
+          "lines": [
+            117,
+            118
+          ],
+          "count": 2,
+          "detail": "basestring type references in tests"
+        }
+      ]
+    },
+    "tests/test_modbus.py": {
+      "total_issues": 5,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            25,
+            35,
+            52,
+            61,
+            88
+          ],
+          "count": 5,
+          "detail": "print statements without parentheses"
+        }
+      ]
+    },
+    "tests/test_csv_processor.py": {
+      "total_issues": 4,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            27,
+            53,
+            102
+          ],
+          "count": 3,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            5
+          ],
+          "count": 1,
+          "detail": "from StringIO import StringIO"
+        }
+      ]
+    },
+    "tests/test_report_generator.py": {
+      "total_issues": 8,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            34,
+            57,
+            81,
+            135
+          ],
+          "count": 4,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SEMANTIC_REDUCE",
+          "lines": [
+            127,
+            129,
+            133
+          ],
+          "count": 3,
+          "detail": "reduce() builtin usage in tests"
+        },
+        {
+          "category": "IMPORT_REMOVED_STDLIB",
+          "lines": [
+            6
+          ],
+          "count": 1,
+          "detail": "from StringIO import StringIO"
+        }
+      ]
+    },
+    "tests/test_mainframe_parser.py": {
+      "total_issues": 18,
+      "issues": [
+        {
+          "category": "SYNTAX_PRINT_STATEMENT",
+          "lines": [
+            26,
+            42,
+            75,
+            110,
+            137
+          ],
+          "count": 5,
+          "detail": "print statements without parentheses"
+        },
+        {
+          "category": "SEMANTIC_LONG_TYPE",
+          "lines": [
+            40,
+            41,
+            47,
+            51,
+            58,
+            73,
+            74,
+            84,
+            88,
+            89,
+            92,
+            132,
+            136
+          ],
+          "count": 13,
+          "detail": "long type references in tests"
+        }
+      ]
+    }
+  }
+}

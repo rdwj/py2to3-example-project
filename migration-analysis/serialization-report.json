@@ -1,0 +1,294 @@
+{
+  "scan_date": "2026-02-12",
+  "target_version": "3.12",
+  "total_serialization_points": 26,
+  "risk_summary": {
+    "critical": 8,
+    "high": 6,
+    "medium": 4,
+    "low": 8
+  },
+  "categories": {
+    "pickle_cpickle": {
+      "count": 11,
+      "findings": [
+        {
+          "file": "src/data_processing/mainframe_parser.py",
+          "line": 20,
+          "pattern": "import cPickle",
+          "code_snippet": "import cPickle",
+          "risk": "high",
+          "direction": "internal",
+          "remediation": "Replace with: import pickle (cPickle was merged into pickle in Py3 as the C accelerator)"
+        },
+        {
+          "file": "src/data_processing/mainframe_parser.py",
+          "line": 376,
+          "pattern": "cPickle.load(file_handle)",
+          "code_snippet": "data = cPickle.load(f)",
+          "risk": "high",
+          "direction": "ingestion",
+          "remediation": "Replace with: pickle.load(f, encoding='latin1') to load Py2-pickled data. Existing .cache files written by Py2 with protocol 2 will fail without encoding='latin1'."
+        },
+        {
+          "file": "src/data_processing/mainframe_parser.py",
+          "line": 380,
+          "pattern": "except (cPickle.UnpicklingError, ...)",
+          "code_snippet": "except (cPickle.UnpicklingError, IOError, EOFError), e:",
+          "risk": "medium",
+          "direction": "internal",
+          "remediation": "Replace cPickle with pickle. Also fix except syntax to: except (pickle.UnpicklingError, IOError, EOFError) as e:"
+        },
+        {
+          "file": "src/data_processing/mainframe_parser.py",
+          "line": 392,
+          "pattern": "cPickle.dump(obj, f, cPickle.HIGHEST_PROTOCOL)",
+          "code_snippet": "cPickle.dump(records, f, cPickle.HIGHEST_PROTOCOL)",
+          "risk": "medium",
+          "direction": "egression",
+          "remediation": "Replace with: pickle.dump(records, f, pickle.HIGHEST_PROTOCOL). HIGHEST_PROTOCOL will be 5 in Py3.12 (was 2 in Py2). New cache files written by Py3 cannot be read by Py2."
+        },
+        {
+          "file": "src/data_processing/json_handler.py",
+          "line": 19,
+          "pattern": "import cPickle",
+          "code_snippet": "import cPickle",
+          "risk": "high",
+          "direction": "internal",
+          "remediation": "Replace with: import pickle"
+        },
+        {
+          "file": "src/data_processing/json_handler.py",
+          "line": 220,
+          "pattern": "cPickle.dump(record_set, f, cPickle.HIGHEST_PROTOCOL)",
+          "code_snippet": "cPickle.dump(record_set, f, cPickle.HIGHEST_PROTOCOL)",
+          "risk": "high",
+          "direction": "egression",
+          "remediation": "Replace with: pickle.dump(record_set, f, pickle.HIGHEST_PROTOCOL). Shared NFS staging files will not be readable by Py2 consumers until they are also migrated."
+        },
+        {
+          "file": "src/data_processing/json_handler.py",
+          "line": 228,
+          "pattern": "cPickle.load(f)",
+          "code_snippet": "data = cPickle.load(f)",
+          "risk": "high",
+          "direction": "ingestion",
+          "remediation": "Replace with: pickle.load(f, encoding='latin1') to maintain backward compatibility with Py2-serialized .pkl files on the NFS staging area."
+        },
+        {
+          "file": "src/storage/database.py",
+          "line": 13,
+          "pattern": "import cPickle",
+          "code_snippet": "import cPickle",
+          "risk": "high",
+          "direction": "internal",
+          "remediation": "Replace with: import pickle"
+        },
+        {
+          "file": "src/storage/database.py",
+          "line": 203,
+          "pattern": "cPickle.dumps(payload_obj, 2)",
+          "code_snippet": "blob = sqlite3.Binary(cPickle.dumps(payload_obj, 2))",
+          "risk": "critical",
+          "direction": "egression",
+          "remediation": "Replace with: pickle.dumps(payload_obj, 2). Protocol 2 is fine for cross-version compat, but existing BLOB data in SQLite will need encoding='latin1' on load."
+        },
+        {
+          "file": "src/storage/database.py",
+          "line": 227,
+          "pattern": "cPickle.loads(str(row[N]))",
+          "code_snippet": "payload = cPickle.loads(str(row[3]))",
+          "risk": "critical",
+          "direction": "ingestion",
+          "remediation": "CRITICAL: In Py2, str(buffer_obj) returns the raw bytes. In Py3, str(bytes_obj) returns \"b'\\x80\\x02...'\" -- a repr string, not raw bytes. Replace with: pickle.loads(bytes(row[3]), encoding='latin1')"
+        },
+        {
+          "file": "src/storage/database.py",
+          "line": 257,
+          "pattern": "cPickle.loads(str(row[0]))",
+          "code_snippet": "return cPickle.loads(str(row[0])) if row else None",
+          "risk": "critical",
+          "direction": "ingestion",
+          "remediation": "CRITICAL: Same str(buffer) -> str(bytes) issue as line 227. Replace with: pickle.loads(bytes(row[0]), encoding='latin1')"
+        }
+      ]
+    },
+    "copy_reg": {
+      "count": 2,
+      "findings": [
+        {
+          "file": "src/storage/database.py",
+          "line": 12,
+          "pattern": "import copy_reg",
+          "code_snippet": "import copy_reg",
+          "risk": "critical",
+          "direction": "internal",
+          "remediation": "Replace with: import copyreg (module renamed in Py3)"
+        },
+        {
+          "file": "src/storage/database.py",
+          "line": 28,
+          "pattern": "copy_reg.pickle(types.InstanceType, ...)",
+          "code_snippet": "copy_reg.pickle(types.InstanceType, _pickle_data_point)",
+          "risk": "critical",
+          "direction": "internal",
+          "remediation": "CRITICAL: types.InstanceType was removed in Py3 (no old-style classes). Replace with: copyreg.pickle(DataPoint, _pickle_data_point) -- register the class directly instead of the metaclass."
+        }
+      ]
+    },
+    "struct_custom": {
+      "count": 9,
+      "findings": [
+        {
+          "file": "src/io_protocols/modbus_client.py",
+          "line": 58,
+          "pattern": "struct.pack() + str_payload concatenation",
+          "code_snippet": "pdu = struct.pack(\"B\", self.function_code) + self.payload",
+          "risk": "medium",
+          "direction": "egression",
+          "remediation": "struct.pack() returns bytes in Py3. If self.payload is str (likely, since payload='' default on line 50), concatenation will fail with TypeError. Change default to b'' and ensure all payloads are bytes."
+        },
+        {
+          "file": "src/io_protocols/modbus_client.py",
+          "line": 64,
+          "pattern": "struct.pack() + str concatenation",
+          "code_snippet": "body = struct.pack(\"BB\", self.unit_id, self.function_code) + self.payload",
+          "risk": "medium",
+          "direction": "egression",
+          "remediation": "Same as line 58: ensure self.payload is bytes, not str."
+        },
+        {
+          "file": "src/io_protocols/modbus_client.py",
+          "line": 101,
+          "pattern": "buffer() builtin",
+          "code_snippet": "return buffer(self._raw, offset, count * 2)",
+          "risk": "low",
+          "direction": "internal",
+          "remediation": "buffer() removed in Py3. Replace with: memoryview(self._raw)[offset:offset + count * 2]"
+        },
+        {
+          "file": "src/io_protocols/modbus_client.py",
+          "line": 206,
+          "pattern": "\"\".join(chunks) for socket recv",
+          "code_snippet": "return \"\".join(chunks)",
+          "risk": "low",
+          "direction": "ingestion",
+          "remediation": "Socket recv() returns bytes in Py3. Replace with: b\"\".join(chunks)"
+        },
+        {
+          "file": "src/io_protocols/mqtt_listener.py",
+          "line": 193,
+          "pattern": "struct.pack() + str concatenation for MQTT CONNECT",
+          "code_snippet": "vh = struct.pack(\">H\", 4) + \"MQTT\" + struct.pack(\"BBH\", 4, 2, self.keepalive)",
+          "risk": "critical",
+          "direction": "egression",
+          "remediation": "CRITICAL: struct.pack() returns bytes in Py3, but 'MQTT' is str. Concatenation will raise TypeError. Replace 'MQTT' with b'MQTT' and ensure all string literals in packet construction are bytes."
+        },
+        {
+          "file": "src/io_protocols/mqtt_listener.py",
+          "line": 194,
+          "pattern": "struct.pack() + str for client_id",
+          "code_snippet": "pl = struct.pack(\">H\", len(self.client_id)) + self.client_id",
+          "risk": "critical",
+          "direction": "egression",
+          "remediation": "self.client_id is str in Py3. Must encode to bytes: self.client_id.encode('utf-8')"
+        },
+        {
+          "file": "src/io_protocols/mqtt_listener.py",
+          "line": 199,
+          "pattern": "struct.pack() + str for topic",
+          "code_snippet": "pl = struct.pack(\">H\", len(topic)) + topic + struct.pack(\"B\", qos)",
+          "risk": "critical",
+          "direction": "egression",
+          "remediation": "topic is str in Py3. Must encode to bytes: topic.encode('utf-8')"
+        },
+        {
+          "file": "src/io_protocols/mqtt_listener.py",
+          "line": 208,
+          "pattern": "out = \"\" for byte accumulation",
+          "code_snippet": "out = \"\"\n        ...\n        out += struct.pack(\"B\", b)",
+          "risk": "low",
+          "direction": "internal",
+          "remediation": "struct.pack returns bytes, concatenated with str ''. Change to out = b'' for bytes accumulation."
+        },
+        {
+          "file": "src/io_protocols/serial_sensor.py",
+          "line": 92,
+          "pattern": "struct.unpack on str body slice",
+          "code_snippet": "sid, stype = struct.unpack(\">HB\", body[:3])",
+          "risk": "low",
+          "direction": "ingestion",
+          "remediation": "In Py3, body from file.read() is already bytes, so struct.unpack will work. Low risk if file is opened in 'rb' mode (which it is on line 127). Verify all str operations on body use bytes methods."
+        }
+      ]
+    },
+    "json_encoding": {
+      "count": 4,
+      "findings": [
+        {
+          "file": "src/data_processing/json_handler.py",
+          "line": 134,
+          "pattern": "json.loads(raw_bytes, encoding=...)",
+          "code_snippet": "data = json.loads(raw_bytes, encoding=self._default_encoding)",
+          "risk": "critical",
+          "direction": "ingestion",
+          "remediation": "CRITICAL: The encoding= parameter was removed from json.loads() in Python 3.9. Remove the parameter. Decode bytes to str first if needed: json.loads(raw_bytes.decode(self._default_encoding))"
+        },
+        {
+          "file": "src/data_processing/json_handler.py",
+          "line": 170,
+          "pattern": "json.dumps(data, encoding=...)",
+          "code_snippet": "\"encoding\": self._default_encoding,",
+          "risk": "critical",
+          "direction": "egression",
+          "remediation": "CRITICAL: The encoding= parameter was removed from json.dumps() in Python 3.9. Remove the parameter entirely. In Py3 all strings are unicode, so encoding is unnecessary."
+        },
+        {
+          "file": "src/data_processing/json_handler.py",
+          "line": 194,
+          "pattern": "json.dumps(data, encoding=...) in dump_to_stream",
+          "code_snippet": "\"encoding\": self._default_encoding,",
+          "risk": "critical",
+          "direction": "egression",
+          "remediation": "Same as line 170. Remove encoding= parameter from json.dumps() kwargs."
+        },
+        {
+          "file": "src/io_protocols/mqtt_listener.py",
+          "line": 47,
+          "pattern": "json.loads(self.payload, encoding='utf-8')",
+          "code_snippet": "self._json = json.loads(self.payload, encoding=\"utf-8\")",
+          "risk": "critical",
+          "direction": "ingestion",
+          "remediation": "CRITICAL: encoding= removed in Py3. Replace with: json.loads(self.payload.decode('utf-8') if isinstance(self.payload, bytes) else self.payload)"
+        }
+      ]
+    },
+    "marshal": {
+      "count": 0,
+      "findings": []
+    },
+    "shelve": {
+      "count": 0,
+      "findings": []
+    },
+    "yaml": {
+      "count": 0,
+      "findings": []
+    },
+    "msgpack": {
+      "count": 0,
+      "findings": []
+    },
+    "protobuf": {
+      "count": 0,
+      "findings": []
+    },
+    "custom_class_serialization": {
+      "count": 0,
+      "findings": [],
+      "notes": "No __getstate__, __setstate__, __reduce__, or __reduce_ex__ methods found in any classes. The copy_reg.pickle() registration in database.py handles DataPoint serialization but is covered under the copy_reg category."
+    }
+  },
+  "persisted_data_files": [],
+  "persisted_data_files_notes": "No .pkl, .pickle, .shelve, .db, or .marshal files found in the repository. However, the code writes .cache files (mainframe_parser.py, cache.py) and SQLite BLOB columns (database.py) that will contain Py2-protocol pickled data at runtime."
+}

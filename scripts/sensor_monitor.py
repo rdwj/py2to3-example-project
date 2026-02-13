@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 IoT sensor monitoring daemon for the Legacy Industrial Data Platform.
@@ -8,10 +8,12 @@ ingestion, buffering readings in a thread-safe queue for the storage
 subsystem to consume.
 
 Usage:
-    python scripts/sensor_monitor.py [--serial PORT] [--mqtt HOST:PORT]
+    python3 scripts/sensor_monitor.py [--serial PORT] [--mqtt HOST:PORT]
 
 Runs until interrupted with Ctrl-C or SIGTERM.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

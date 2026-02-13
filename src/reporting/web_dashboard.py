@@ -12,6 +12,8 @@ Uses ``BaseHTTPServer`` for HTTP, ``Cookie`` for sessions, and
 data-acquisition loop isn't blocked.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import time
 import urllib
 import thread

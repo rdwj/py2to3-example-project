@@ -11,6 +11,8 @@ Uses ``thread`` (renamed ``_thread`` in Py3) and ``Queue.Queue`` (renamed
 ``queue.Queue`` in Py3).
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import sys
 import time
 import thread

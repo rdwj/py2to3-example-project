@@ -13,6 +13,8 @@ so the parser uses lazy iteration and popen-based filtering to avoid
 loading entire files into memory.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import re
 import time

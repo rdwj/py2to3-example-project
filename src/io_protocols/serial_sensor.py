@@ -3,6 +3,9 @@
 RS-485 serial sensor reader for the Legacy Industrial Data Platform.
 Packet format: [SYNC 0xAA] [LEN] [ID_HI] [ID_LO] [TYPE] [PAYLOAD...] [CHK]
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import struct
 import time
 from cStringIO import StringIO

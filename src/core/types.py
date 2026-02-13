@@ -7,6 +7,8 @@ sensor readings, data points, counters, and the registry machinery
 that automatically tracks every sensor type in the running system.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import time
 import struct
 

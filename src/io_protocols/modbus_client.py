@@ -3,6 +3,9 @@
 MODBUS TCP/RTU client for the Legacy Industrial Data Platform.
 Reads holding registers from SCADA PLCs over TCP sockets.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import socket
 import struct
 import time

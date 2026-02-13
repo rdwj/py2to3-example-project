@@ -1,0 +1,326 @@
+{
+  "report_date": "2026-02-12",
+  "project": "Legacy Industrial Data Platform",
+  "target_version": "3.12",
+  "total_rules": 17,
+  "pylint_rules": 14,
+  "flake8_rules": 4,
+  "rules": {
+    "pylint": [
+      {
+        "code": "W9001",
+        "short_id": "PY2001",
+        "message_id": "py2-missing-future-import",
+        "phase": 1,
+        "description": "Module missing one or more of the four standard __future__ imports (absolute_import, division, print_function, unicode_literals)",
+        "fix": "Add: from __future__ import absolute_import, division, print_function, unicode_literals",
+        "affected_files_estimate": 45,
+        "severity": "HIGH",
+        "automatable": true,
+        "inventory_categories": ["N/A -- meta-rule not in py2-ism-inventory"]
+      },
+      {
+        "code": "W9002",
+        "short_id": "PY2002",
+        "message_id": "py2-print-statement",
+        "phase": 2,
+        "description": "print used as a statement instead of a function call",
+        "fix": "Convert to print() function call; handle trailing comma as end='' parameter",
+        "affected_files_estimate": 27,
+        "severity": "HIGH",
+        "automatable": true,
+        "inventory_categories": ["SYNTAX_PRINT_STATEMENT", "SYNTAX_PRINT_CHEVRON"]
+      },
+      {
+        "code": "W9003",
+        "short_id": "PY2003",
+        "message_id": "py2-except-comma-syntax",
+        "phase": 2,
+        "description": "Old except syntax 'except ExceptionType, variable:' with comma instead of 'as'",
+        "fix": "Replace comma with 'as': except ExceptionType as variable:",
+        "affected_files_estimate": 16,
+        "severity": "HIGH",
+        "automatable": true,
+        "inventory_categories": ["SYNTAX_EXCEPT_COMMA"]
+      },
+      {
+        "code": "W9004",
+        "short_id": "PY2004",
+        "message_id": "py2-xrange-usage",
+        "phase": 2,
+        "description": "xrange() builtin removed in Python 3",
+        "fix": "Replace xrange() with range()",
+        "affected_files_estimate": 7,
+        "severity": "MEDIUM",
+        "automatable": true,
+        "inventory_categories": ["SEMANTIC_XRANGE"]
+      },
+      {
+        "code": "W9005",
+        "short_id": "PY2005",
+        "message_id": "py2-dict-iter-method",
+        "phase": 2,
+        "description": "dict.iteritems(), dict.iterkeys(), or dict.itervalues() removed in Python 3",
+        "fix": "Replace with .items(), .keys(), .values() respectively",
+        "affected_files_estimate": 11,
+        "severity": "MEDIUM",
+        "automatable": true,
+        "inventory_categories": ["SEMANTIC_DICT_ITERITEMS", "SEMANTIC_DICT_VIEWKEYS"]
+      },
+      {
+        "code": "W9006",
+        "short_id": "PY2006",
+        "message_id": "py2-string-type",
+        "phase": 3,
+        "description": "basestring or unicode type references (removed in Python 3)",
+        "fix": "Replace basestring with str or (str, bytes) for isinstance checks; replace unicode with str",
+        "affected_files_estimate": 12,
+        "severity": "MEDIUM",
+        "automatable": false,
+        "inventory_categories": ["SEMANTIC_BASESTRING", "SEMANTIC_UNICODE_TYPE"]
+      },
+      {
+        "code": "W9007",
+        "short_id": "PY2007",
+        "message_id": "py2-has-key",
+        "phase": 2,
+        "description": "dict.has_key() method removed in Python 3",
+        "fix": "Replace d.has_key(k) with 'k in d'",
+        "affected_files_estimate": 9,
+        "severity": "MEDIUM",
+        "automatable": true,
+        "inventory_categories": ["SEMANTIC_DICT_HAS_KEY"]
+      },
+      {
+        "code": "W9008",
+        "short_id": "PY2008a",
+        "message_id": "py2-long-type",
+        "phase": 2,
+        "description": "long type reference (removed in Python 3; int handles arbitrary precision)",
+        "fix": "Replace long with int; remove isinstance checks against long",
+        "affected_files_estimate": 5,
+        "severity": "HIGH",
+        "automatable": false,
+        "inventory_categories": ["SEMANTIC_LONG_TYPE"]
+      },
+      {
+        "code": "W9018",
+        "short_id": "PY2008b",
+        "message_id": "py2-long-literal",
+        "phase": 2,
+        "description": "Long integer literal with L suffix (SyntaxError in Python 3)",
+        "fix": "Remove the L suffix; Python 3 int handles arbitrary precision",
+        "affected_files_estimate": 5,
+        "severity": "HIGH",
+        "automatable": true,
+        "inventory_categories": ["SYNTAX_LONG_LITERAL"]
+      },
+      {
+        "code": "W9009",
+        "short_id": "PY2009",
+        "message_id": "py2-only-import",
+        "phase": 1,
+        "description": "Import of a removed/renamed stdlib module (cPickle, cStringIO, ConfigParser, Queue, etc.)",
+        "fix": "Update to Python 3 module names (see inventory for per-module mappings)",
+        "affected_files_estimate": 18,
+        "severity": "HIGH",
+        "automatable": false,
+        "inventory_categories": ["IMPORT_REMOVED_STDLIB", "IMPORT_DISTUTILS"]
+      },
+      {
+        "code": "W9010",
+        "short_id": "PY2010",
+        "message_id": "py2-buffer-builtin",
+        "phase": 3,
+        "description": "buffer() builtin removed in Python 3",
+        "fix": "Replace buffer() with memoryview()",
+        "affected_files_estimate": 2,
+        "severity": "MEDIUM",
+        "automatable": false,
+        "inventory_categories": ["SEMANTIC_BUFFER"]
+      },
+      {
+        "code": "W9011",
+        "short_id": "PY2011",
+        "message_id": "py2-file-builtin",
+        "phase": 2,
+        "description": "file() builtin removed in Python 3",
+        "fix": "Replace file() with open()",
+        "affected_files_estimate": 3,
+        "severity": "HIGH",
+        "automatable": true,
+        "inventory_categories": ["SEMANTIC_FILE_BUILTIN"]
+      },
+      {
+        "code": "W9012",
+        "short_id": "PY2012",
+        "message_id": "py2-implicit-relative-import",
+        "phase": 1,
+        "description": "Implicit relative import without leading dot",
+        "fix": "Add leading dot: from .module import X; or use absolute import with full package path",
+        "affected_files_estimate": 18,
+        "severity": "HIGH",
+        "automatable": false,
+        "inventory_categories": ["SEMANTIC_IMPLICIT_RELATIVE_IMPORT"]
+      },
+      {
+        "code": "W9013",
+        "short_id": "PY2013",
+        "message_id": "py2-ord-on-bytes",
+        "phase": 3,
+        "description": "ord() on byte data is unnecessary in Python 3 (bytes[i] returns int directly)",
+        "fix": "Remove the ord() wrapper; access bytes elements directly for int values",
+        "affected_files_estimate": 5,
+        "severity": "HIGH",
+        "automatable": false,
+        "inventory_categories": ["DATA_ORD_ON_BYTES"]
+      }
+    ],
+    "flake8": [
+      {
+        "code": "E950",
+        "description": "Binary protocol module missing explicit binary mode in file open()",
+        "phase": 2,
+        "fix": "Add explicit 'rb'/'wb' mode argument to open()/file() calls in modules that import struct or socket",
+        "affected_files_estimate": 7,
+        "severity": "HIGH",
+        "inventory_categories": ["DATA_ENCODING_BOUNDARY"]
+      },
+      {
+        "code": "E951",
+        "description": "pickle/cPickle dump/dumps called without explicit protocol version",
+        "phase": 2,
+        "fix": "Add protocol=2 for cross-version compat or protocol=pickle.HIGHEST_PROTOCOL for Py3-only",
+        "affected_files_estimate": 4,
+        "severity": "MEDIUM",
+        "inventory_categories": ["SEMANTIC_CPICKLE"]
+      },
+      {
+        "code": "E952",
+        "description": "String literal concatenated with bytes variable (TypeError in Python 3)",
+        "phase": 2,
+        "fix": "Change string literals to bytes literals (b\"...\") when concatenating with struct.pack() or recv() results",
+        "affected_files_estimate": 3,
+        "severity": "CRITICAL",
+        "inventory_categories": ["DATA_STRUCT_MIXED", "DATA_ENCODING_BOUNDARY"]
+      },
+      {
+        "code": "E953",
+        "description": "Socket recv() result used without decode() or explicit bytes handling",
+        "phase": 2,
+        "fix": "Add .decode() for text protocols, or handle as bytes for binary protocols",
+        "affected_files_estimate": 3,
+        "severity": "HIGH",
+        "inventory_categories": ["DATA_SOCKET_RECV"]
+      }
+    ]
+  },
+  "phase_coverage": {
+    "phase1": {
+      "pylint_rules": ["W9001", "W9009", "W9012"],
+      "flake8_rules": [],
+      "inventory_categories_covered": [
+        "IMPORT_REMOVED_STDLIB",
+        "IMPORT_DISTUTILS",
+        "SEMANTIC_IMPLICIT_RELATIVE_IMPORT"
+      ],
+      "total_issues_covered": 95,
+      "gate_criteria": [
+        "All .py files have the four __future__ imports",
+        "No Py2-only stdlib imports remain (flagged, not necessarily fixed)",
+        "No implicit relative imports remain (flagged, not necessarily fixed)",
+        "Build system uses setuptools (not distutils)",
+        "No pycrypto in requirements (replaced with pycryptodome)",
+        "Characterization tests exist for high/critical-risk modules"
+      ]
+    },
+    "phase2": {
+      "pylint_rules": ["W9001", "W9002", "W9003", "W9004", "W9005", "W9007", "W9008", "W9009", "W9011", "W9012", "W9018"],
+      "flake8_rules": ["E950", "E951", "E952", "E953"],
+      "inventory_categories_covered": [
+        "SYNTAX_PRINT_STATEMENT",
+        "SYNTAX_PRINT_CHEVRON",
+        "SYNTAX_EXCEPT_COMMA",
+        "SEMANTIC_XRANGE",
+        "SEMANTIC_DICT_ITERITEMS",
+        "SEMANTIC_DICT_VIEWKEYS",
+        "SEMANTIC_DICT_HAS_KEY",
+        "SEMANTIC_FILE_BUILTIN",
+        "SEMANTIC_LONG_TYPE",
+        "SYNTAX_LONG_LITERAL",
+        "IMPORT_REMOVED_STDLIB",
+        "IMPORT_DISTUTILS",
+        "SEMANTIC_IMPLICIT_RELATIVE_IMPORT",
+        "DATA_SOCKET_RECV",
+        "DATA_STRUCT_MIXED",
+        "DATA_ENCODING_BOUNDARY",
+        "SEMANTIC_CPICKLE"
+      ],
+      "total_issues_covered": 508
+    },
+    "phase3": {
+      "pylint_rules": ["W9001", "W9002", "W9003", "W9004", "W9005", "W9006", "W9007", "W9008", "W9009", "W9010", "W9011", "W9012", "W9013", "W9018"],
+      "flake8_rules": ["E950", "E951", "E952", "E953"],
+      "inventory_categories_covered": [
+        "All phase 2 categories plus:",
+        "SEMANTIC_BASESTRING",
+        "SEMANTIC_UNICODE_TYPE",
+        "SEMANTIC_BUFFER",
+        "DATA_ORD_ON_BYTES"
+      ],
+      "total_issues_covered": 590
+    },
+    "phase4": {
+      "pylint_rules": ["W9001", "W9002", "W9003", "W9004", "W9005", "W9006", "W9007", "W9008", "W9009", "W9010", "W9011", "W9012", "W9013", "W9018"],
+      "flake8_rules": ["E950", "E951", "E952", "E953"],
+      "inventory_categories_covered": [
+        "All phase 3 categories plus standard pylint import-error and syntax-error"
+      ],
+      "total_issues_covered": 590,
+      "notes": "Phase 4 adds standard pylint checks (import-error, syntax-error) to validate the migrated code actually parses and imports correctly under Python 3. The remaining 109 issues from the inventory (e.g. __cmp__, __nonzero__, exec statement, tuple param unpacking) require manual review and are not covered by automated lint rules."
+    }
+  },
+  "uncovered_categories": {
+    "description": "Py2-ism categories from the inventory that are NOT covered by the custom lint rules. These require manual code review.",
+    "categories": [
+      {"name": "SYNTAX_RAISE_TWO_ARG", "count": 4, "reason": "Requires Py2 parser to detect; AST-level detection unreliable under Py3 parser"},
+      {"name": "SYNTAX_EXEC_STATEMENT", "count": 2, "reason": "exec is a function in Py3; distinguishing statement from function call requires source text analysis"},
+      {"name": "SYNTAX_EXECFILE", "count": 1, "reason": "Low occurrence; manual fix"},
+      {"name": "SYNTAX_BACKTICK_REPR", "count": 1, "reason": "SyntaxError under Py3 parser; will be caught by syntax-error check in phase4"},
+      {"name": "SYNTAX_DIAMOND_OPERATOR", "count": 1, "reason": "SyntaxError under Py3 parser; will be caught by syntax-error check in phase4"},
+      {"name": "SYNTAX_OCTAL_LITERAL", "count": 4, "reason": "SyntaxError under Py3 parser; will be caught by syntax-error check in phase4"},
+      {"name": "SEMANTIC_METACLASS_ATTR", "count": 2, "reason": "Semantic change requiring class rewrite; manual review only"},
+      {"name": "SEMANTIC_CMP", "count": 8, "reason": "Protocol change (__cmp__ -> __lt__/__eq__); requires careful manual migration"},
+      {"name": "SEMANTIC_NONZERO", "count": 1, "reason": "Rename __nonzero__ to __bool__; low count, manual fix"},
+      {"name": "SEMANTIC_DIV", "count": 1, "reason": "Rename __div__ to __truediv__; low count, manual fix"},
+      {"name": "SEMANTIC_INTEGER_DIVISION", "count": 7, "reason": "Context-dependent: / vs // decision requires understanding intent"},
+      {"name": "SEMANTIC_RAW_INPUT", "count": 2, "reason": "Simple rename; low count, manual fix"},
+      {"name": "SEMANTIC_APPLY", "count": 2, "reason": "Low count, manual fix"},
+      {"name": "SEMANTIC_REDUCE", "count": 8, "reason": "Moved to functools; manual import addition"},
+      {"name": "SEMANTIC_ITERATOR_NEXT", "count": 5, "reason": "obj.next() -> next(obj); low count, manual fix"},
+      {"name": "SEMANTIC_ITERTOOLS_IZIP", "count": 4, "reason": "izip -> zip; manual import removal"},
+      {"name": "SEMANTIC_MAP_FILTER_LIST", "count": 4, "reason": "Context-dependent: wrap in list() or use comprehension"},
+      {"name": "SEMANTIC_SYS_MAXINT", "count": 1, "reason": "sys.maxint -> sys.maxsize; manual fix"},
+      {"name": "SEMANTIC_SYS_EXC_ATTRS", "count": 5, "reason": "sys.exc_type -> sys.exc_info(); manual fix"},
+      {"name": "SEMANTIC_SYS_EXITFUNC", "count": 1, "reason": "sys.exitfunc -> atexit; manual fix"},
+      {"name": "SEMANTIC_SETS_MODULE", "count": 1, "reason": "sets.Set -> set; manual fix"},
+      {"name": "SEMANTIC_OPERATOR_REMOVED", "count": 5, "reason": "Multiple operator module functions; manual fix"},
+      {"name": "SEMANTIC_FUNC_ATTRS", "count": 3, "reason": "func_name -> __name__; manual fix"},
+      {"name": "SEMANTIC_METHOD_ATTRS", "count": 4, "reason": "im_func -> __func__; manual fix"},
+      {"name": "SEMANTIC_RELOAD", "count": 2, "reason": "reload() -> importlib.reload(); manual fix"},
+      {"name": "SEMANTIC_IMP_MODULE", "count": 2, "reason": "imp -> importlib; manual fix"},
+      {"name": "SEMANTIC_COMMANDS_MODULE", "count": 3, "reason": "commands -> subprocess; manual fix"},
+      {"name": "SEMANTIC_OS_POPEN", "count": 1, "reason": "os.popen -> subprocess; manual fix"},
+      {"name": "SEMANTIC_OS_GETCWDU", "count": 2, "reason": "os.getcwdu -> os.getcwd; manual fix"},
+      {"name": "SEMANTIC_JSON_ENCODING_PARAM", "count": 6, "reason": "Removed parameter; manual fix"},
+      {"name": "SEMANTIC_COPY_REG", "count": 2, "reason": "copy_reg -> copyreg; covered by W9009 import check"},
+      {"name": "SEMANTIC_MD5_SHA_MODULES", "count": 2, "reason": "md5/sha -> hashlib; covered by W9009 import check"},
+      {"name": "SEMANTIC_STANDARD_ERROR", "count": 8, "reason": "StandardError -> Exception; manual fix"},
+      {"name": "SEMANTIC_TUPLE_PARAM_UNPACK", "count": 2, "reason": "PEP 3113; requires function signature rewrite"},
+      {"name": "SEMANTIC_XREADLINES", "count": 1, "reason": "f.xreadlines() -> iterate file; manual fix"},
+      {"name": "SEMANTIC_HEX_DECODE", "count": 2, "reason": "str.decode('hex') -> bytes.fromhex(); manual fix"},
+      {"name": "SEMANTIC_TYPES_INSTANCETYPE", "count": 1, "reason": "types.InstanceType removed; manual fix"}
+    ],
+    "total_uncovered_issues": 109
+  }
+}

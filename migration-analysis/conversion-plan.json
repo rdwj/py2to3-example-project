@@ -1,0 +1,450 @@
+{
+  "plan_date": "2026-02-12",
+  "target_version": "3.12",
+  "total_modules": 44,
+  "total_conversion_units": 9,
+  "total_waves": 5,
+  "total_py2_isms": 699,
+  "total_lines": 8074,
+  "strongly_connected_components": [],
+  "scc_notes": "No circular/mutual imports detected in the dependency graph. All edges are strictly hierarchical: leaf core modules <- consumer packages <- __init__ facades <- tests <- scripts.",
+
+  "waves": [
+    {
+      "wave": 1,
+      "name": "Foundation",
+      "description": "Leaf modules with zero internal dependencies. All gateway modules live here. Must complete before any downstream work begins.",
+      "parallel_slots": 2,
+      "units": [
+        {
+          "unit_id": "CU-01",
+          "name": "core-foundation",
+          "description": "Gateway modules depended on by every other package. Exceptions (fan_in=19), config_loader (fan_in=8), types (fan_in=7), string_helpers (fan_in=6), plus standalone utilities.",
+          "modules": [
+            "src/core/exceptions.py",
+            "src/core/types.py",
+            "src/core/config_loader.py",
+            "src/core/string_helpers.py",
+            "src/core/utils.py",
+            "src/core/itertools_helpers.py"
+          ],
+          "module_count": 6,
+          "total_lines": 1209,
+          "total_py2_isms": 101,
+          "dependencies": [],
+          "dependents": ["CU-03", "CU-04", "CU-05", "CU-06", "CU-07"],
+          "risk_score": "high",
+          "risk_factors": [
+            "gateway_modules_with_combined_fan_in_40",
+            "bytes_str_boundary_in_string_helpers",
+            "encoding_operations",
+            "metaclass_and_cmp_protocol_in_types",
+            "no_existing_tests_for_5_of_6_modules"
+          ],
+          "data_layer_involvement": true,
+          "data_layer_details": "string_helpers.py is the str/unicode/bytes boundary for the entire codebase. types.py defines DataPoint with buffer() and struct usage.",
+          "fan_in": 40,
+          "is_gateway": true,
+          "effort_estimate": {
+            "person_hours_low": 8,
+            "person_hours_high": 14,
+            "automatable_issues": 30,
+            "manual_issues": 71,
+            "complexity_notes": "string_helpers.py requires careful semantic redesign of every isinstance check. types.py __cmp__/__nonzero__/__div__ need protocol modernization. config_loader.py is mostly print statements + import renames."
+          }
+        },
+        {
+          "unit_id": "CU-02",
+          "name": "compat-shim",
+          "description": "Standalone Python 2/3 compatibility shim. No dependents in the internal graph, but may be imported by external consumers or scripts.",
+          "modules": [
+            "src/compat.py"
+          ],
+          "module_count": 1,
+          "total_lines": 107,
+          "total_py2_isms": 13,
+          "dependencies": [],
+          "dependents": [],
+          "risk_score": "medium",
+          "risk_factors": [
+            "encoding_operations",
+            "bytes_str_boundary",
+            "high_issue_density"
+          ],
+          "data_layer_involvement": true,
+          "data_layer_details": "Defines string_types, text_type, and shims for cPickle/cStringIO/ConfigParser/Queue.",
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 1,
+            "person_hours_high": 2,
+            "automatable_issues": 0,
+            "manual_issues": 13,
+            "complexity_notes": "Decision: simplify to Py3-only (remove Py2 branches) or delete entirely and inline Py3 equivalents in consumers. Likely candidate for removal post-migration."
+          }
+        }
+      ]
+    },
+    {
+      "wave": 2,
+      "name": "Protocol and Processing Layer",
+      "description": "Consumer packages that depend only on Wave 1 core modules. These can run in parallel (3 parallel slots).",
+      "parallel_slots": 3,
+      "units": [
+        {
+          "unit_id": "CU-03",
+          "name": "io-protocols",
+          "description": "Hardware and network protocol adapters: Modbus, OPC-UA, MQTT, Serial. Binary protocol handling with struct pack/unpack and socket I/O.",
+          "modules": [
+            "src/io_protocols/modbus_client.py",
+            "src/io_protocols/opcua_client.py",
+            "src/io_protocols/mqtt_listener.py",
+            "src/io_protocols/serial_sensor.py"
+          ],
+          "module_count": 4,
+          "total_lines": 934,
+          "total_py2_isms": 95,
+          "dependencies": ["CU-01"],
+          "dependents": ["CU-08"],
+          "risk_score": "high",
+          "risk_factors": [
+            "binary_protocol_handling",
+            "bytes_str_boundary_critical",
+            "socket_recv_returns_bytes",
+            "struct_pack_concat_with_str",
+            "ord_on_bytes_removal",
+            "integer_division_in_crc"
+          ],
+          "data_layer_involvement": true,
+          "data_layer_details": "42 bytes/str boundary points across the 4 modules. modbus_client: 18 boundaries (11 critical). mqtt_listener: 15 boundaries (12 critical). serial_sensor: 12 boundaries (8 critical). opcua_client: 5 boundaries.",
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 10,
+            "person_hours_high": 18,
+            "automatable_issues": 29,
+            "manual_issues": 66,
+            "complexity_notes": "Highest semantic complexity in the project. Every str literal in packet construction must become bytes. All ord() calls must be removed. Socket recv() return type changes. CRC computation needs // for integer division. mqtt_listener has the most boundary points per line of code."
+          }
+        },
+        {
+          "unit_id": "CU-04",
+          "name": "data-processing",
+          "description": "Data ingestion and transformation: CSV, XML, JSON, mainframe EBCDIC, text analysis, log parsing.",
+          "modules": [
+            "src/data_processing/mainframe_parser.py",
+            "src/data_processing/csv_processor.py",
+            "src/data_processing/xml_transformer.py",
+            "src/data_processing/json_handler.py",
+            "src/data_processing/text_analyzer.py",
+            "src/data_processing/log_parser.py"
+          ],
+          "module_count": 6,
+          "total_lines": 2119,
+          "total_py2_isms": 143,
+          "dependencies": ["CU-01"],
+          "dependents": ["CU-08"],
+          "risk_score": "high",
+          "risk_factors": [
+            "largest_unit_by_loc",
+            "ebcdic_handling_mainframe_parser",
+            "cpickle_serialization_boundaries",
+            "json_encoding_param_removal",
+            "csv_binary_mode_incompatible_with_py3",
+            "file_builtin_removal",
+            "encoding_operations_pervasive"
+          ],
+          "data_layer_involvement": true,
+          "data_layer_details": "mainframe_parser: cPickle load/dump, file() builtin, ord() on EBCDIC bytes, long literals. json_handler: json.loads/dumps encoding= removal, cPickle for staging files. csv_processor: binary mode CSV incompatible with Py3, BOM detection on bytes vs str.",
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 14,
+            "person_hours_high": 24,
+            "automatable_issues": 40,
+            "manual_issues": 103,
+            "complexity_notes": "mainframe_parser.py alone has 55 issues (highest in codebase). csv_processor.py needs a significant rewrite of the unicode CSV wrapper pattern. json_handler.py encoding= parameter removal is straightforward but requires validation. log_parser.py and text_analyzer.py are moderate difficulty."
+          }
+        },
+        {
+          "unit_id": "CU-05",
+          "name": "storage",
+          "description": "Persistence layer: file store, SQLite database, in-memory cache with disk spill.",
+          "modules": [
+            "src/storage/database.py",
+            "src/storage/cache.py",
+            "src/storage/file_store.py"
+          ],
+          "module_count": 3,
+          "total_lines": 773,
+          "total_py2_isms": 102,
+          "dependencies": ["CU-01"],
+          "dependents": ["CU-08"],
+          "risk_score": "high",
+          "risk_factors": [
+            "cpickle_sqlite_blob_deserialization",
+            "str_buffer_to_bytes_silent_corruption",
+            "copy_reg_types_instancetype_removal",
+            "md5_sha_module_removal",
+            "hashlib_requires_bytes_input",
+            "file_builtin_removal"
+          ],
+          "data_layer_involvement": true,
+          "data_layer_details": "database.py: 6 critical serialization points including str(buffer)->bytes(row) silent corruption issue. cache.py: md5.new/sha.new module removal, cPickle for disk cache. file_store.py: file() builtin, os.getcwdu(), octal literals.",
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 8,
+            "person_hours_high": 14,
+            "automatable_issues": 32,
+            "manual_issues": 70,
+            "complexity_notes": "database.py str(row[N]) -> bytes(row[N]) fix is the #1 silent-corruption risk in the entire migration. cache.py has the most long literals. file_store.py has the most file() builtin replacements."
+          }
+        }
+      ]
+    },
+    {
+      "wave": 3,
+      "name": "Automation and Reporting",
+      "description": "Higher-level consumer packages that depend only on Wave 1 core modules. Can run in parallel.",
+      "parallel_slots": 2,
+      "units": [
+        {
+          "unit_id": "CU-06",
+          "name": "automation",
+          "description": "Task automation: plugin loading (imp module), script execution (exec/execfile), and job scheduling.",
+          "modules": [
+            "src/automation/plugin_loader.py",
+            "src/automation/script_runner.py",
+            "src/automation/scheduler.py"
+          ],
+          "module_count": 3,
+          "total_lines": 758,
+          "total_py2_isms": 93,
+          "dependencies": ["CU-01"],
+          "dependents": ["CU-08"],
+          "risk_score": "high",
+          "risk_factors": [
+            "imp_module_removal_requires_importlib",
+            "exec_statement_and_execfile",
+            "tuple_parameter_unpacking",
+            "func_attrs_method_attrs_rename",
+            "operator_removed_functions",
+            "sys_exc_attrs_removal",
+            "sys_exitfunc_removal"
+          ],
+          "data_layer_involvement": false,
+          "data_layer_details": null,
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 6,
+            "person_hours_high": 10,
+            "automatable_issues": 40,
+            "manual_issues": 53,
+            "complexity_notes": "plugin_loader.py has the most diverse set of Py2 idioms (39 issues, 16 categories). imp->importlib migration requires understanding the full find/load lifecycle. script_runner.py tuple parameter unpacking is rare and needs careful rewrite."
+          }
+        },
+        {
+          "unit_id": "CU-07",
+          "name": "reporting",
+          "description": "Output generation: report generator, email sender, web dashboard. Depends on the broadest set of core modules.",
+          "modules": [
+            "src/reporting/report_generator.py",
+            "src/reporting/email_sender.py",
+            "src/reporting/web_dashboard.py"
+          ],
+          "module_count": 3,
+          "total_lines": 677,
+          "total_py2_isms": 74,
+          "dependencies": ["CU-01"],
+          "dependents": ["CU-08"],
+          "risk_score": "high",
+          "risk_factors": [
+            "report_generator_critical_density_16_8",
+            "print_chevron_syntax",
+            "exec_statement",
+            "unicode_type_heavy_usage",
+            "basestring_checks",
+            "reduce_builtin",
+            "web_dashboard_5_removed_stdlib_imports"
+          ],
+          "data_layer_involvement": true,
+          "data_layer_details": "report_generator.py has 15 unicode type references and heavy bytes/str encoding. email_sender.py encodes content for MIME. web_dashboard.py uses BaseHTTPServer, Cookie, cookielib (all renamed).",
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 6,
+            "person_hours_high": 10,
+            "automatable_issues": 22,
+            "manual_issues": 52,
+            "complexity_notes": "report_generator.py has the highest issue density among non-__init__ files (16.8/100 lines). web_dashboard.py has 5 renamed stdlib imports but they are all mechanical renames. email_sender.py encoding is moderate complexity."
+          }
+        }
+      ]
+    },
+    {
+      "wave": 4,
+      "name": "Package Facades and Tests",
+      "description": "Package __init__ files (simple import rewrites) and test suite modernization. Depends on all source modules being converted.",
+      "parallel_slots": 2,
+      "units": [
+        {
+          "unit_id": "CU-08",
+          "name": "package-inits",
+          "description": "All package __init__.py files. These are re-export facades that wire up the converted modules. Convert after all sibling modules are done.",
+          "modules": [
+            "src/core/__init__.py",
+            "src/io_protocols/__init__.py",
+            "src/data_processing/__init__.py",
+            "src/storage/__init__.py",
+            "src/automation/__init__.py",
+            "src/reporting/__init__.py"
+          ],
+          "module_count": 6,
+          "total_lines": 78,
+          "total_py2_isms": 22,
+          "dependencies": ["CU-01", "CU-02", "CU-03", "CU-04", "CU-05", "CU-06", "CU-07"],
+          "dependents": ["CU-09"],
+          "risk_score": "low",
+          "risk_factors": [
+            "implicit_relative_imports_only",
+            "high_density_due_to_small_file_size"
+          ],
+          "data_layer_involvement": false,
+          "data_layer_details": null,
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 1,
+            "person_hours_high": 2,
+            "automatable_issues": 0,
+            "manual_issues": 22,
+            "complexity_notes": "All 22 issues are implicit relative imports. Mechanical fix: add leading dot to each import. Quick validation step."
+          }
+        },
+        {
+          "unit_id": "CU-09-tests",
+          "name": "tests",
+          "description": "Test infrastructure and test files. Depends on the modules they exercise.",
+          "modules": [
+            "tests/conftest.py",
+            "tests/test_core_types.py",
+            "tests/test_csv_processor.py",
+            "tests/test_mainframe_parser.py",
+            "tests/test_modbus.py",
+            "tests/test_report_generator.py",
+            "tests/__init__.py"
+          ],
+          "module_count": 7,
+          "total_lines": 695,
+          "total_py2_isms": 56,
+          "dependencies": ["CU-01", "CU-03", "CU-04", "CU-07", "CU-08"],
+          "dependents": ["CU-09"],
+          "risk_score": "medium",
+          "risk_factors": [
+            "test_mainframe_parser_13_long_type_refs",
+            "test_core_types_cmp_builtin",
+            "conftest_hex_decode",
+            "stringio_import_rename"
+          ],
+          "data_layer_involvement": false,
+          "data_layer_details": null,
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 3,
+            "person_hours_high": 5,
+            "automatable_issues": 20,
+            "manual_issues": 36,
+            "complexity_notes": "test_mainframe_parser.py has 13 long type references needing isinstance(x, int) rewrites. conftest.py hex decode needs bytes.fromhex(). Most test changes are print statement fixes."
+          }
+        }
+      ]
+    },
+    {
+      "wave": 5,
+      "name": "Entry Points and Build System",
+      "description": "Top-level scripts and setup.py. Convert last as integration-level validation of the full migration.",
+      "parallel_slots": 1,
+      "units": [
+        {
+          "unit_id": "CU-09",
+          "name": "scripts-and-setup",
+          "description": "Entry-point scripts (batch_import, generate_ebcdic_data, run_platform, sensor_monitor) and setup.py with the distutils blocker.",
+          "modules": [
+            "scripts/batch_import.py",
+            "scripts/generate_ebcdic_data.py",
+            "scripts/run_platform.py",
+            "scripts/sensor_monitor.py",
+            "setup.py"
+          ],
+          "module_count": 5,
+          "total_lines": 617,
+          "total_py2_isms": 1,
+          "dependencies": ["CU-01", "CU-02", "CU-03", "CU-04", "CU-05", "CU-06", "CU-07", "CU-08", "CU-09-tests"],
+          "dependents": [],
+          "risk_score": "medium",
+          "risk_factors": [
+            "distutils_removal_blocker_in_setup_py",
+            "integration_level_validation"
+          ],
+          "data_layer_involvement": false,
+          "data_layer_details": null,
+          "fan_in": 0,
+          "is_gateway": false,
+          "effort_estimate": {
+            "person_hours_low": 2,
+            "person_hours_high": 4,
+            "automatable_issues": 0,
+            "manual_issues": 1,
+            "complexity_notes": "Scripts themselves have 0 Py2-isms (they use from __future__ imports). The single issue is distutils->setuptools migration in setup.py. Main effort is integration testing all scripts against the converted codebase."
+          }
+        }
+      ]
+    }
+  ],
+
+  "critical_path": {
+    "description": "Longest dependency chain through the conversion DAG. This is the minimum calendar time to complete the migration assuming unlimited parallelism within waves.",
+    "chain": ["CU-01", "CU-04", "CU-08", "CU-09-tests", "CU-09"],
+    "chain_labels": [
+      "Wave 1: core-foundation (8-14h)",
+      "Wave 2: data-processing (14-24h)",
+      "Wave 4: package-inits (1-2h)",
+      "Wave 4: tests (3-5h)",
+      "Wave 5: scripts-and-setup (2-4h)"
+    ],
+    "total_effort_low_hours": 28,
+    "total_effort_high_hours": 49,
+    "rationale": "CU-04 (data-processing) is the bottleneck unit -- largest by LOC, highest manual issue count, and sits on the critical path. CU-03 (io-protocols) is the alternative bottleneck if protocol conversion takes longer than data processing."
+  },
+
+  "gateway_units": [
+    {
+      "unit_id": "CU-01",
+      "name": "core-foundation",
+      "fan_in": 40,
+      "downstream_units": ["CU-03", "CU-04", "CU-05", "CU-06", "CU-07"],
+      "warning": "CRITICAL GATEWAY: Every other source unit depends on this. A regression in exceptions.py, types.py, config_loader.py, or string_helpers.py will cascade across the entire codebase. Requires thorough testing before proceeding to Wave 2. Recommend writing integration smoke tests for the core APIs before moving downstream.",
+      "testing_strategy": "Write targeted tests for: (1) exception class hierarchy compatibility, (2) DataPoint/SensorReading/LargeCounter construction and comparison, (3) safe_decode/safe_encode with bytes, str, and mixed inputs, (4) config_loader with both old and new ConfigParser."
+    }
+  ],
+
+  "effort_summary": {
+    "total_person_hours_low": 59,
+    "total_person_hours_high": 103,
+    "total_automatable_issues": 213,
+    "total_manual_issues": 487,
+    "automatable_percentage": 30.4,
+    "calendar_weeks_sequential": "3-5 weeks (one developer)",
+    "calendar_weeks_parallel": "2-3 weeks (two developers, wave parallelism)"
+  },
+
+  "risk_heatmap": {
+    "critical_units": [],
+    "high_risk_units": ["CU-01", "CU-03", "CU-04", "CU-05", "CU-06", "CU-07"],
+    "medium_risk_units": ["CU-02", "CU-09-tests", "CU-09"],
+    "low_risk_units": ["CU-08"]
+  }
+}

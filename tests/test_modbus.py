@@ -3,6 +3,9 @@
 Tests for the MODBUS TCP/RTU client: CRC-16 calculation, frame
 construction, RegisterBank with integer division, struct pack/unpack.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import struct

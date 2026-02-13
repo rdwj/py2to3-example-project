@@ -1,0 +1,253 @@
+{
+  "plan_date": "2026-02-12",
+  "target_version": "3.12",
+  "total_steps": 7,
+  "estimated_effort_hours": "8-12",
+  "steps": [
+    {
+      "step": 1,
+      "priority": "P0",
+      "title": "Replace cPickle imports with pickle",
+      "description": "cPickle was merged into pickle as the C accelerator in Python 3. All four files importing cPickle must be updated.",
+      "files": [
+        "src/data_processing/mainframe_parser.py",
+        "src/data_processing/json_handler.py",
+        "src/storage/database.py",
+        "src/storage/cache.py"
+      ],
+      "changes": [
+        {
+          "pattern": "import cPickle",
+          "replacement": "import pickle",
+          "note": "Direct module rename. All references to cPickle.dump, cPickle.load, cPickle.dumps, cPickle.loads, cPickle.HIGHEST_PROTOCOL, cPickle.UnpicklingError, cPickle.PicklingError must change to pickle.*"
+        }
+      ],
+      "risks": [
+        "pickle.HIGHEST_PROTOCOL is 5 in Py3.12 vs 2 in Py2. New pickle files will not be readable by Py2 processes."
+      ],
+      "testing": "Verify all pickle operations still function after rename. Run unit tests that exercise serialization paths."
+    },
+    {
+      "step": 2,
+      "priority": "P0",
+      "title": "Replace copy_reg with copyreg and remove types.InstanceType",
+      "description": "copy_reg was renamed to copyreg in Python 3. types.InstanceType was removed because old-style classes no longer exist.",
+      "files": [
+        "src/storage/database.py"
+      ],
+      "changes": [
+        {
+          "pattern": "import copy_reg",
+          "replacement": "import copyreg"
+        },
+        {
+          "pattern": "copy_reg.pickle(types.InstanceType, _pickle_data_point)",
+          "replacement": "copyreg.pickle(DataPoint, _pickle_data_point)",
+          "note": "Register the DataPoint class directly instead of the generic InstanceType metaclass. Ensure DataPoint is imported before this line (it already is from src.core.types)."
+        }
+      ],
+      "risks": [
+        "If DataPoint was an old-style class in Py2, it must inherit from object in Py3 (all classes are new-style). Verify DataPoint class definition.",
+        "The copyreg.pickle() call registers a custom reducer. Verify _pickle_data_point and _unpickle_data_point functions still work with the Py3 DataPoint class."
+      ],
+      "testing": "Pickle and unpickle a DataPoint instance. Verify the copyreg reducer is invoked and produces correct results."
+    },
+    {
+      "step": 3,
+      "priority": "P0",
+      "title": "Add encoding='latin1' to all pickle.load() and pickle.loads() calls",
+      "description": "Python 2 pickled str objects as bytes. When loading Py2-pickled data in Py3, encoding='latin1' preserves byte values as str characters (lossless round-trip for 0x00-0xFF). Without this, Py3 will attempt ASCII decoding and raise UnicodeDecodeError for values > 0x7F.",
+      "files": [
+        "src/data_processing/mainframe_parser.py",
+        "src/data_processing/json_handler.py",
+        "src/storage/database.py",
+        "src/storage/cache.py"
+      ],
+      "changes": [
+        {
+          "pattern": "pickle.load(f)",
+          "replacement": "pickle.load(f, encoding='latin1')",
+          "locations": [
+            "mainframe_parser.py:376 -- loading cached parsed records",
+            "json_handler.py:228 -- loading record sets from NFS staging"
+          ]
+        },
+        {
+          "pattern": "pickle.loads(data)",
+          "replacement": "pickle.loads(data, encoding='latin1')",
+          "locations": [
+            "database.py:227 -- deserializing event payloads from SQLite BLOBs",
+            "database.py:257 -- deserializing objects from object_store",
+            "cache.py:219 -- loading disk-persisted cache entries"
+          ]
+        }
+      ],
+      "risks": [
+        "encoding='latin1' is safe for binary data but may produce incorrect results if the pickled objects contained actual text that should be decoded differently. Review the data types being pickled.",
+        "Once Py3 re-serializes with protocol >= 3, old Py2 consumers will not be able to read the data. Coordinate migration of all consumers."
+      ],
+      "testing": "If any Py2-era .cache files or SQLite databases exist in test environments, verify they load correctly with encoding='latin1'."
+    },
+    {
+      "step": 4,
+      "priority": "P0",
+      "title": "Fix str(buffer) to bytes() in database.py",
+      "description": "In Py2, SQLite returns buffer objects for BLOB columns, and str(buffer_obj) returns the raw bytes. In Py3, SQLite returns bytes objects, and str(bytes_obj) returns the repr string \"b'\\x80...'\" -- completely wrong for passing to pickle.loads().",
+      "files": [
+        "src/storage/database.py"
+      ],
+      "changes": [
+        {
+          "pattern": "cPickle.loads(str(row[3]))",
+          "replacement": "pickle.loads(bytes(row[3]), encoding='latin1')",
+          "location": "database.py:227 -- fetch_events() event payload deserialization"
+        },
+        {
+          "pattern": "cPickle.loads(str(row[0]))",
+          "replacement": "pickle.loads(bytes(row[0]), encoding='latin1')",
+          "location": "database.py:257 -- get_object() object_store deserialization"
+        }
+      ],
+      "risks": [
+        "CRITICAL: Without this fix, every pickle.loads() call on SQLite BLOB data will fail silently (garbage input) or raise an exception. This is the highest-priority fix in the serialization category.",
+        "bytes() on a Py3 bytes object is a no-op, so the fix is safe even if the column already returns bytes."
+      ],
+      "testing": "Create a test SQLite database with pickled BLOBs and verify they deserialize correctly after migration."
+    },
+    {
+      "step": 5,
+      "priority": "P0",
+      "title": "Remove encoding= parameter from json.loads() and json.dumps()",
+      "description": "The encoding= parameter was deprecated in Python 3.1 and removed entirely in Python 3.9. In Py3.12 it raises TypeError. json.loads() in Py3 accepts str (unicode) or bytes (auto-detected encoding). json.dumps() in Py3 only handles str.",
+      "files": [
+        "src/data_processing/json_handler.py",
+        "src/io_protocols/mqtt_listener.py"
+      ],
+      "changes": [
+        {
+          "location": "json_handler.py:134 (load_bytes)",
+          "pattern": "json.loads(raw_bytes, encoding=self._default_encoding)",
+          "replacement": "json.loads(raw_bytes if isinstance(raw_bytes, str) else raw_bytes.decode(self._default_encoding))",
+          "note": "Py3 json.loads() accepts bytes with UTF-8/UTF-16/UTF-32 BOM detection, but for explicit encoding control, decode first."
+        },
+        {
+          "location": "json_handler.py:170 (dump_to_file kwargs)",
+          "pattern": "\"encoding\": self._default_encoding,",
+          "replacement": "Remove this key from the kwargs dict entirely.",
+          "note": "In Py3 all strings are unicode; encoding parameter is meaningless."
+        },
+        {
+          "location": "json_handler.py:194 (dump_to_stream kwargs)",
+          "pattern": "\"encoding\": self._default_encoding,",
+          "replacement": "Remove this key from the kwargs dict entirely."
+        },
+        {
+          "location": "mqtt_listener.py:47 (json_payload)",
+          "pattern": "json.loads(self.payload, encoding=\"utf-8\")",
+          "replacement": "json.loads(self.payload if isinstance(self.payload, str) else self.payload.decode('utf-8'))"
+        }
+      ],
+      "risks": [
+        "If raw_bytes is actually bytes (from socket/file), the decode step may fail if the encoding assumption is wrong. Add error handling for UnicodeDecodeError.",
+        "The isinstance check pattern handles both Py2-style (bytes) and Py3-style (str) inputs gracefully."
+      ],
+      "testing": "Test with UTF-8 encoded byte strings, pure str inputs, and non-ASCII content (Japanese, German sensor labels mentioned in docstrings)."
+    },
+    {
+      "step": 6,
+      "priority": "P1",
+      "title": "Fix struct.pack + str concatenation to use bytes throughout",
+      "description": "struct.pack() returns str in Py2 but bytes in Py3. Any concatenation with str literals ('MQTT', '', topic strings) will raise TypeError in Py3.",
+      "files": [
+        "src/io_protocols/modbus_client.py",
+        "src/io_protocols/mqtt_listener.py"
+      ],
+      "changes": [
+        {
+          "location": "modbus_client.py:50",
+          "pattern": "payload=\"\"",
+          "replacement": "payload=b\"\"",
+          "note": "Default parameter must be bytes, not str."
+        },
+        {
+          "location": "modbus_client.py:206",
+          "pattern": "return \"\".join(chunks)",
+          "replacement": "return b\"\".join(chunks)",
+          "note": "Socket recv() returns bytes in Py3."
+        },
+        {
+          "location": "mqtt_listener.py:193",
+          "pattern": "struct.pack(\">H\", 4) + \"MQTT\"",
+          "replacement": "struct.pack(\">H\", 4) + b\"MQTT\"",
+          "note": "Protocol name must be bytes for concatenation with struct output."
+        },
+        {
+          "location": "mqtt_listener.py:194",
+          "pattern": "struct.pack(\">H\", len(self.client_id)) + self.client_id",
+          "replacement": "struct.pack(\">H\", len(cid)) + cid  # where cid = self.client_id.encode('utf-8')",
+          "note": "client_id is str in Py3; must encode to bytes for wire protocol."
+        },
+        {
+          "location": "mqtt_listener.py:199",
+          "pattern": "struct.pack(\">H\", len(topic)) + topic",
+          "replacement": "struct.pack(\">H\", len(t)) + t  # where t = topic.encode('utf-8')",
+          "note": "Topic strings must be encoded to bytes."
+        },
+        {
+          "location": "mqtt_listener.py:208",
+          "pattern": "out = \"\"",
+          "replacement": "out = b\"\"",
+          "note": "Byte accumulator for MQTT variable-length encoding must be bytes."
+        },
+        {
+          "location": "mqtt_listener.py:226",
+          "pattern": "return first + \"\\x00\"",
+          "replacement": "return first + b\"\\x00\"",
+          "note": "Concatenation with socket recv() bytes."
+        },
+        {
+          "location": "mqtt_listener.py:227",
+          "pattern": "body = \"\"",
+          "replacement": "body = b\"\"",
+          "note": "Accumulator for socket data must be bytes."
+        }
+      ],
+      "risks": [
+        "Any caller passing str payloads to ModbusFrame() will break. Audit all call sites.",
+        "Topic matching in MqttSubscription.matches() splits on '/' -- if topics come from wire as bytes, they need decoding before string comparison.",
+        "ord() calls on bytes elements are unnecessary in Py3 (bytes[i] is already int). Must remove or guard with isinstance checks."
+      ],
+      "testing": "Build MODBUS and MQTT packets and verify wire format matches expected byte sequences. Test with non-ASCII topic names."
+    },
+    {
+      "step": 7,
+      "priority": "P1",
+      "title": "Re-serialize any existing Py2-protocol pickle files",
+      "description": "Any .cache files (mainframe_parser, cache.py disk persistence) and SQLite BLOB columns containing Py2-pickled data should be re-serialized after the migration to avoid carrying legacy encoding='latin1' baggage forever.",
+      "files": [],
+      "changes": [
+        {
+          "action": "Write a one-time migration script that:",
+          "sub_steps": [
+            "1. Scans cache directories for .cache files",
+            "2. Loads each with pickle.load(f, encoding='latin1')",
+            "3. Re-dumps with pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)",
+            "4. Reads all SQLite BLOB rows from events.payload and object_store.pickled",
+            "5. Deserializes with pickle.loads(data, encoding='latin1')",
+            "6. Re-serializes with pickle.dumps(obj, protocol=pickle.HIGHEST_PROTOCOL)",
+            "7. Updates the rows in place"
+          ]
+        }
+      ],
+      "risks": [
+        "Must be run exactly once during the migration cutover window.",
+        "Requires exclusive access to SQLite databases and cache directories.",
+        "If any Py2 consumers still exist, they will not be able to read re-serialized data.",
+        "Backup all data files and databases before running the migration script."
+      ],
+      "testing": "Run the migration script on a copy of production data. Verify all objects deserialize correctly without encoding='latin1'. Run the full application test suite against the migrated data."
+    }
+  ],
+  "execution_order_notes": "Steps 1-5 are P0 (must complete before migration). Steps 1 and 2 are pure import/reference changes with no behavioral impact. Steps 3 and 4 fix data loading correctness. Step 5 fixes json API compatibility. Step 6 is P1 (blocks runtime operation of IO protocol modules). Step 7 is P1 post-migration cleanup.",
+  "rollback_plan": "Maintain Py2 branch until all consumers are verified on Py3. Keep backup of all .cache files and SQLite databases. If rollback is needed, restore from backup and revert to Py2 branch."
+}

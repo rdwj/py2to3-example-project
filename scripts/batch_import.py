@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Mainframe batch import script for the Legacy Industrial Data Platform.
@@ -11,8 +11,10 @@ Called by cron at 02:30 UTC:
     30 2 * * * /opt/platform/scripts/batch_import.py /opt/platform/incoming/mainframe
 
 Usage:
-    python scripts/batch_import.py <input_dir_or_file> [--cache-dir DIR]
+    python3 scripts/batch_import.py <input_dir_or_file> [--cache-dir DIR]
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

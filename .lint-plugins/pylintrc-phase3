@@ -1,0 +1,41 @@
+# pylintrc-phase3 -- Py2-to-3 Migration: Phase 3 Enforcement
+#
+# Phase 3 adds to Phase 2:
+#   - basestring / unicode type detection
+#   - buffer() builtin detection
+#   - ord() on bytes detection (Py3 bytes[i] returns int)
+#
+# Usage:
+#   pylint --rcfile=.lint-plugins/pylintrc-phase3 \
+#          --load-plugins=py2_idioms_checker \
+#          src/ tests/
+
+[MAIN]
+load-plugins=py2_idioms_checker
+init-hook='import sys; sys.path.insert(0, ".lint-plugins")'
+
+disable=all
+enable=
+    py2-missing-future-import,
+    py2-only-import,
+    py2-implicit-relative-import,
+    py2-print-statement,
+    py2-except-comma-syntax,
+    py2-xrange-usage,
+    py2-dict-iter-method,
+    py2-has-key,
+    py2-file-builtin,
+    py2-long-type,
+    py2-long-literal,
+    py2-string-type,
+    py2-buffer-builtin,
+    py2-ord-on-bytes,
+    fatal
+
+[FORMAT]
+max-line-length=120
+
+[REPORTS]
+output-format=text
+reports=no
+score=no

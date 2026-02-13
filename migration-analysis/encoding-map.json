@@ -1,0 +1,594 @@
+{
+  "scan_date": "2026-02-12",
+  "total_encoding_operations": 72,
+  "encodings_used": [
+    "utf-8",
+    "latin-1",
+    "cp1252",
+    "shift_jis",
+    "iso-8859-15",
+    "ascii",
+    "cp037",
+    "utf-8-sig",
+    "utf-16-le",
+    "utf-16-be"
+  ],
+  "operations": [
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 21,
+      "operation": "detect",
+      "encoding": "multiple",
+      "context": "_ENCODING_CANDIDATES list defines trial encodings: utf-8, latin-1, cp1252, shift_jis, iso-8859-15, ascii",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 31,
+      "operation": "detect",
+      "encoding": "multiple",
+      "context": "detect_encoding() iterates candidate list trying trial decodes to find working encoding",
+      "risk": "high"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 45,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "raw_bytes.decode(enc) inside detect_encoding trial loop",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 56,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode() wraps .decode(encoding, errors) with fallback handling",
+      "risk": "high"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 66,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "safe_encode() wraps .encode(encoding, errors) with fallback handling",
+      "risk": "high"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 76,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "to_platform_string() encodes unicode to platform-specific byte string",
+      "risk": "critical"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 91,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "normalise_sensor_label() decodes bytes with .decode('utf-8', 'replace')",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 98,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "normalise_sensor_label() applies unicodedata.normalize('NFC') then re-encodes",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 113,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "safe_concat() decodes each part with .decode('utf-8', 'replace') before joining",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 131,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "build_csv_line() calls safe_decode() on each field before CSV formatting",
+      "risk": "low"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 146,
+      "operation": "codec_open",
+      "encoding": "utf-8",
+      "context": "make_text_buffer()/make_binary_buffer() selects StringIO vs cStringIO based on type needs",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 166,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "validate_roundtrip() encodes then decodes to verify encoding fidelity",
+      "risk": "low"
+    },
+    {
+      "file": "src/core/config_loader.py",
+      "line": 154,
+      "operation": "detect",
+      "encoding": "ascii",
+      "context": "sys.getdefaultencoding() reports default encoding; Py2 returns 'ascii', Py3 returns 'utf-8'",
+      "risk": "high"
+    },
+    {
+      "file": "src/core/compat.py",
+      "line": 92,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "ensure_bytes() converts text to bytes via .encode(encoding), default utf-8",
+      "risk": "medium"
+    },
+    {
+      "file": "src/core/compat.py",
+      "line": 101,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "ensure_text() converts bytes to text via .decode(encoding), default utf-8",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 29,
+      "operation": "codec_open",
+      "encoding": "ascii",
+      "context": "CSV_READ_MODE = 'rb' forces binary read mode for csv module (Py2 requirement)",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 34,
+      "operation": "detect",
+      "encoding": "ascii",
+      "context": "DEFAULT_ENCODING = 'ascii' used as fallback encoding constant",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 37,
+      "operation": "detect",
+      "encoding": "multiple",
+      "context": "BOM constants for UTF-8-SIG, UTF-16-LE, UTF-16-BE byte order mark detection",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 46,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "unicode_csv_reader decodes each cell via cell.decode(encoding, 'replace')",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 59,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "unicode_csv_writer encodes each cell via cell.encode(encoding, 'replace') before writing",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 123,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "Field mapper decodes column name with col.decode('utf-8', 'replace')",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 195,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "csv_text.encode(encoding) to push text into StringIO for csv module",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 226,
+      "operation": "codec_open",
+      "encoding": "multiple",
+      "context": "codecs.open(file_path, 'wb', encoding=encoding, errors='replace') for output",
+      "risk": "high"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 229,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "header_line.encode(encoding, 'replace') before writing to file",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 237,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "value.encode(encoding, 'replace') for each data cell during file write",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 287,
+      "operation": "detect",
+      "encoding": "multiple",
+      "context": "_detect_file_encoding() checks BOM markers then falls back to heuristic detection",
+      "risk": "high"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 61,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "unescape_html_entities decodes text with text.decode('utf-8', 'replace')",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 196,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "transform_string encodes xml_string.encode('utf-8') for ElementTree parsing",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 204,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "t.encode('utf-8') to feed bytes into ElementTree",
+      "risk": "low"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 206,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "tag.decode('utf-8', 'replace') to get unicode tag name from parsed XML",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 244,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "attr_value.decode('utf-8', 'replace') for XML attribute values",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 272,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "text.decode('utf-8', 'replace') for XML text content extraction",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "line": 301,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "tag.decode('utf-8', 'replace') in recursive element traversal",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/text_analyzer.py",
+      "line": 77,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "safe_encode(normalised, 'utf-8') to produce bytes for hashlib digest",
+      "risk": "low"
+    },
+    {
+      "file": "src/data_processing/text_analyzer.py",
+      "line": 138,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(text) to normalize input before keyword extraction",
+      "risk": "low"
+    },
+    {
+      "file": "src/data_processing/text_analyzer.py",
+      "line": 250,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "text.encode('utf-8') to produce bytes for external tool invocation",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 33,
+      "operation": "detect",
+      "encoding": "cp037",
+      "context": "EBCDIC_CODEC = 'cp037' constant for IBM mainframe data decoding",
+      "risk": "low"
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 319,
+      "operation": "decode",
+      "encoding": "cp037",
+      "context": "field_bytes.decode(EBCDIC_CODEC).rstrip() converts EBCDIC mainframe field to unicode",
+      "risk": "high"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 34,
+      "operation": "detect",
+      "encoding": "utf-8",
+      "context": "JSON_DEFAULT_ENCODING = 'utf-8' constant for JSON operations",
+      "risk": "low"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 47,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "json.loads(self.payload, encoding='utf-8') uses encoding param removed in Python 3.9",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 134,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "json.loads(raw_bytes, encoding=self._default_encoding) same removed-param pattern",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 170,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "json.dumps(data, encoding=self._default_encoding) uses encoding param removed in Py3",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 180,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "json_str.encode(self._default_encoding) converts JSON string to bytes for storage",
+      "risk": "medium"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 195,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "json.dumps + json_str.encode pattern repeated for serialization path",
+      "risk": "critical"
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 201,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "json_str.encode(self._default_encoding) final bytes conversion for output",
+      "risk": "medium"
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 23,
+      "operation": "detect",
+      "encoding": "multiple",
+      "context": "_ENC_FALLBACKS list: utf-8, latin-1, shift_jis, cp1252 for OPC-UA data decoding",
+      "risk": "medium"
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 192,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "t.encode('utf-8') to prepare text for XML parsing of OPC-UA node values",
+      "risk": "low"
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 204,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "t.encode('utf-8') second XML encoding path for OPC-UA node data",
+      "risk": "low"
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 219,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "_dec() method tries multi-encoding fallback decode for raw OPC-UA byte payloads",
+      "risk": "high"
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 241,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "self._dec(raw).encode('utf-8') normalizes decoded OPC-UA data to UTF-8 bytes",
+      "risk": "medium"
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 47,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "json.loads(self.payload, encoding='utf-8') uses encoding param removed in Python 3.9",
+      "risk": "critical"
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 39,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "root_path.decode('utf-8') converts byte string path to unicode",
+      "risk": "high"
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 93,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "content.encode(encoding) converts text to bytes before file write",
+      "risk": "medium"
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 129,
+      "operation": "isinstance_check",
+      "encoding": "utf-8",
+      "context": "dp.tag.encode('utf-8') if isinstance(dp.tag, unicode) guards encode with type check",
+      "risk": "critical"
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 146,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "content.encode(encoding) for secondary write path",
+      "risk": "medium"
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 140,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "hashlib.md5(raw_key) requires bytes input; str in Py3 needs explicit .encode()",
+      "risk": "high"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 31,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(title) ensures report title is unicode before formatting",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 39,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(line) for each line in report body",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 124,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(tag) for sensor tag names in alarm reports",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 149,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "unicode(msg, 'utf-8') explicit Py2 unicode constructor with encoding arg",
+      "risk": "critical"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 150,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(alarm.get('tag', 'UNKNOWN')) for alarm tag display",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 171,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(tag) in alarm summary loop for report generation",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 192,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(l) for each template line during report rendering",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "line": 209,
+      "operation": "encode",
+      "encoding": "multiple",
+      "context": "safe_encode(content) to produce final byte output for report file",
+      "risk": "medium"
+    },
+    {
+      "file": "src/reporting/email_sender.py",
+      "line": 71,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "safe_encode(self.body) converts email body to bytes for MIME attachment",
+      "risk": "medium"
+    },
+    {
+      "file": "src/reporting/email_sender.py",
+      "line": 73,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "safe_encode(self.subject) converts subject for email header encoding",
+      "risk": "medium"
+    },
+    {
+      "file": "src/reporting/email_sender.py",
+      "line": 156,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "safe_encode(tag) and safe_encode(message) for alarm notification email body",
+      "risk": "medium"
+    },
+    {
+      "file": "src/reporting/email_sender.py",
+      "line": 175,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "safe_encode(report_content) for daily digest email attachment",
+      "risk": "medium"
+    },
+    {
+      "file": "src/reporting/web_dashboard.py",
+      "line": 143,
+      "operation": "decode",
+      "encoding": "utf-8",
+      "context": "urllib.unquote(k/v) URL-decodes query params; returns bytes in Py2, str in Py3",
+      "risk": "high"
+    },
+    {
+      "file": "src/reporting/web_dashboard.py",
+      "line": 153,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(tag) for dashboard sensor tag display",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/web_dashboard.py",
+      "line": 174,
+      "operation": "decode",
+      "encoding": "multiple",
+      "context": "safe_decode(a.get('tag')) and safe_decode(a.get('message')) for alarm display",
+      "risk": "low"
+    },
+    {
+      "file": "src/reporting/web_dashboard.py",
+      "line": 203,
+      "operation": "encode",
+      "encoding": "utf-8",
+      "context": "safe_encode(html_unicode) converts rendered HTML to bytes for HTTP response body",
+      "risk": "medium"
+    }
+  ]
+}

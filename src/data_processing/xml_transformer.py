@@ -13,6 +13,8 @@ structures, and produces the configuration dicts consumed by the
 real-time alarm processing engine.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import xml.etree.ElementTree as ET
 from HTMLParser import HTMLParser

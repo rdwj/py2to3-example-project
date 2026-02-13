@@ -1,0 +1,1270 @@
+{
+  "scan_date": "2026-02-12",
+  "total_boundaries": 126,
+  "critical_count": 54,
+  "high_count": 62,
+  "medium_count": 10,
+  "low_count": 0,
+  "boundaries": [
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 35,
+      "pattern": "isinstance_str_check",
+      "code": "if isinstance(byte_val, str):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "critical",
+      "fix_hint": "In Py3, str is text not bytes. Check isinstance(byte_val, (bytes, int)) or remove the guard entirely since Py3 bytes iteration yields int."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 36,
+      "pattern": "ord_on_str_byte",
+      "code": "byte_val = ord(byte_val)",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_value_extraction",
+      "risk": "critical",
+      "fix_hint": "Remove ord() call; Py3 bytes iteration already yields int. Or use a compat wrapper."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 40,
+      "pattern": "integer_division",
+      "code": "crc = (crc / 2) ^ _CRC16_POLY",
+      "direction": "internal",
+      "boundary_type": "integer_division",
+      "risk": "high",
+      "fix_hint": "Change / to // for integer division. Float result breaks bitwise XOR."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 42,
+      "pattern": "integer_division",
+      "code": "crc = crc / 2",
+      "direction": "internal",
+      "boundary_type": "integer_division",
+      "risk": "high",
+      "fix_hint": "Change / to // for integer division."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 50,
+      "pattern": "empty_str_for_bytes",
+      "code": "def __init__(self, unit_id, function_code, payload=\"\"):",
+      "direction": "internal",
+      "boundary_type": "ambiguous_type",
+      "risk": "critical",
+      "fix_hint": "Change default to b\"\" since payload is concatenated with struct.pack output."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 58,
+      "pattern": "struct_pack_concat_str",
+      "code": "pdu = struct.pack(\"B\", self.function_code) + self.payload",
+      "direction": "text_to_bytes",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Ensure self.payload is bytes (b\"\") so concatenation with struct.pack output works."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 64,
+      "pattern": "struct_pack_concat_str",
+      "code": "body = struct.pack(\"BB\", self.unit_id, self.function_code) + self.payload",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Ensure self.payload is bytes."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 89,
+      "pattern": "integer_division",
+      "code": "self._count = len(raw_data) / 2",
+      "direction": "internal",
+      "boundary_type": "integer_division",
+      "risk": "high",
+      "fix_hint": "Change to len(raw_data) // 2 for integer result."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 101,
+      "pattern": "buffer_builtin",
+      "code": "return buffer(self._raw, offset, count * 2)",
+      "direction": "internal",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace buffer() with memoryview(). Note: memoryview slicing syntax differs."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 152,
+      "pattern": "ord_on_bytes_index",
+      "code": "resp_fc = ord(response[0])",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Py3 bytes[i] returns int directly. Remove ord() call."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 154,
+      "pattern": "ord_on_bytes_index",
+      "code": "exc = ord(response[1])",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes[i] returns int."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 157,
+      "pattern": "ord_on_bytes_index",
+      "code": "byte_count = ord(response[1])",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes[i] returns int."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 164,
+      "pattern": "ord_on_bytes_index",
+      "code": "if ord(response[0]) & 0x80:",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes[i] returns int."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 165,
+      "pattern": "ord_on_bytes_index",
+      "code": "exc = ord(response[1])",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord()."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 167,
+      "pattern": "ord_on_bytes_index",
+      "code": "function_code=ord(response[0]) & 0x7F",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord()."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 201,
+      "pattern": "socket_recv",
+      "code": "chunk = self._sock.recv(n - got)",
+      "direction": "ingestion",
+      "boundary_type": "bytes_to_text",
+      "risk": "critical",
+      "fix_hint": "recv() returns bytes in Py3. Ensure downstream code treats result as bytes."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 206,
+      "pattern": "string_join_bytes",
+      "code": "return \"\".join(chunks)",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Change to b\"\".join(chunks) since chunks contain bytes from recv()."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 47,
+      "pattern": "json_loads_encoding",
+      "code": "self._json = json.loads(self.payload, encoding=\"utf-8\")",
+      "direction": "bytes_to_text",
+      "boundary_type": "removed_parameter",
+      "risk": "critical",
+      "fix_hint": "Remove encoding= parameter. Decode payload to str first if needed: json.loads(self.payload.decode('utf-8'))."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 134,
+      "pattern": "socket_send_str",
+      "code": "self._sock.send(self._mk_connect())",
+      "direction": "text_to_bytes",
+      "boundary_type": "socket_send",
+      "risk": "critical",
+      "fix_hint": "Ensure _mk_connect() returns bytes. Fix all string literals in _mk_connect to be bytes."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 138,
+      "pattern": "ord_on_bytes_index",
+      "code": "rc = ord(ack[3])",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes[i] returns int."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 193,
+      "pattern": "struct_pack_concat_str",
+      "code": "vh = struct.pack(\">H\", 4) + \"MQTT\" + struct.pack(\"BBH\", 4, 2, self.keepalive)",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Change \"MQTT\" to b\"MQTT\". struct.pack returns bytes, cannot concat with str in Py3."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 194,
+      "pattern": "struct_pack_concat_str",
+      "code": "pl = struct.pack(\">H\", len(self.client_id)) + self.client_id",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Encode client_id to bytes first: self.client_id.encode('utf-8')."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 199,
+      "pattern": "struct_pack_concat_str",
+      "code": "pl = struct.pack(\">H\", len(topic)) + topic + struct.pack(\"B\", qos)",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Encode topic to bytes. len(topic) must reflect byte length."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 203,
+      "pattern": "struct_pack_concat_str",
+      "code": "vh = struct.pack(\">H\", len(topic)) + topic",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Encode topic to bytes."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 208,
+      "pattern": "empty_str_for_bytes",
+      "code": "out = \"\"",
+      "direction": "internal",
+      "boundary_type": "binary_accumulator",
+      "risk": "critical",
+      "fix_hint": "Change to out = b\"\". This accumulates struct.pack output."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 211,
+      "pattern": "integer_division",
+      "code": "n = n / 128",
+      "direction": "internal",
+      "boundary_type": "integer_division",
+      "risk": "high",
+      "fix_hint": "Change to n = n // 128."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 214,
+      "pattern": "struct_pack_concat_str",
+      "code": "out += struct.pack(\"B\", b)",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "This concatenates struct.pack (bytes) with out (str). Fix out to be b\"\"."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 221,
+      "pattern": "socket_recv",
+      "code": "first = self._sock.recv(1)",
+      "direction": "ingestion",
+      "boundary_type": "byte_read",
+      "risk": "critical",
+      "fix_hint": "Returns bytes in Py3. All downstream concatenation must use bytes."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 226,
+      "pattern": "str_byte_literal",
+      "code": "return first + \"\\x00\"",
+      "direction": "internal",
+      "boundary_type": "bytes_concat",
+      "risk": "critical",
+      "fix_hint": "Change to first + b\"\\x00\"."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 227,
+      "pattern": "empty_str_for_bytes",
+      "code": "body = \"\"",
+      "direction": "internal",
+      "boundary_type": "binary_accumulator",
+      "risk": "critical",
+      "fix_hint": "Change to body = b\"\"."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 243,
+      "pattern": "socket_recv",
+      "code": "b = self._sock.recv(1)",
+      "direction": "ingestion",
+      "boundary_type": "byte_read",
+      "risk": "critical",
+      "fix_hint": "Returns bytes in Py3."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 246,
+      "pattern": "ord_on_bytes_index",
+      "code": "e = ord(b)",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "recv(1) returns bytes in Py3. Use b[0] instead of ord(b)."
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "line": 267,
+      "pattern": "ord_on_bytes_index",
+      "code": "pt = ord(pkt[0]) & 0xF0",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes[i] returns int."
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 110,
+      "pattern": "urllib_rename",
+      "code": "p = urllib.urlencode({...})",
+      "direction": "text_to_bytes",
+      "boundary_type": "renamed_function",
+      "risk": "medium",
+      "fix_hint": "Use urllib.parse.urlencode() in Py3."
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 116,
+      "pattern": "urllib2_urlopen_read",
+      "code": "body = urllib2.urlopen(req, timeout=self.timeout).read()",
+      "direction": "ingestion",
+      "boundary_type": "bytes_to_text",
+      "risk": "high",
+      "fix_hint": "response.read() returns bytes in Py3. Use urllib.request.urlopen()."
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 139,
+      "pattern": "urllib_rename",
+      "code": "urllib.quote(node_id, safe=\"\")",
+      "direction": "text_to_bytes",
+      "boundary_type": "renamed_function",
+      "risk": "medium",
+      "fix_hint": "Use urllib.parse.quote() in Py3."
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 141,
+      "pattern": "urllib2_urlopen_read",
+      "code": "raw = urllib2.urlopen(url, timeout=self.timeout).read()",
+      "direction": "ingestion",
+      "boundary_type": "bytes_to_text",
+      "risk": "high",
+      "fix_hint": "Returns bytes in Py3."
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "line": 221,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(raw, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "unicode doesn't exist in Py3. Use isinstance(raw, str)."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 8,
+      "pattern": "cstringio_import",
+      "code": "from cStringIO import StringIO",
+      "direction": "internal",
+      "boundary_type": "removed_module",
+      "risk": "medium",
+      "fix_hint": "Use from io import BytesIO."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 13,
+      "pattern": "str_byte_literal",
+      "code": "SYNC_BYTE = \"\\xAA\"",
+      "direction": "internal",
+      "boundary_type": "ambiguous_type",
+      "risk": "critical",
+      "fix_hint": "Change to SYNC_BYTE = b\"\\xAA\". Used for comparison with serial port read data."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 54,
+      "pattern": "ord_on_bytes_iteration",
+      "code": "\" \".join(\"%02X\" % ord(b) for b in self.payload)",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_iteration",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes iteration yields int. Use \"%02X\" % b directly."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 68,
+      "pattern": "cstringio_buffer",
+      "code": "self._buf = StringIO()",
+      "direction": "internal",
+      "boundary_type": "buffer_type",
+      "risk": "high",
+      "fix_hint": "Use io.BytesIO() for binary data assembly."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 75,
+      "pattern": "iterator_next_method",
+      "code": "def next(self):",
+      "direction": "internal",
+      "boundary_type": "iterator_protocol",
+      "risk": "high",
+      "fix_hint": "Rename to __next__(). Optionally keep next() as alias for back-compat."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 80,
+      "pattern": "str_byte_comparison",
+      "code": "if b != SYNC_BYTE:",
+      "direction": "internal",
+      "boundary_type": "type_comparison",
+      "risk": "critical",
+      "fix_hint": "Both b (from read(1)) and SYNC_BYTE must be bytes for comparison to work."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 85,
+      "pattern": "ord_on_bytes_read",
+      "code": "plen = ord(lb)",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Use lb[0] instead of ord(lb) since read(1) returns bytes in Py3."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 93,
+      "pattern": "ord_on_bytes_index",
+      "code": "payload, rxchk = body[3:-1], ord(body[-1])",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_indexing",
+      "risk": "critical",
+      "fix_hint": "Use body[-1] directly -- Py3 bytes[-1] returns int."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 96,
+      "pattern": "ord_on_bytes_iteration",
+      "code": "chk ^= ord(c)",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_iteration",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes iteration yields int."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 144,
+      "pattern": "iterator_next_call",
+      "code": "pkt = SensorPacketStream(self._port).next()",
+      "direction": "internal",
+      "boundary_type": "iterator_protocol",
+      "risk": "high",
+      "fix_hint": "Use next(SensorPacketStream(self._port)) builtin instead of .next() method."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 167,
+      "pattern": "dict_iteritems",
+      "code": "for sid, info in self._registry.iteritems():",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use .items() instead of .iteritems()."
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "line": 180,
+      "pattern": "dict_iteritems",
+      "code": "for sid, info in self._registry.iteritems():",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use .items() instead of .iteritems()."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 41,
+      "pattern": "octal_literal",
+      "code": "OUTPUT_FILE_MODE = 0755",
+      "direction": "internal",
+      "boundary_type": "syntax_error",
+      "risk": "medium",
+      "fix_hint": "Change to 0o755. Old octal syntax is a SyntaxError in Py3."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 156,
+      "pattern": "ord_on_bytes_iteration",
+      "code": "byte_array = [ord(b) for b in raw_bytes]",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_iteration",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- Py3 bytes iteration yields int. Use list(raw_bytes) or iterate directly."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 204,
+      "pattern": "ord_on_bytes_iteration",
+      "code": "byte_array = [ord(b) for b in raw_bytes]",
+      "direction": "bytes_to_text",
+      "boundary_type": "byte_iteration",
+      "risk": "critical",
+      "fix_hint": "Remove ord() -- same fix as line 156."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 267,
+      "pattern": "file_builtin",
+      "code": "f = file(file_path, \"rb\")",
+      "direction": "ingestion",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 346,
+      "pattern": "isinstance_long",
+      "code": "isinstance(account_raw, (int, long))",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Remove long from tuple -- in Py3, int handles arbitrary precision."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 374,
+      "pattern": "file_builtin",
+      "code": "f = file(cache_file, \"rb\")",
+      "direction": "ingestion",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 376,
+      "pattern": "cpickle_load",
+      "code": "data = cPickle.load(f)",
+      "direction": "ingestion",
+      "boundary_type": "deserialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.load(). Py2 protocol 2 pickles may need encoding='latin-1' to load in Py3."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 390,
+      "pattern": "file_builtin",
+      "code": "f = file(cache_file, \"wb\")",
+      "direction": "egression",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 392,
+      "pattern": "cpickle_dump",
+      "code": "cPickle.dump(records, f, cPickle.HIGHEST_PROTOCOL)",
+      "direction": "egression",
+      "boundary_type": "serialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.dump(). HIGHEST_PROTOCOL in Py3 is 5, not 2."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 406,
+      "pattern": "getcwdu",
+      "code": "output_dir = os.getcwdu()",
+      "direction": "internal",
+      "boundary_type": "removed_function",
+      "risk": "high",
+      "fix_hint": "Replace with os.getcwd(). Py3 os.getcwd() already returns str (text)."
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "line": 412,
+      "pattern": "file_builtin",
+      "code": "f = file(summary_path, \"w\")",
+      "direction": "egression",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 12,
+      "pattern": "stringio_import",
+      "code": "from StringIO import StringIO",
+      "direction": "internal",
+      "boundary_type": "removed_module",
+      "risk": "medium",
+      "fix_hint": "Use from io import StringIO."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 13,
+      "pattern": "cstringio_import",
+      "code": "from cStringIO import StringIO as FastStringIO",
+      "direction": "internal",
+      "boundary_type": "removed_module",
+      "risk": "medium",
+      "fix_hint": "Use from io import BytesIO."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 39,
+      "pattern": "isinstance_str_for_bytes",
+      "code": "if not isinstance(raw_bytes, str):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "critical",
+      "fix_hint": "In Py3, str is text. Change to isinstance(raw_bytes, bytes) to check for byte data."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 59,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(value, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Change to isinstance(value, str). Py3 str is unicode."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 61,
+      "pattern": "isinstance_basestring",
+      "code": "if isinstance(value, basestring):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "basestring removed in Py3. Use isinstance(value, (str, bytes))."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 69,
+      "pattern": "isinstance_str_not_unicode",
+      "code": "if isinstance(value, str) and not isinstance(value, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "critical",
+      "fix_hint": "This Py2 idiom for 'is bytes?' is meaningless in Py3. Use isinstance(value, bytes)."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 71,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(value, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Change to isinstance(value, str)."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 80,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(value, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Change to isinstance(value, str)."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 82,
+      "pattern": "isinstance_basestring",
+      "code": "if isinstance(value, basestring):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(value, (str, bytes))."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 97,
+      "pattern": "isinstance_unicode",
+      "code": "if not isinstance(label, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Change to isinstance(label, str)."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 98,
+      "pattern": "str_decode",
+      "code": "label = label.decode(u\"utf-8\", u\"replace\")",
+      "direction": "bytes_to_text",
+      "boundary_type": "decoding",
+      "risk": "high",
+      "fix_hint": "Py3 str has no .decode() method. Only bytes has .decode()."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 148,
+      "pattern": "stringio_buffer",
+      "code": "buf = StringIO()",
+      "direction": "internal",
+      "boundary_type": "buffer_type",
+      "risk": "high",
+      "fix_hint": "Py3 io.StringIO only accepts str. Ensure safe_encode return type matches."
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "line": 156,
+      "pattern": "cstringio_buffer",
+      "code": "buf = FastStringIO()",
+      "direction": "internal",
+      "boundary_type": "buffer_type",
+      "risk": "high",
+      "fix_hint": "Use io.BytesIO() for binary data assembly."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 29,
+      "pattern": "csv_binary_mode",
+      "code": "CSV_READ_MODE = \"rb\"",
+      "direction": "ingestion",
+      "boundary_type": "file_mode",
+      "risk": "high",
+      "fix_hint": "Py3 csv needs text mode. Change to 'r' and use open(f, 'r', newline='', encoding=...)."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 37,
+      "pattern": "str_byte_literal",
+      "code": "_BOM_UTF8 = \"\\xef\\xbb\\xbf\"",
+      "direction": "internal",
+      "boundary_type": "ambiguous_type",
+      "risk": "critical",
+      "fix_hint": "Change to b\"\\xef\\xbb\\xbf\". Compared against bytes from 'rb' read."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 38,
+      "pattern": "str_byte_literal",
+      "code": "_BOM_UTF16_LE = \"\\xff\\xfe\"",
+      "direction": "internal",
+      "boundary_type": "ambiguous_type",
+      "risk": "critical",
+      "fix_hint": "Change to b\"\\xff\\xfe\"."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 39,
+      "pattern": "str_byte_literal",
+      "code": "_BOM_UTF16_BE = \"\\xfe\\xff\"",
+      "direction": "internal",
+      "boundary_type": "ambiguous_type",
+      "risk": "critical",
+      "fix_hint": "Change to b\"\\xfe\\xff\"."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 56,
+      "pattern": "unicode_csv_wrapper",
+      "code": "yield [cell.decode(encoding, \"replace\") for cell in row]",
+      "direction": "bytes_to_text",
+      "boundary_type": "csv_wrapper",
+      "risk": "critical",
+      "fix_hint": "Entire function unnecessary in Py3. Py3 csv yields str natively."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 71,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(cell, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "unicode removed in Py3. Use isinstance(cell, str)."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 120,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(col, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(col, str)."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 165,
+      "pattern": "csv_file_open",
+      "code": "f = open(file_path, CSV_READ_MODE)",
+      "direction": "ingestion",
+      "boundary_type": "file_open",
+      "risk": "high",
+      "fix_hint": "Py3 csv requires open(f, 'r', newline='', encoding=encoding)."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 194,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(csv_text, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(csv_text, str)."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 226,
+      "pattern": "codecs_open_binary",
+      "code": "out = codecs.open(file_path, \"wb\", encoding=encoding, errors=\"replace\")",
+      "direction": "egression",
+      "boundary_type": "file_open",
+      "risk": "high",
+      "fix_hint": "In Py3, 'wb' mode + encoding is contradictory. Use open(f, 'w', newline='', encoding=encoding)."
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "line": 295,
+      "pattern": "bom_comparison",
+      "code": "if header[:3] == _BOM_UTF8:",
+      "direction": "internal",
+      "boundary_type": "bytes_str_comparison",
+      "risk": "critical",
+      "fix_hint": "header is bytes (from 'rb' read). If _BOM_UTF8 stays as str, this is always False in Py3."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 134,
+      "pattern": "json_loads_encoding",
+      "code": "data = json.loads(raw_bytes, encoding=self._default_encoding)",
+      "direction": "bytes_to_text",
+      "boundary_type": "removed_parameter",
+      "risk": "critical",
+      "fix_hint": "Remove encoding= parameter. In Py3, json.loads accepts str or bytes (auto-detects UTF-8/16/32)."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 170,
+      "pattern": "json_dumps_encoding",
+      "code": "\"encoding\": self._default_encoding",
+      "direction": "text_to_bytes",
+      "boundary_type": "removed_parameter",
+      "risk": "critical",
+      "fix_hint": "Remove encoding key from kwargs dict. Py3 json.dumps does not accept encoding parameter."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 179,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(json_str, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "In Py3, json.dumps always returns str. Use isinstance(json_str, str)."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 194,
+      "pattern": "json_dumps_encoding",
+      "code": "\"encoding\": self._default_encoding",
+      "direction": "text_to_bytes",
+      "boundary_type": "removed_parameter",
+      "risk": "critical",
+      "fix_hint": "Remove encoding key."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 200,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(json_str, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(json_str, str)."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 220,
+      "pattern": "cpickle_dump",
+      "code": "cPickle.dump(record_set, f, cPickle.HIGHEST_PROTOCOL)",
+      "direction": "egression",
+      "boundary_type": "serialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.dump(). HIGHEST_PROTOCOL changes between Py2 (2) and Py3 (5)."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 228,
+      "pattern": "cpickle_load",
+      "code": "data = cPickle.load(f)",
+      "direction": "ingestion",
+      "boundary_type": "deserialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.load(f, encoding='latin-1') for Py2-originated pickles."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 275,
+      "pattern": "dict_iteritems",
+      "code": "for key, value in record.iteritems():",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use .items() instead."
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "line": 304,
+      "pattern": "dict_iterkeys",
+      "code": "for key in data.iterkeys():",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use data.keys() or just 'for key in data:'."
+    },
+    {
+      "file": "src/storage/database.py",
+      "line": 28,
+      "pattern": "instance_type",
+      "code": "copy_reg.pickle(types.InstanceType, _pickle_data_point)",
+      "direction": "internal",
+      "boundary_type": "removed_type",
+      "risk": "critical",
+      "fix_hint": "types.InstanceType does not exist in Py3 (no old-style classes). Register reducer on the class itself."
+    },
+    {
+      "file": "src/storage/database.py",
+      "line": 193,
+      "pattern": "str_buffer_to_bytes",
+      "code": "return str(row[0]) if row and row[0] is not None else None",
+      "direction": "bytes_to_text",
+      "boundary_type": "blob_extraction",
+      "risk": "critical",
+      "fix_hint": "Use bytes(row[0]). In Py3, str(bytes_obj) returns repr like \"b'\\\\x...'\" not raw bytes."
+    },
+    {
+      "file": "src/storage/database.py",
+      "line": 203,
+      "pattern": "cpickle_dumps",
+      "code": "blob = sqlite3.Binary(cPickle.dumps(payload_obj, 2))",
+      "direction": "egression",
+      "boundary_type": "serialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.dumps(). Consider protocol compatibility."
+    },
+    {
+      "file": "src/storage/database.py",
+      "line": 227,
+      "pattern": "str_buffer_unpickle",
+      "code": "payload = cPickle.loads(str(row[3]))",
+      "direction": "bytes_to_text",
+      "boundary_type": "deserialization",
+      "risk": "critical",
+      "fix_hint": "Use pickle.loads(bytes(row[3])). str(buffer) in Py3 gives repr, not raw bytes."
+    },
+    {
+      "file": "src/storage/database.py",
+      "line": 240,
+      "pattern": "cpickle_dumps",
+      "code": "pickled = cPickle.dumps(obj, 2)",
+      "direction": "egression",
+      "boundary_type": "serialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.dumps()."
+    },
+    {
+      "file": "src/storage/database.py",
+      "line": 257,
+      "pattern": "str_buffer_unpickle",
+      "code": "return cPickle.loads(str(row[0])) if row else None",
+      "direction": "bytes_to_text",
+      "boundary_type": "deserialization",
+      "risk": "critical",
+      "fix_hint": "Use pickle.loads(bytes(row[0])). Critical silent corruption -- str(bytes) gives repr in Py3."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 56,
+      "pattern": "sha_new",
+      "code": "return sha.new(cPickle.dumps(value, 2)).hexdigest()",
+      "direction": "internal",
+      "boundary_type": "removed_module",
+      "risk": "critical",
+      "fix_hint": "Use hashlib.sha1(pickle.dumps(value, 2)).hexdigest()."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 73,
+      "pattern": "md5_new",
+      "code": "hash_val = int(md5.new(key).hexdigest()[:8], 16)",
+      "direction": "internal",
+      "boundary_type": "removed_module",
+      "risk": "critical",
+      "fix_hint": "Use hashlib.md5(key.encode('utf-8')).hexdigest(). md5.new() removed in Py3."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 74,
+      "pattern": "integer_division",
+      "code": "bucket = hash_val / self._num_buckets",
+      "direction": "internal",
+      "boundary_type": "integer_division",
+      "risk": "high",
+      "fix_hint": "Change to hash_val // self._num_buckets."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 105,
+      "pattern": "dict_iteritems",
+      "code": "for k, entry in self._store.iteritems():",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use .items() instead."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 118,
+      "pattern": "integer_division",
+      "code": "hit_rate = (self._hits * 100) / total if total > 0 else 0",
+      "direction": "internal",
+      "boundary_type": "integer_division",
+      "risk": "high",
+      "fix_hint": "Change to // for integer result, or keep / if float percentage is acceptable."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 140,
+      "pattern": "hashlib_md5_str",
+      "code": "return hashlib.md5(raw_key).hexdigest()",
+      "direction": "internal",
+      "boundary_type": "bytes_required",
+      "risk": "high",
+      "fix_hint": "In Py3, hashlib.md5() requires bytes. Use hashlib.md5(raw_key.encode('utf-8'))."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 193,
+      "pattern": "dict_iteritems",
+      "code": "for hk, entry in entries.iteritems():",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use .items() instead."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 198,
+      "pattern": "cpickle_dumps",
+      "code": "data = cPickle.dumps({...}, 2)",
+      "direction": "egression",
+      "boundary_type": "serialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.dumps()."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 219,
+      "pattern": "cpickle_loads",
+      "code": "rec = cPickle.loads(f.read())",
+      "direction": "ingestion",
+      "boundary_type": "deserialization",
+      "risk": "high",
+      "fix_hint": "Use pickle.loads(). May need encoding='latin-1' for Py2-originated cache files."
+    },
+    {
+      "file": "src/storage/cache.py",
+      "line": 250,
+      "pattern": "dict_iteritems",
+      "code": "expired = [k for k, e in self._cache._store.iteritems() if e.is_expired()]",
+      "direction": "internal",
+      "boundary_type": "dict_method",
+      "risk": "high",
+      "fix_hint": "Use .items() instead."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 25,
+      "pattern": "octal_literal",
+      "code": "DIR_PERMISSIONS = 0755",
+      "direction": "internal",
+      "boundary_type": "syntax_error",
+      "risk": "medium",
+      "fix_hint": "Change to 0o755."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 26,
+      "pattern": "octal_literal",
+      "code": "FILE_PERMISSIONS = 0644",
+      "direction": "internal",
+      "boundary_type": "syntax_error",
+      "risk": "medium",
+      "fix_hint": "Change to 0o644."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 27,
+      "pattern": "octal_literal",
+      "code": "FILE_PERMISSIONS_RESTRICTED = 0600",
+      "direction": "internal",
+      "boundary_type": "syntax_error",
+      "risk": "medium",
+      "fix_hint": "Change to 0o600."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 37,
+      "pattern": "getcwdu",
+      "code": "root_path = os.getcwdu()",
+      "direction": "internal",
+      "boundary_type": "removed_function",
+      "risk": "high",
+      "fix_hint": "Replace with os.getcwd()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 38,
+      "pattern": "isinstance_str_for_bytes",
+      "code": "if isinstance(root_path, str):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "critical",
+      "fix_hint": "In Py3 str is text. This check + decode pattern is wrong. Check isinstance(root_path, bytes) instead."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 39,
+      "pattern": "str_decode",
+      "code": "root_path = root_path.decode(\"utf-8\")",
+      "direction": "bytes_to_text",
+      "boundary_type": "decoding",
+      "risk": "critical",
+      "fix_hint": "Py3 str has no .decode(). Only bytes has .decode()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 90,
+      "pattern": "file_builtin",
+      "code": "f = file(dest, \"w\")",
+      "direction": "egression",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 92,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(content, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(content, str)."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 106,
+      "pattern": "file_builtin",
+      "code": "f = file(dest, \"wb\")",
+      "direction": "egression",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 121,
+      "pattern": "file_builtin",
+      "code": "f = file(dest, \"wb\")",
+      "direction": "egression",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 129,
+      "pattern": "isinstance_unicode",
+      "code": "tag = dp.tag.encode(\"utf-8\") if isinstance(dp.tag, unicode) else dp.tag",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(dp.tag, str). In Py3, str is always text; encode to bytes."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 144,
+      "pattern": "file_builtin",
+      "code": "f = file(dest, \"w\")",
+      "direction": "egression",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 146,
+      "pattern": "isinstance_unicode",
+      "code": "if isinstance(content, unicode):",
+      "direction": "internal",
+      "boundary_type": "type_check",
+      "risk": "high",
+      "fix_hint": "Use isinstance(content, str)."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 162,
+      "pattern": "file_builtin",
+      "code": "f = file(src, \"r\")",
+      "direction": "ingestion",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 175,
+      "pattern": "file_builtin",
+      "code": "f = file(src, \"rb\")",
+      "direction": "ingestion",
+      "boundary_type": "removed_builtin",
+      "risk": "high",
+      "fix_hint": "Replace file() with open()."
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "line": 201,
+      "pattern": "long_literal",
+      "code": "total_bytes, total_files = 0L, 0",
+      "direction": "internal",
+      "boundary_type": "long_type",
+      "risk": "medium",
+      "fix_hint": "Remove L suffix. Py3 int handles arbitrary precision."
+    }
+  ]
+}

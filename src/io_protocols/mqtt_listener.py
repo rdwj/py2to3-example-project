@@ -3,6 +3,9 @@
 MQTT-like message listener for the Legacy Industrial Data Platform.
 Simplified MQTT v3.1.1 over raw TCP for IoT sensor gateway telemetry.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import socket
 import struct
 import time

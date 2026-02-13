@@ -1,0 +1,240 @@
+{
+  "report_date": "2026-02-12",
+  "target_python": "3.12",
+  "build_files_discovered": {
+    "setup.py": {
+      "path": "setup.py",
+      "type": "distutils_setup",
+      "status": "UPDATED"
+    },
+    "requirements.txt": {
+      "path": "requirements.txt",
+      "type": "pip_requirements",
+      "status": "UPDATED"
+    },
+    "config/platform.ini": {
+      "path": "config/platform.ini",
+      "type": "application_config",
+      "status": "NO_CHANGES_NEEDED"
+    },
+    "create_structure.sh": {
+      "path": "create_structure.sh",
+      "type": "shell_script",
+      "status": "NO_CHANGES_NEEDED",
+      "note": "No Python references in script"
+    }
+  },
+  "absent_build_files": [
+    "pyproject.toml",
+    "setup.cfg",
+    "tox.ini",
+    "Makefile",
+    "Containerfile",
+    "Dockerfile",
+    ".pre-commit-config.yaml"
+  ],
+  "setup_py_changes": {
+    "import_migration": {
+      "before": "from distutils.core import setup",
+      "after": "from setuptools import setup, find_packages",
+      "reason": "distutils was deprecated in Python 3.10 and removed in Python 3.12. setuptools is the maintained replacement.",
+      "severity": "CRITICAL"
+    },
+    "shebang_update": {
+      "before": "#!/usr/bin/env python",
+      "after": "#!/usr/bin/env python3",
+      "reason": "Explicit Python 3 interpreter selection"
+    },
+    "docstring_update": {
+      "description": "Updated references from 'distutils' to 'setuptools' and 'python' to 'python3' in docstring"
+    },
+    "python_requires_added": {
+      "value": ">=3.12",
+      "reason": "Enforces minimum Python version at install time, preventing accidental installation under Python 2.x"
+    },
+    "classifiers_added": [
+      "Development Status :: 5 - Production/Stable",
+      "Intended Audience :: Manufacturing",
+      "License :: Other/Proprietary License",
+      "Operating System :: POSIX :: Linux",
+      "Programming Language :: Python :: 3",
+      "Programming Language :: Python :: 3.12",
+      "Topic :: Scientific/Engineering :: Interface Engine/Protocol Translator"
+    ],
+    "metadata_preserved": [
+      "name",
+      "version",
+      "description",
+      "author",
+      "author_email",
+      "url",
+      "license",
+      "platforms",
+      "packages",
+      "scripts",
+      "data_files"
+    ]
+  },
+  "requirements_changes": [
+    {
+      "package": "pycrypto",
+      "old_spec": "pycrypto==2.6.1",
+      "new_spec": "pycryptodome>=3.20.0",
+      "action": "REPLACED",
+      "reason": "pycrypto is abandoned with no Python 3 support. pycryptodome is the maintained fork with the same Crypto namespace.",
+      "severity": "CRITICAL",
+      "api_notes": "pycryptodome is largely a drop-in replacement. Some cipher initialization APIs differ (e.g., AES.new() parameter changes). Source code using Crypto.* imports must be audited during Phase 1."
+    },
+    {
+      "package": "pyserial",
+      "old_spec": "pyserial==2.7",
+      "new_spec": "pyserial>=3.5",
+      "action": "BUMPED",
+      "reason": "2.7 has limited Python 3 support. 3.5+ fully supports Python 3.12.",
+      "severity": "LOW"
+    },
+    {
+      "package": "paho-mqtt",
+      "old_spec": "paho-mqtt==1.3.1",
+      "new_spec": "paho-mqtt>=1.6.1",
+      "action": "BUMPED",
+      "reason": "1.3.1 predates Python 3.12 support. 1.6.1+ has full Py3 support and bug fixes.",
+      "severity": "LOW",
+      "api_notes": "paho-mqtt 2.x has breaking API changes (callback signatures). Pinning to >=1.6.1 keeps compatible API while gaining Py3.12 support."
+    },
+    {
+      "package": "pymodbus",
+      "old_spec": "pymodbus==1.3.2",
+      "new_spec": "pymodbus>=3.6.0",
+      "action": "BUMPED",
+      "reason": "1.x is EOL. 3.x is the current maintained branch with Python 3.12 support.",
+      "severity": "MEDIUM",
+      "api_notes": "pymodbus 3.x has significant API changes from 1.x (async-first, different client constructors). Source code using pymodbus must be updated in Phase 1."
+    },
+    {
+      "package": "lxml",
+      "old_spec": "lxml==3.8.0",
+      "new_spec": "lxml>=5.1.0",
+      "action": "BUMPED",
+      "reason": "lxml 3.x does not build against Python 3.12. 5.x is the current stable release.",
+      "severity": "MEDIUM",
+      "api_notes": "lxml API is stable across major versions. The primary concern is C extension rebuild compatibility, not API changes."
+    },
+    {
+      "package": "opcua",
+      "old_spec": "opcua==0.98.6",
+      "new_spec": "opcua>=0.98.13",
+      "action": "BUMPED",
+      "reason": "Minor bump for Python 3 compatibility fixes.",
+      "severity": "LOW",
+      "api_notes": "Consider evaluating opcua-asyncio as a longer-term replacement. The freeopcua/opcua package has limited maintenance."
+    },
+    {
+      "package": "SQLAlchemy",
+      "old_spec": "SQLAlchemy==0.9.9",
+      "new_spec": "SQLAlchemy>=1.4.54",
+      "action": "BUMPED",
+      "reason": "0.9.x is EOL and does not support Python 3.12. 1.4.x provides a migration path toward 2.x while maintaining backward-compatible API.",
+      "severity": "MEDIUM",
+      "api_notes": "SQLAlchemy 1.4 introduces a compatibility mode for 2.0-style usage. The project should eventually target 2.x, but 1.4 is the safe intermediate step. Column/Table definitions and session usage are largely unchanged from 0.9."
+    },
+    {
+      "package": "simplejson",
+      "old_spec": "simplejson==3.8.2",
+      "new_spec": "simplejson>=3.19.0",
+      "action": "BUMPED",
+      "reason": "3.8.x predates Python 3.12 wheel availability. 3.19+ is current.",
+      "severity": "LOW"
+    },
+    {
+      "package": "Jinja2",
+      "old_spec": "Jinja2==2.7.3",
+      "new_spec": "Jinja2>=3.1.0",
+      "action": "BUMPED",
+      "reason": "Jinja2 2.x is EOL. 3.1+ supports Python 3.12 and has security fixes.",
+      "severity": "LOW",
+      "api_notes": "Jinja2 3.x removed some deprecated APIs. Template rendering is largely unchanged but 'with' statement extension handling may differ."
+    },
+    {
+      "package": "MarkupSafe",
+      "old_spec": "MarkupSafe==0.23",
+      "new_spec": "MarkupSafe>=2.1.0",
+      "action": "BUMPED",
+      "reason": "0.23 does not support Python 3.12 (C extension compilation fails). 2.1+ is current and required by Jinja2 3.x.",
+      "severity": "LOW"
+    },
+    {
+      "package": "chardet",
+      "old_spec": "chardet==2.3.0",
+      "new_spec": "chardet>=5.2.0",
+      "action": "BUMPED",
+      "reason": "2.3.0 is pre-Python 3.12. 5.x is current stable.",
+      "severity": "LOW"
+    },
+    {
+      "package": "requests",
+      "old_spec": "requests==2.5.3",
+      "new_spec": "requests>=2.31.0",
+      "action": "BUMPED",
+      "reason": "2.5.x is very old and has known security vulnerabilities. 2.31+ supports Python 3.12.",
+      "severity": "LOW"
+    },
+    {
+      "package": "six",
+      "old_spec": "six==1.9.0",
+      "new_spec": null,
+      "action": "REMOVED",
+      "reason": "six is a Python 2/3 compatibility library. After migration to Python 3-only, it becomes unnecessary. Any remaining six usage in the codebase should be replaced with native Python 3 equivalents during Phase 1.",
+      "severity": "LOW"
+    }
+  ],
+  "shebang_updates": [
+    {
+      "file": "setup.py",
+      "before": "#!/usr/bin/env python",
+      "after": "#!/usr/bin/env python3"
+    },
+    {
+      "file": "scripts/run_platform.py",
+      "before": "#!/usr/bin/env python",
+      "after": "#!/usr/bin/env python3"
+    },
+    {
+      "file": "scripts/batch_import.py",
+      "before": "#!/usr/bin/env python",
+      "after": "#!/usr/bin/env python3"
+    },
+    {
+      "file": "scripts/sensor_monitor.py",
+      "before": "#!/usr/bin/env python",
+      "after": "#!/usr/bin/env python3"
+    },
+    {
+      "file": "scripts/generate_ebcdic_data.py",
+      "before": "#!/usr/bin/env python3",
+      "after": "#!/usr/bin/env python3",
+      "note": "Already correct, no change needed"
+    }
+  ],
+  "files_modified": [
+    "setup.py",
+    "requirements.txt",
+    "scripts/run_platform.py",
+    "scripts/batch_import.py",
+    "scripts/sensor_monitor.py"
+  ],
+  "files_not_modified": [
+    "create_structure.sh",
+    "config/platform.ini",
+    "config/logging.conf",
+    "scripts/generate_ebcdic_data.py"
+  ],
+  "recommendations": [
+    "Consider adding a pyproject.toml for modern Python packaging (PEP 621). This can coexist with setup.py initially.",
+    "Add a tox.ini or nox configuration for automated testing across environments.",
+    "The pymodbus 1.x to 3.x upgrade involves significant API changes. Plan for source code updates in Phase 1.",
+    "SQLAlchemy should be upgraded from 1.4 to 2.x after the initial migration stabilizes.",
+    "The opcua package (freeopcua) has limited maintenance. Evaluate opcua-asyncio as a longer-term alternative.",
+    "Remove six from the codebase after all Python 2 compatibility code is removed."
+  ]
+}

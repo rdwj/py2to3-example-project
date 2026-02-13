@@ -1,0 +1,212 @@
+{
+  "report_date": "2026-02-12",
+  "target_python": "3.12",
+  "total_dependencies": 13,
+  "critical_issues": 2,
+  "medium_issues": 3,
+  "low_issues": 8,
+  "dependencies": {
+    "pycrypto": {
+      "original_version": "2.6.1",
+      "py312_compatible": false,
+      "status": "ABANDONED",
+      "risk": "CRITICAL",
+      "replacement": "pycryptodome",
+      "replacement_version": ">=3.20.0",
+      "action_taken": "Replaced in requirements.txt",
+      "migration_notes": [
+        "pycryptodome uses the same 'Crypto' top-level namespace",
+        "Most imports (Crypto.Cipher, Crypto.Hash, Crypto.PublicKey) are drop-in compatible",
+        "AES.new() and DES.new() have parameter changes in pycryptodome (mode is positional, IV is keyword-only in some cases)",
+        "No Crypto.* imports were found in the source tree, so the switch has no immediate source code impact",
+        "If any future code or plugins use Crypto.*, verify against pycryptodome API"
+      ]
+    },
+    "pyserial": {
+      "original_version": "2.7",
+      "updated_version": ">=3.5",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "API is stable between 2.x and 3.x",
+        "Main change: serial.Serial() timeout behavior is slightly different",
+        "Used by: src/io_protocols/serial_sensor.py"
+      ]
+    },
+    "paho-mqtt": {
+      "original_version": "1.3.1",
+      "updated_version": ">=1.6.1",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "API within 1.x is backward compatible",
+        "WARNING: paho-mqtt 2.x has breaking changes to callback signatures. Pinned floor to 1.6.1 to avoid accidental 2.x upgrade.",
+        "Consider adding an upper bound (<2.0) if strict compatibility is needed",
+        "Used by: src/io_protocols/mqtt_listener.py"
+      ]
+    },
+    "pymodbus": {
+      "original_version": "1.3.2",
+      "updated_version": ">=3.6.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "MEDIUM",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "SIGNIFICANT API CHANGES between 1.x and 3.x",
+        "Client constructors changed: ModbusTcpClient API differs",
+        "Async-first architecture in 3.x",
+        "Register reading/writing API has different return types",
+        "Source code in src/io_protocols/modbus_client.py MUST be updated during Phase 1",
+        "Recommend reviewing pymodbus 3.x migration guide"
+      ]
+    },
+    "lxml": {
+      "original_version": "3.8.0",
+      "updated_version": ">=5.1.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "MEDIUM",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "Core API (etree.parse, etree.Element, XSLT) is stable",
+        "lxml 3.x C extensions fail to compile against Python 3.12 headers",
+        "lxml 5.x ships pre-built wheels for Python 3.12",
+        "Used by: src/data_processing/xml_transformer.py"
+      ]
+    },
+    "opcua": {
+      "original_version": "0.98.6",
+      "updated_version": ">=0.98.13",
+      "py312_compatible": true,
+      "status": "LIMITED_MAINTENANCE",
+      "risk": "MEDIUM",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "The freeopcua/opcua package has limited maintenance activity",
+        "0.98.13 includes Python 3 compatibility fixes",
+        "Consider evaluating opcua-asyncio as a longer-term replacement",
+        "Used by: src/io_protocols/opcua_client.py"
+      ]
+    },
+    "SQLAlchemy": {
+      "original_version": "0.9.9",
+      "updated_version": ">=1.4.54",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "MEDIUM",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "0.9.x is EOL and does not support Python 3.12",
+        "1.4.x provides backward compatibility with 0.9/1.0 patterns while adding 2.0-style compatibility mode",
+        "Query API is largely unchanged for basic usage (create_engine, Session, declarative_base)",
+        "Eventually should migrate to SQLAlchemy 2.x for full modern API",
+        "Used by: src/storage/database.py"
+      ]
+    },
+    "simplejson": {
+      "original_version": "3.8.2",
+      "updated_version": ">=3.19.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "API is stable across 3.x versions",
+        "Used by: src/data_processing/json_handler.py"
+      ]
+    },
+    "Jinja2": {
+      "original_version": "2.7.3",
+      "updated_version": ">=3.1.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "Jinja2 2.x is EOL",
+        "3.x removed some deprecated APIs",
+        "Template rendering core is unchanged",
+        "Used by: src/reporting/report_generator.py"
+      ]
+    },
+    "MarkupSafe": {
+      "original_version": "0.23",
+      "updated_version": ">=2.1.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "Required by Jinja2 3.x",
+        "API is stable (Markup class, escape function)"
+      ]
+    },
+    "chardet": {
+      "original_version": "2.3.0",
+      "updated_version": ">=5.2.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "API is stable (chardet.detect() returns same dict structure)",
+        "Used by: encoding detection in data processing modules"
+      ]
+    },
+    "requests": {
+      "original_version": "2.5.3",
+      "updated_version": ">=2.31.0",
+      "py312_compatible": true,
+      "status": "MAINTAINED",
+      "risk": "LOW",
+      "action_taken": "Version bumped in requirements.txt",
+      "migration_notes": [
+        "2.5.x has known security vulnerabilities (CVEs)",
+        "API is stable across 2.x versions",
+        "requests 2.31+ drops Python 2 support but API is unchanged"
+      ]
+    },
+    "six": {
+      "original_version": "1.9.0",
+      "updated_version": null,
+      "py312_compatible": true,
+      "status": "MAINTAINED_BUT_UNNECESSARY",
+      "risk": "LOW",
+      "action_taken": "Removed from requirements.txt",
+      "migration_notes": [
+        "six is a Python 2/3 compatibility library",
+        "After migrating to Python 3-only, all six usage should be replaced with native Python 3 equivalents",
+        "Common replacements: six.moves.range -> range, six.text_type -> str, six.string_types -> (str,)",
+        "Remove six imports during Phase 1 source code migration"
+      ]
+    }
+  },
+  "summary": {
+    "blockers_resolved": [
+      "pycrypto (abandoned) -> pycryptodome (maintained fork)",
+      "distutils (removed in 3.12) -> setuptools"
+    ],
+    "packages_requiring_source_changes": [
+      "pymodbus (1.x -> 3.x API changes)",
+      "six (remove all usage)"
+    ],
+    "packages_with_minor_api_risk": [
+      "paho-mqtt (avoid 2.x)",
+      "SQLAlchemy (0.9 -> 1.4 is mostly compatible)",
+      "Jinja2 (2.x -> 3.x removed some deprecated features)"
+    ],
+    "packages_safe_to_upgrade": [
+      "pyserial",
+      "lxml",
+      "simplejson",
+      "MarkupSafe",
+      "chardet",
+      "requests"
+    ]
+  }
+}

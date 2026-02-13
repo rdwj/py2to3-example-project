@@ -8,6 +8,8 @@ list is managed via the platform INI file because the original operators
 preferred editing a config section over using a web interface.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import sys
 import time
 import socket

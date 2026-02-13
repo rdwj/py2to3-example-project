@@ -3,6 +3,9 @@
 Tests for core types: DataPoint __cmp__/sorted(cmp=), LargeCounter
 long arithmetic, SensorReading registry, basestring/unicode checks.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import time

@@ -1,0 +1,711 @@
+{
+  "nodes": [
+    {
+      "id": "src/core/types",
+      "package": "core",
+      "file": "src/core/types.py",
+      "lines": 231,
+      "is_leaf": true,
+      "fan_in": 7,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/core/utils",
+      "package": "core",
+      "file": "src/core/utils.py",
+      "lines": 189,
+      "is_leaf": true,
+      "fan_in": 0,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/core/string_helpers",
+      "package": "core",
+      "file": "src/core/string_helpers.py",
+      "lines": 178,
+      "is_leaf": true,
+      "fan_in": 6,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/core/config_loader",
+      "package": "core",
+      "file": "src/core/config_loader.py",
+      "lines": 196,
+      "is_leaf": true,
+      "fan_in": 8,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/core/itertools_helpers",
+      "package": "core",
+      "file": "src/core/itertools_helpers.py",
+      "lines": 246,
+      "is_leaf": true,
+      "fan_in": 0,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/core/exceptions",
+      "package": "core",
+      "file": "src/core/exceptions.py",
+      "lines": 169,
+      "is_leaf": true,
+      "fan_in": 19,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/core/__init__",
+      "package": "core",
+      "file": "src/core/__init__.py",
+      "lines": 8,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/compat",
+      "package": "compat",
+      "file": "src/compat.py",
+      "lines": 107,
+      "is_leaf": true,
+      "fan_in": 0,
+      "fan_out_internal": 0
+    },
+    {
+      "id": "src/io_protocols/modbus_client",
+      "package": "io_protocols",
+      "file": "src/io_protocols/modbus_client.py",
+      "lines": 220,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/io_protocols/opcua_client",
+      "package": "io_protocols",
+      "file": "src/io_protocols/opcua_client.py",
+      "lines": 251,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/io_protocols/mqtt_listener",
+      "package": "io_protocols",
+      "file": "src/io_protocols/mqtt_listener.py",
+      "lines": 281,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/io_protocols/serial_sensor",
+      "package": "io_protocols",
+      "file": "src/io_protocols/serial_sensor.py",
+      "lines": 182,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/io_protocols/__init__",
+      "package": "io_protocols",
+      "file": "src/io_protocols/__init__.py",
+      "lines": 14,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 4
+    },
+    {
+      "id": "src/data_processing/csv_processor",
+      "package": "data_processing",
+      "file": "src/data_processing/csv_processor.py",
+      "lines": 319,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/data_processing/xml_transformer",
+      "package": "data_processing",
+      "file": "src/data_processing/xml_transformer.py",
+      "lines": 307,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/data_processing/text_analyzer",
+      "package": "data_processing",
+      "file": "src/data_processing/text_analyzer.py",
+      "lines": 296,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/data_processing/mainframe_parser",
+      "package": "data_processing",
+      "file": "src/data_processing/mainframe_parser.py",
+      "lines": 438,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/data_processing/json_handler",
+      "package": "data_processing",
+      "file": "src/data_processing/json_handler.py",
+      "lines": 324,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/data_processing/log_parser",
+      "package": "data_processing",
+      "file": "src/data_processing/log_parser.py",
+      "lines": 435,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/data_processing/__init__",
+      "package": "data_processing",
+      "file": "src/data_processing/__init__.py",
+      "lines": 17,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 6
+    },
+    {
+      "id": "src/storage/file_store",
+      "package": "storage",
+      "file": "src/storage/file_store.py",
+      "lines": 239,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 1
+    },
+    {
+      "id": "src/storage/database",
+      "package": "storage",
+      "file": "src/storage/database.py",
+      "lines": 277,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/storage/cache",
+      "package": "storage",
+      "file": "src/storage/cache.py",
+      "lines": 257,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 1
+    },
+    {
+      "id": "src/storage/__init__",
+      "package": "storage",
+      "file": "src/storage/__init__.py",
+      "lines": 13,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/automation/plugin_loader",
+      "package": "automation",
+      "file": "src/automation/plugin_loader.py",
+      "lines": 264,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 1
+    },
+    {
+      "id": "src/automation/script_runner",
+      "package": "automation",
+      "file": "src/automation/script_runner.py",
+      "lines": 207,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 1
+    },
+    {
+      "id": "src/automation/scheduler",
+      "package": "automation",
+      "file": "src/automation/scheduler.py",
+      "lines": 287,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 1
+    },
+    {
+      "id": "src/automation/__init__",
+      "package": "automation",
+      "file": "src/automation/__init__.py",
+      "lines": 12,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/reporting/report_generator",
+      "package": "reporting",
+      "file": "src/reporting/report_generator.py",
+      "lines": 220,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/reporting/email_sender",
+      "package": "reporting",
+      "file": "src/reporting/email_sender.py",
+      "lines": 180,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    },
+    {
+      "id": "src/reporting/web_dashboard",
+      "package": "reporting",
+      "file": "src/reporting/web_dashboard.py",
+      "lines": 277,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 2
+    },
+    {
+      "id": "src/reporting/__init__",
+      "package": "reporting",
+      "file": "src/reporting/__init__.py",
+      "lines": 14,
+      "is_leaf": false,
+      "fan_in": 0,
+      "fan_out_internal": 3
+    }
+  ],
+  "edges": [
+    {
+      "from": "src/core/__init__",
+      "to": "src/core/types",
+      "imports": ["DataPoint", "SensorReading", "LargeCounter"]
+    },
+    {
+      "from": "src/core/__init__",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/core/__init__",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/io_protocols/modbus_client",
+      "to": "src/core/types",
+      "imports": ["DataPoint", "register_view"]
+    },
+    {
+      "from": "src/io_protocols/modbus_client",
+      "to": "src/core/exceptions",
+      "imports": ["ModbusError"]
+    },
+    {
+      "from": "src/io_protocols/opcua_client",
+      "to": "src/core/types",
+      "imports": ["DataPoint"]
+    },
+    {
+      "from": "src/io_protocols/opcua_client",
+      "to": "src/core/exceptions",
+      "imports": ["OpcUaError"]
+    },
+    {
+      "from": "src/io_protocols/mqtt_listener",
+      "to": "src/core/types",
+      "imports": ["DataPoint"]
+    },
+    {
+      "from": "src/io_protocols/mqtt_listener",
+      "to": "src/core/exceptions",
+      "imports": ["MqttError"]
+    },
+    {
+      "from": "src/io_protocols/serial_sensor",
+      "to": "src/core/types",
+      "imports": ["DataPoint", "SensorReading", "get_sensor_class"]
+    },
+    {
+      "from": "src/io_protocols/serial_sensor",
+      "to": "src/core/exceptions",
+      "imports": ["SerialError", "ParseError"]
+    },
+    {
+      "from": "src/io_protocols/__init__",
+      "to": "src/io_protocols/modbus_client",
+      "imports": ["ModbusClient"]
+    },
+    {
+      "from": "src/io_protocols/__init__",
+      "to": "src/io_protocols/opcua_client",
+      "imports": ["OpcUaClient"]
+    },
+    {
+      "from": "src/io_protocols/__init__",
+      "to": "src/io_protocols/serial_sensor",
+      "imports": ["SerialSensor"]
+    },
+    {
+      "from": "src/io_protocols/__init__",
+      "to": "src/io_protocols/mqtt_listener",
+      "imports": ["MqttListener"]
+    },
+    {
+      "from": "src/data_processing/csv_processor",
+      "to": "src/core/exceptions",
+      "imports": ["DataError", "EncodingError", "ParseError"]
+    },
+    {
+      "from": "src/data_processing/csv_processor",
+      "to": "src/core/string_helpers",
+      "imports": ["safe_decode", "safe_encode", "detect_encoding"]
+    },
+    {
+      "from": "src/data_processing/csv_processor",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/data_processing/xml_transformer",
+      "to": "src/core/exceptions",
+      "imports": ["ParseError", "DataError"]
+    },
+    {
+      "from": "src/data_processing/xml_transformer",
+      "to": "src/core/string_helpers",
+      "imports": ["safe_decode", "normalise_sensor_label"]
+    },
+    {
+      "from": "src/data_processing/xml_transformer",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/data_processing/text_analyzer",
+      "to": "src/core/exceptions",
+      "imports": ["DataError"]
+    },
+    {
+      "from": "src/data_processing/text_analyzer",
+      "to": "src/core/string_helpers",
+      "imports": ["safe_decode", "safe_encode", "detect_encoding"]
+    },
+    {
+      "from": "src/data_processing/text_analyzer",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/data_processing/mainframe_parser",
+      "to": "src/core/types",
+      "imports": ["LargeCounter"]
+    },
+    {
+      "from": "src/data_processing/mainframe_parser",
+      "to": "src/core/exceptions",
+      "imports": ["ParseError", "DataError"]
+    },
+    {
+      "from": "src/data_processing/mainframe_parser",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/data_processing/json_handler",
+      "to": "src/core/exceptions",
+      "imports": ["DataError", "ParseError"]
+    },
+    {
+      "from": "src/data_processing/json_handler",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/data_processing/log_parser",
+      "to": "src/core/exceptions",
+      "imports": ["ParseError", "DataError"]
+    },
+    {
+      "from": "src/data_processing/log_parser",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/data_processing/__init__",
+      "to": "src/data_processing/mainframe_parser",
+      "imports": ["MainframeParser"]
+    },
+    {
+      "from": "src/data_processing/__init__",
+      "to": "src/data_processing/csv_processor",
+      "imports": ["CsvProcessor"]
+    },
+    {
+      "from": "src/data_processing/__init__",
+      "to": "src/data_processing/xml_transformer",
+      "imports": ["XmlTransformer"]
+    },
+    {
+      "from": "src/data_processing/__init__",
+      "to": "src/data_processing/json_handler",
+      "imports": ["JsonHandler"]
+    },
+    {
+      "from": "src/data_processing/__init__",
+      "to": "src/data_processing/text_analyzer",
+      "imports": ["TextAnalyzer"]
+    },
+    {
+      "from": "src/data_processing/__init__",
+      "to": "src/data_processing/log_parser",
+      "imports": ["LogParser"]
+    },
+    {
+      "from": "src/storage/file_store",
+      "to": "src/core/exceptions",
+      "imports": ["StorageError"]
+    },
+    {
+      "from": "src/storage/database",
+      "to": "src/core/exceptions",
+      "imports": ["DatabaseError", "StorageError"]
+    },
+    {
+      "from": "src/storage/database",
+      "to": "src/core/types",
+      "imports": ["DataPoint"]
+    },
+    {
+      "from": "src/storage/cache",
+      "to": "src/core/exceptions",
+      "imports": ["CacheError"]
+    },
+    {
+      "from": "src/storage/__init__",
+      "to": "src/storage/database",
+      "imports": ["Database"]
+    },
+    {
+      "from": "src/storage/__init__",
+      "to": "src/storage/file_store",
+      "imports": ["FileStore"]
+    },
+    {
+      "from": "src/storage/__init__",
+      "to": "src/storage/cache",
+      "imports": ["Cache"]
+    },
+    {
+      "from": "src/automation/plugin_loader",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/automation/script_runner",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/automation/scheduler",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/automation/__init__",
+      "to": "src/automation/scheduler",
+      "imports": ["Scheduler"]
+    },
+    {
+      "from": "src/automation/__init__",
+      "to": "src/automation/script_runner",
+      "imports": ["ScriptRunner"]
+    },
+    {
+      "from": "src/automation/__init__",
+      "to": "src/automation/plugin_loader",
+      "imports": ["PluginLoader"]
+    },
+    {
+      "from": "src/reporting/report_generator",
+      "to": "src/core/types",
+      "imports": ["DataPoint", "is_string"]
+    },
+    {
+      "from": "src/reporting/report_generator",
+      "to": "src/core/string_helpers",
+      "imports": ["safe_decode", "safe_encode"]
+    },
+    {
+      "from": "src/reporting/report_generator",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/reporting/email_sender",
+      "to": "src/core/config_loader",
+      "imports": ["load_platform_config"]
+    },
+    {
+      "from": "src/reporting/email_sender",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/reporting/email_sender",
+      "to": "src/core/string_helpers",
+      "imports": ["safe_encode", "safe_decode"]
+    },
+    {
+      "from": "src/reporting/web_dashboard",
+      "to": "src/core/exceptions",
+      "imports": ["PlatformError"]
+    },
+    {
+      "from": "src/reporting/web_dashboard",
+      "to": "src/core/string_helpers",
+      "imports": ["safe_decode", "safe_encode"]
+    },
+    {
+      "from": "src/reporting/__init__",
+      "to": "src/reporting/report_generator",
+      "imports": ["ReportGenerator"]
+    },
+    {
+      "from": "src/reporting/__init__",
+      "to": "src/reporting/email_sender",
+      "imports": ["EmailSender"]
+    },
+    {
+      "from": "src/reporting/__init__",
+      "to": "src/reporting/web_dashboard",
+      "imports": ["WebDashboard"]
+    }
+  ],
+  "clusters": [
+    {
+      "name": "core",
+      "modules": [
+        "src/core/types",
+        "src/core/utils",
+        "src/core/string_helpers",
+        "src/core/config_loader",
+        "src/core/itertools_helpers",
+        "src/core/exceptions",
+        "src/core/__init__"
+      ],
+      "description": "Foundation layer: types, exceptions, config, string utilities. No cross-module internal dependencies among leaf modules."
+    },
+    {
+      "name": "compat",
+      "modules": [
+        "src/compat"
+      ],
+      "description": "Python 2/3 compatibility shims. Standalone module with no internal dependencies."
+    },
+    {
+      "name": "io_protocols",
+      "modules": [
+        "src/io_protocols/modbus_client",
+        "src/io_protocols/opcua_client",
+        "src/io_protocols/mqtt_listener",
+        "src/io_protocols/serial_sensor",
+        "src/io_protocols/__init__"
+      ],
+      "description": "Hardware and network protocol adapters. Depends only on core/types and core/exceptions."
+    },
+    {
+      "name": "data_processing",
+      "modules": [
+        "src/data_processing/csv_processor",
+        "src/data_processing/xml_transformer",
+        "src/data_processing/text_analyzer",
+        "src/data_processing/mainframe_parser",
+        "src/data_processing/json_handler",
+        "src/data_processing/log_parser",
+        "src/data_processing/__init__"
+      ],
+      "description": "Data ingestion and transformation. Depends on core/exceptions, core/string_helpers, core/config_loader, and core/types."
+    },
+    {
+      "name": "storage",
+      "modules": [
+        "src/storage/file_store",
+        "src/storage/database",
+        "src/storage/cache",
+        "src/storage/__init__"
+      ],
+      "description": "Persistence layer. Depends on core/exceptions and core/types."
+    },
+    {
+      "name": "automation",
+      "modules": [
+        "src/automation/plugin_loader",
+        "src/automation/script_runner",
+        "src/automation/scheduler",
+        "src/automation/__init__"
+      ],
+      "description": "Task automation and plugin management. Depends only on core/exceptions."
+    },
+    {
+      "name": "reporting",
+      "modules": [
+        "src/reporting/report_generator",
+        "src/reporting/email_sender",
+        "src/reporting/web_dashboard",
+        "src/reporting/__init__"
+      ],
+      "description": "Output generation and delivery. Depends on core/types, core/string_helpers, core/config_loader, and core/exceptions."
+    }
+  ],
+  "gateway_modules": [
+    {
+      "id": "src/core/exceptions",
+      "fan_in": 19,
+      "description": "Highest fan-in module. Every non-leaf package imports from it. Must be converted first and kept stable."
+    },
+    {
+      "id": "src/core/config_loader",
+      "fan_in": 8,
+      "description": "Configuration loading used across data_processing, reporting, and core __init__."
+    },
+    {
+      "id": "src/core/types",
+      "fan_in": 7,
+      "description": "Core data types (DataPoint, SensorReading, LargeCounter) used by io_protocols, data_processing, storage, and reporting."
+    },
+    {
+      "id": "src/core/string_helpers",
+      "fan_in": 6,
+      "description": "String encoding/decoding helpers used by data_processing and reporting."
+    }
+  ],
+  "orphan_modules": [
+    {
+      "id": "src/core/utils",
+      "reason": "No internal dependents (fan_in=0) and no internal dependencies (fan_out=0). Uses only stdlib (sys, os, sets.Set)."
+    },
+    {
+      "id": "src/core/itertools_helpers",
+      "reason": "No internal dependents (fan_in=0) and no internal dependencies (fan_out=0). Uses only stdlib itertools."
+    },
+    {
+      "id": "src/compat",
+      "reason": "No internal dependents (fan_in=0) and no internal dependencies (fan_out=0). Standalone compatibility shim."
+    }
+  ]
+}

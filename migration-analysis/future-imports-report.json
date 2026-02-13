@@ -1,0 +1,755 @@
+{
+  "summary": {
+    "total_files_scanned": 45,
+    "files_modified": 43,
+    "files_skipped_empty": 2,
+    "files_already_had_all_imports": 0,
+    "high_risk_file_count": 19
+  },
+  "future_import_line": "from __future__ import absolute_import, division, print_function, unicode_literals",
+  "required_imports": [
+    "absolute_import",
+    "division",
+    "print_function",
+    "unicode_literals"
+  ],
+  "per_file": [
+    {
+      "file": "scripts/batch_import.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "file() builtin"
+      ]
+    },
+    {
+      "file": "scripts/generate_ebcdic_data.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "scripts/run_platform.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "scripts/sensor_monitor.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "setup.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/__init__.py",
+      "status": "skipped_empty",
+      "imports_added": [],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/automation/__init__.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/automation/plugin_loader.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/automation/scheduler.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/automation/script_runner.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/compat.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "unicode_literals"
+      ],
+      "imports_already_present": [
+        "print_function"
+      ],
+      "high_risk_indicators": [
+        "cStringIO usage",
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/core/__init__.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/core/config_loader.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/core/exceptions.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/core/itertools_helpers.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "cStringIO usage"
+      ]
+    },
+    {
+      "file": "src/core/types.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "src/core/utils.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/data_processing/__init__.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "binary file I/O",
+        "hex escape sequences in strings"
+      ]
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "binary file I/O",
+        "cStringIO usage",
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/data_processing/log_parser.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "cPickle usage",
+        "file() builtin",
+        "struct.pack/unpack",
+        "ord() calls"
+      ]
+    },
+    {
+      "file": "src/data_processing/text_analyzer.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/data_processing/xml_transformer.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/io_protocols/__init__.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "socket send",
+        "struct.pack/unpack",
+        "ord() calls",
+        "socket recv",
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "socket send",
+        "struct.pack/unpack",
+        "ord() calls",
+        "hex escape sequences in strings",
+        "socket recv",
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "cStringIO usage",
+        "struct.pack/unpack",
+        "ord() calls",
+        "binary file I/O",
+        "hex escape sequences in strings"
+      ]
+    },
+    {
+      "file": "src/reporting/__init__.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/reporting/email_sender.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/reporting/report_generator.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/reporting/web_dashboard.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/storage/__init__.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "src/storage/cache.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "binary file I/O",
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/storage/database.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "file() builtin",
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "tests/__init__.py",
+      "status": "skipped_empty",
+      "imports_added": [],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "tests/conftest.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    },
+    {
+      "file": "tests/test_core_types.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "hex escape sequences in strings",
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "tests/test_csv_processor.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "hex escape sequences in strings"
+      ]
+    },
+    {
+      "file": "tests/test_mainframe_parser.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "hex escape sequences in strings",
+        "struct.pack/unpack",
+        "ord() calls"
+      ]
+    },
+    {
+      "file": "tests/test_modbus.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": [
+        "hex escape sequences in strings",
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "tests/test_report_generator.py",
+      "status": "modified",
+      "imports_added": [
+        "absolute_import",
+        "division",
+        "print_function",
+        "unicode_literals"
+      ],
+      "imports_already_present": [],
+      "high_risk_indicators": []
+    }
+  ],
+  "high_risk_files": [
+    {
+      "file": "scripts/batch_import.py",
+      "indicators": [
+        "file() builtin"
+      ]
+    },
+    {
+      "file": "src/compat.py",
+      "indicators": [
+        "cStringIO usage",
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/core/string_helpers.py",
+      "indicators": [
+        "cStringIO usage"
+      ]
+    },
+    {
+      "file": "src/core/types.py",
+      "indicators": [
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "src/data_processing/csv_processor.py",
+      "indicators": [
+        "binary file I/O",
+        "hex escape sequences in strings"
+      ]
+    },
+    {
+      "file": "src/data_processing/json_handler.py",
+      "indicators": [
+        "binary file I/O",
+        "cStringIO usage",
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/data_processing/mainframe_parser.py",
+      "indicators": [
+        "cPickle usage",
+        "file() builtin",
+        "struct.pack/unpack",
+        "ord() calls"
+      ]
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "indicators": [
+        "socket send",
+        "struct.pack/unpack",
+        "ord() calls",
+        "socket recv",
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/io_protocols/mqtt_listener.py",
+      "indicators": [
+        "socket send",
+        "struct.pack/unpack",
+        "ord() calls",
+        "hex escape sequences in strings",
+        "socket recv",
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/io_protocols/opcua_client.py",
+      "indicators": [
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/io_protocols/serial_sensor.py",
+      "indicators": [
+        "cStringIO usage",
+        "struct.pack/unpack",
+        "ord() calls",
+        "binary file I/O",
+        "hex escape sequences in strings"
+      ]
+    },
+    {
+      "file": "src/reporting/email_sender.py",
+      "indicators": [
+        "socket operations"
+      ]
+    },
+    {
+      "file": "src/storage/cache.py",
+      "indicators": [
+        "binary file I/O",
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/storage/database.py",
+      "indicators": [
+        "cPickle usage"
+      ]
+    },
+    {
+      "file": "src/storage/file_store.py",
+      "indicators": [
+        "file() builtin",
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "tests/test_core_types.py",
+      "indicators": [
+        "hex escape sequences in strings",
+        "struct.pack/unpack"
+      ]
+    },
+    {
+      "file": "tests/test_csv_processor.py",
+      "indicators": [
+        "hex escape sequences in strings"
+      ]
+    },
+    {
+      "file": "tests/test_mainframe_parser.py",
+      "indicators": [
+        "hex escape sequences in strings",
+        "struct.pack/unpack",
+        "ord() calls"
+      ]
+    },
+    {
+      "file": "tests/test_modbus.py",
+      "indicators": [
+        "hex escape sequences in strings",
+        "struct.pack/unpack"
+      ]
+    }
+  ]
+}

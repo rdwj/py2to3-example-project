@@ -1,0 +1,2919 @@
+{
+  "project": {
+    "name": "Legacy Industrial Data Platform",
+    "codebase_path": "/Users/wjackson/Developer/code-translation-tests/py2to3-example-project",
+    "target_version": "3.12",
+    "created": "2026-02-12T22:30:00Z",
+    "last_updated": "2026-02-13T04:56:26Z"
+  },
+  "modules": {
+    "src/core/types.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "medium",
+      "risk_factors": [
+        "gateway_module"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 7,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 3,
+        "semantic_division": 1,
+        "semantic_import": 0,
+        "metaclass": 1
+      },
+      "metrics": {
+        "lines_of_code": 231,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 7,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/core/utils.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "medium",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 2,
+        "semantic_iterator": 4,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 189,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/core/string_helpers.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "high",
+      "risk_factors": [
+        "gateway_module",
+        "encoding_operations",
+        "bytes_str_boundary",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 20,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 178,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 6,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/core/config_loader.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "medium",
+      "risk_factors": [
+        "gateway_module",
+        "encoding_operations"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 15,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 196,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 8,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/core/itertools_helpers.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "medium",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 14,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 246,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/core/exceptions.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "medium",
+      "risk_factors": [
+        "gateway_module"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 9,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 169,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 19,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/core/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "core",
+      "risk_score": "critical",
+      "risk_factors": [
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 8,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/compat.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "compat",
+      "risk_score": "high",
+      "risk_factors": [
+        "encoding_operations",
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 8,
+        "semantic_division": 0,
+        "semantic_import": 5,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 107,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "src/io_protocols/modbus_client.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "io_protocols",
+      "risk_score": "high",
+      "risk_factors": [
+        "serialization_boundary",
+        "bytes_str_boundary",
+        "binary_protocol_handling",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 12,
+        "semantic_iterator": 2,
+        "semantic_bytes_str": 8,
+        "semantic_division": 3,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 220,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/io_protocols/opcua_client.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "io_protocols",
+      "risk_score": "medium",
+      "risk_factors": [
+        "encoding_operations",
+        "bytes_str_boundary"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 15,
+        "semantic_iterator": 3,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 6,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 251,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/io_protocols/mqtt_listener.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "io_protocols",
+      "risk_score": "medium",
+      "risk_factors": [
+        "serialization_boundary",
+        "encoding_operations",
+        "bytes_str_boundary",
+        "binary_protocol_handling"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 13,
+        "semantic_iterator": 3,
+        "semantic_bytes_str": 3,
+        "semantic_division": 2,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 281,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/io_protocols/serial_sensor.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "io_protocols",
+      "risk_score": "medium",
+      "risk_factors": [
+        "serialization_boundary",
+        "bytes_str_boundary",
+        "binary_protocol_handling"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 8,
+        "semantic_iterator": 5,
+        "semantic_bytes_str": 3,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 182,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/io_protocols/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "io_protocols",
+      "risk_score": "critical",
+      "risk_factors": [
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 14,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 4
+      }
+    },
+    "src/data_processing/csv_processor.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "low",
+      "risk_factors": [
+        "encoding_operations",
+        "bytes_str_boundary"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 5,
+        "semantic_iterator": 2,
+        "semantic_bytes_str": 4,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 319,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/data_processing/xml_transformer.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "medium",
+      "risk_factors": [
+        "encoding_operations"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 7,
+        "semantic_iterator": 5,
+        "semantic_bytes_str": 3,
+        "semantic_division": 0,
+        "semantic_import": 5,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 307,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/data_processing/text_analyzer.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "medium",
+      "risk_factors": [
+        "encoding_operations",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 9,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 5,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 296,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/data_processing/mainframe_parser.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "high",
+      "risk_factors": [
+        "serialization_boundary",
+        "encoding_operations",
+        "bytes_str_boundary",
+        "binary_protocol_handling",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 31,
+        "semantic_iterator": 4,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 438,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/data_processing/json_handler.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "medium",
+      "risk_factors": [
+        "serialization_boundary",
+        "encoding_operations",
+        "bytes_str_boundary",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 2,
+        "semantic_iterator": 5,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 324,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/data_processing/log_parser.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "low",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 8,
+        "semantic_iterator": 1,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 435,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/data_processing/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "data_processing",
+      "risk_score": "critical",
+      "risk_factors": [
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 6,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 17,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 6
+      }
+    },
+    "src/storage/file_store.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "storage",
+      "risk_score": "high",
+      "risk_factors": [
+        "encoding_operations",
+        "bytes_str_boundary",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 14,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 4,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 239,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 1
+      }
+    },
+    "src/storage/database.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "storage",
+      "risk_score": "high",
+      "risk_factors": [
+        "serialization_boundary",
+        "bytes_str_boundary",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 24,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 277,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/storage/cache.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "storage",
+      "risk_score": "high",
+      "risk_factors": [
+        "serialization_boundary",
+        "encoding_operations",
+        "bytes_str_boundary",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 23,
+        "semantic_iterator": 3,
+        "semantic_bytes_str": 0,
+        "semantic_division": 2,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 257,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 1
+      }
+    },
+    "src/storage/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "storage",
+      "risk_score": "critical",
+      "risk_factors": [
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 13,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/automation/plugin_loader.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "automation",
+      "risk_score": "high",
+      "risk_factors": [
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 21,
+        "semantic_iterator": 4,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 1
+      },
+      "metrics": {
+        "lines_of_code": 264,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 1
+      }
+    },
+    "src/automation/script_runner.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "automation",
+      "risk_score": "high",
+      "risk_factors": [
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 13,
+        "semantic_iterator": 3,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 207,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 1
+      }
+    },
+    "src/automation/scheduler.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "automation",
+      "risk_score": "high",
+      "risk_factors": [
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 19,
+        "semantic_iterator": 4,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 287,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 1
+      }
+    },
+    "src/automation/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "automation",
+      "risk_score": "critical",
+      "risk_factors": [
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 12,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/reporting/report_generator.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "reporting",
+      "risk_score": "critical",
+      "risk_factors": [
+        "encoding_operations",
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 13,
+        "semantic_iterator": 2,
+        "semantic_bytes_str": 15,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 220,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/reporting/email_sender.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "reporting",
+      "risk_score": "medium",
+      "risk_factors": [
+        "encoding_operations"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 9,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 3,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 180,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "src/reporting/web_dashboard.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "reporting",
+      "risk_score": "medium",
+      "risk_factors": [
+        "encoding_operations"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 12,
+        "semantic_iterator": 3,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 7,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 277,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 2
+      }
+    },
+    "src/reporting/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "reporting",
+      "risk_score": "critical",
+      "risk_factors": [
+        "high_issue_density",
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 14,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 3
+      }
+    },
+    "tests/conftest.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "high",
+      "risk_factors": [
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 2,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 56,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "tests/test_core_types.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "high",
+      "risk_factors": [
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 5,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 127,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "tests/test_csv_processor.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "low",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 3,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 114,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "tests/test_mainframe_parser.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "high",
+      "risk_factors": [
+        "high_issue_density"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 5,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 13,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 141,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "tests/test_modbus.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "low",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 5,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 118,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "tests/test_report_generator.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "medium",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 4,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 139,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "tests/__init__.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "tests",
+      "risk_score": "low",
+      "risk_factors": [],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 0,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "scripts/batch_import.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "scripts",
+      "risk_score": "low",
+      "risk_factors": [
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 134,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "scripts/generate_ebcdic_data.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "scripts",
+      "risk_score": "low",
+      "risk_factors": [
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 105,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "scripts/run_platform.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "scripts",
+      "risk_score": "low",
+      "risk_factors": [
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 164,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "scripts/sensor_monitor.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "scripts",
+      "risk_score": "low",
+      "risk_factors": [
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 167,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    },
+    "setup.py": {
+      "current_phase": 1,
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-12T22:30:00Z",
+          "completed": "2026-02-12T22:30:00Z",
+          "gate_passed": true,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/py2-ism-inventory.json",
+            "migration-analysis/dependency-graph.json",
+            "migration-analysis/lint-baseline.json",
+            "migration-analysis/encoding-map.json",
+            "migration-analysis/serialization-report.json",
+            "migration-analysis/bytes-str-boundaries.json",
+            "migration-analysis/c-extension-report.json"
+          ]
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-13T04:30:00Z",
+          "completed": "2026-02-13T04:55:00Z",
+          "gate_passed": true,
+          "gate_report": "migration-analysis/gate-check-report.json",
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/dependency-compatibility.json",
+            "migration-analysis/future-imports-report.json",
+            "migration-analysis/conversion-plan.json",
+            "migration-analysis/critical-path.json",
+            "migration-analysis/test-manifest.json",
+            "migration-analysis/lint-rules-report.json"
+          ]
+        }
+      ],
+      "conversion_unit": "scripts",
+      "risk_score": "low",
+      "risk_factors": [
+        "no_existing_tests"
+      ],
+      "blockers": [],
+      "decisions": [],
+      "notes": [],
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "metrics": {
+        "lines_of_code": 47,
+        "num_functions": null,
+        "num_classes": null,
+        "test_coverage_percent": null,
+        "dependency_fan_in": 0,
+        "dependency_fan_out": 0
+      }
+    }
+  },
+  "conversion_units": {
+    "core": {
+      "modules": [
+        "src/core/types.py",
+        "src/core/utils.py",
+        "src/core/string_helpers.py",
+        "src/core/config_loader.py",
+        "src/core/itertools_helpers.py",
+        "src/core/exceptions.py",
+        "src/core/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [],
+      "risk_score": "high",
+      "assigned_to": null,
+      "notes": [
+        "Gateway modules with highest fan-in. Any regression here cascades to every other package. Key concerns: struct module bytes handling in types.py, sets.Set removal in utils.py, StringIO/cStringIO unification in string_helpers.py, ConfigParser rename in config_loader.py."
+      ]
+    },
+    "compat": {
+      "modules": [
+        "src/compat.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [],
+      "risk_score": "medium",
+      "assigned_to": null,
+      "notes": [
+        "Compatibility shim that may become unnecessary after migration. Review whether it can be removed entirely or simplified."
+      ]
+    },
+    "io_protocols": {
+      "modules": [
+        "src/io_protocols/modbus_client.py",
+        "src/io_protocols/opcua_client.py",
+        "src/io_protocols/mqtt_listener.py",
+        "src/io_protocols/serial_sensor.py",
+        "src/io_protocols/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core"
+      ],
+      "risk_score": "medium",
+      "assigned_to": null,
+      "notes": [
+        "Binary protocol handling with struct pack/unpack. The bytes/str split is the primary concern. No cross-module dependencies within the cluster."
+      ]
+    },
+    "data_processing": {
+      "modules": [
+        "src/data_processing/csv_processor.py",
+        "src/data_processing/xml_transformer.py",
+        "src/data_processing/text_analyzer.py",
+        "src/data_processing/mainframe_parser.py",
+        "src/data_processing/json_handler.py",
+        "src/data_processing/log_parser.py",
+        "src/data_processing/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core"
+      ],
+      "risk_score": "high",
+      "assigned_to": null,
+      "notes": [
+        "Largest cluster. Heavy string encoding work, EBCDIC handling, and file I/O. csv_processor and mainframe_parser are the highest-risk individual modules due to encoding complexity."
+      ]
+    },
+    "storage": {
+      "modules": [
+        "src/storage/file_store.py",
+        "src/storage/database.py",
+        "src/storage/cache.py",
+        "src/storage/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core"
+      ],
+      "risk_score": "medium",
+      "assigned_to": null,
+      "notes": [
+        "Database buffer handling and file I/O. Moderate encoding concerns in file_store."
+      ]
+    },
+    "automation": {
+      "modules": [
+        "src/automation/plugin_loader.py",
+        "src/automation/script_runner.py",
+        "src/automation/scheduler.py",
+        "src/automation/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core"
+      ],
+      "risk_score": "medium",
+      "assigned_to": null,
+      "notes": [
+        "plugin_loader uses imp module (removed in Python 3, must migrate to importlib). script_runner and scheduler have simpler migration paths."
+      ]
+    },
+    "reporting": {
+      "modules": [
+        "src/reporting/report_generator.py",
+        "src/reporting/email_sender.py",
+        "src/reporting/web_dashboard.py",
+        "src/reporting/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core"
+      ],
+      "risk_score": "medium",
+      "assigned_to": null,
+      "notes": [
+        "String encoding in email output and web templates. Depends on the broadest set of core modules."
+      ]
+    },
+    "tests": {
+      "modules": [
+        "tests/conftest.py",
+        "tests/test_core_types.py",
+        "tests/test_csv_processor.py",
+        "tests/test_mainframe_parser.py",
+        "tests/test_modbus.py",
+        "tests/test_report_generator.py",
+        "tests/__init__.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core",
+        "io_protocols",
+        "data_processing",
+        "storage",
+        "automation",
+        "reporting"
+      ],
+      "risk_score": "low",
+      "assigned_to": null,
+      "notes": [
+        "Tests follow their source modules. Main work is updating test framework patterns (unittest2 to pytest) and fixing string assertions for bytes/str split."
+      ]
+    },
+    "scripts": {
+      "modules": [
+        "scripts/batch_import.py",
+        "scripts/generate_ebcdic_data.py",
+        "scripts/run_platform.py",
+        "scripts/sensor_monitor.py",
+        "setup.py"
+      ],
+      "current_phase": 1,
+      "dependencies": [
+        "core",
+        "compat",
+        "io_protocols",
+        "data_processing",
+        "storage",
+        "automation",
+        "reporting",
+        "tests"
+      ],
+      "risk_score": "low",
+      "assigned_to": null,
+      "notes": [
+        "Entry-point scripts. Convert last as integration-level validation. setup.py has a CRITICAL distutils blocker requiring migration to setuptools."
+      ]
+    }
+  },
+  "global_decisions": [
+    {
+      "date": "2026-02-13T04:35:00Z",
+      "decision": "Resolved both Phase 0 critical blockers: distutils replaced with setuptools in setup.py, pycrypto replaced with pycryptodome in requirements.txt",
+      "rationale": "distutils removed in Python 3.12; pycrypto is abandoned with no Py3 support. pycryptodome is the maintained fork with same Crypto namespace.",
+      "made_by": "skill",
+      "skill_name": "py2to3-build-system-updater",
+      "reversible": true
+    }
+  ],
+  "waivers": [],
+  "rollbacks": [],
+  "summary": {
+    "total_modules": 44,
+    "by_phase": {
+      "0": 0,
+      "1": 44,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    },
+    "by_risk": {
+      "low": 10,
+      "medium": 14,
+      "high": 13,
+      "critical": 7
+    }
+  }
+}

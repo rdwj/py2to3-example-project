@@ -13,6 +13,8 @@ for internal record caching when JSON round-trip fidelity is not
 required (e.g. temporary inter-process data passing via shared NFS).
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import json
 import time

@@ -3,6 +3,9 @@
 OPC-UA client for the Legacy Industrial Data Platform.
 HTTP/SOAP transport with XML-RPC fallback for legacy gateways.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import time
 import socket
 import httplib

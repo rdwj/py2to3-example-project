@@ -9,7 +9,7 @@ lifecycle when someone floated the idea of a Python 3 port -- most of
 the codebase still uses Py2 idioms directly.
 """
 
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 

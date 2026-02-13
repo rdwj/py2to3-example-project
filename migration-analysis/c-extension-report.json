@@ -1,0 +1,135 @@
+{
+  "scan_date": "2026-02-12",
+  "target_version": "3.12",
+  "summary": {
+    "c_extensions_found": 0,
+    "cython_files_found": 0,
+    "ctypes_usage_found": 0,
+    "cffi_usage_found": 0,
+    "swig_usage_found": 0,
+    "third_party_with_c_extensions": 4,
+    "buffer_builtin_usage": 2
+  },
+  "risk_assessment": "Low direct risk - no custom C extensions. Primary risk is from third-party packages with C extensions that need version updates. pycrypto is a BLOCKER (abandoned, no Py3 support).",
+  "direct_c_extensions": [],
+  "ctypes_usage": [],
+  "cffi_usage": [],
+  "third_party_c_extensions": [
+    {
+      "package": "pycrypto",
+      "current_version": "2.6.1",
+      "risk": "CRITICAL",
+      "blocker": true,
+      "has_c_extensions": true,
+      "c_extension_details": "C extensions for cryptographic algorithms (AES, DES, SHA, etc.)",
+      "python3_support": false,
+      "status": "ABANDONED - no longer maintained",
+      "migration_action": "Replace with pycryptodome",
+      "replacement_package": "pycryptodome",
+      "replacement_version": "3.x",
+      "namespace_compatible": true,
+      "notes": "pycryptodome is a maintained fork that uses the same 'Crypto' package namespace. Drop-in replacement for most use cases, but some API differences exist (e.g., Crypto.Cipher.AES.new() parameter changes)."
+    },
+    {
+      "package": "lxml",
+      "current_version": "3.8.0",
+      "risk": "LOW",
+      "blocker": false,
+      "has_c_extensions": true,
+      "c_extension_details": "C bindings to libxml2 and libxslt native libraries",
+      "python3_support": true,
+      "status": "Actively maintained",
+      "migration_action": "Update to 5.x",
+      "replacement_package": null,
+      "replacement_version": "5.x",
+      "namespace_compatible": true,
+      "notes": "API is stable across major versions. Update version and verify XML/XSLT processing behavior in tests."
+    },
+    {
+      "package": "pyserial",
+      "current_version": "2.7",
+      "risk": "LOW",
+      "blocker": false,
+      "has_c_extensions": true,
+      "c_extension_details": "Optional C speedup modules for serial I/O",
+      "python3_support": true,
+      "status": "Actively maintained",
+      "migration_action": "Update to 3.x",
+      "replacement_package": null,
+      "replacement_version": "3.x",
+      "namespace_compatible": true,
+      "notes": "Minor API changes between 2.x and 3.x. Check for renamed attributes and byte/string handling in serial reads/writes."
+    },
+    {
+      "package": "SQLAlchemy",
+      "current_version": "0.9.9",
+      "risk": "MEDIUM",
+      "blocker": false,
+      "has_c_extensions": true,
+      "c_extension_details": "C extensions for result processing (cprocessors, cresultproxy, cutils)",
+      "python3_support": true,
+      "status": "Actively maintained",
+      "migration_action": "Update to 2.x (significant API changes)",
+      "replacement_package": null,
+      "replacement_version": "2.x",
+      "namespace_compatible": true,
+      "notes": "Major API evolution from 0.9 to 2.x. Key changes: declarative_base() moved, Query interface deprecated in favor of select(), session.execute() semantics changed. Plan for iterative upgrade (0.9 -> 1.4 with deprecation warnings -> 2.x)."
+    }
+  ],
+  "buffer_builtin_usage": [
+    {
+      "file": "src/core/types.py",
+      "function": "register_view",
+      "usage": "buffer() used to create a view over register data",
+      "python3_replacement": "memoryview()",
+      "risk": "LOW",
+      "notes": "Direct replacement of buffer() with memoryview(). memoryview() supports the same slicing semantics but requires a bytes-like object (not unicode strings)."
+    },
+    {
+      "file": "src/io_protocols/modbus_client.py",
+      "line": 101,
+      "class": "RegisterBank",
+      "usage": "buffer(self._raw, offset, count * 2)",
+      "python3_replacement": "memoryview(self._raw)[offset:offset + count * 2]",
+      "risk": "LOW",
+      "notes": "buffer(obj, offset, size) maps to memoryview(obj)[offset:offset+size] in Python 3. Ensure self._raw is a bytes or bytearray object."
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "Replace pycrypto with pycryptodome",
+      "reason": "pycrypto is abandoned and has no Python 3 support. This is a hard blocker for migration.",
+      "effort": "MEDIUM",
+      "details": "Install pycryptodome, audit all Crypto.* imports for API compatibility, update any AES/DES cipher initialization code to match pycryptodome's interface."
+    },
+    {
+      "priority": 2,
+      "action": "Replace buffer() calls with memoryview()",
+      "reason": "buffer() builtin was removed in Python 3. memoryview() is the direct replacement.",
+      "effort": "LOW",
+      "details": "Two call sites to update. Straightforward replacement with minor syntax adjustment for offset/size slicing."
+    },
+    {
+      "priority": 3,
+      "action": "Plan SQLAlchemy upgrade path (0.9 -> 1.4 -> 2.x)",
+      "reason": "Large API gap between 0.9 and 2.x. Iterative upgrade reduces risk.",
+      "effort": "HIGH",
+      "details": "Upgrade to 1.4 first with SQLALCHEMY_WARN_20=1 to surface deprecation warnings, then migrate to 2.x style. Focus on session usage patterns and query construction."
+    },
+    {
+      "priority": 4,
+      "action": "Update lxml to 5.x",
+      "reason": "Current version 3.8.0 predates Python 3.12 support. Stable API makes this low-risk.",
+      "effort": "LOW",
+      "details": "Update version pin and run XML/XSLT processing tests to verify behavior."
+    },
+    {
+      "priority": 5,
+      "action": "Update pyserial to 3.x",
+      "reason": "Current version 2.7 is outdated. Python 3 compatible versions available.",
+      "effort": "LOW",
+      "details": "Update version pin. Check byte/string handling in serial read/write calls since Python 3 serial ports return bytes, not str."
+    }
+  ]
+}

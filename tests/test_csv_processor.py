@@ -3,6 +3,9 @@
 Tests for CSV processor: unicode_csv_reader, CsvFieldMapper,
 StringIO-based parsing, encode/decode chains.
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import unittest

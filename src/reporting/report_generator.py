@@ -8,6 +8,8 @@ from sensor data.  Report templates are evaluated dynamically via
 Python code -- a decision made in 2009 that nobody has revisited.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import sys
 import time
 import os

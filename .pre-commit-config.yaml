@@ -1,0 +1,65 @@
+# Pre-commit hooks for Python 2-to-3 migration enforcement.
+#
+# Install:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Run manually:
+#   pre-commit run --all-files
+#
+# The MIGRATION_PHASE environment variable controls which pylintrc is used.
+# Default is phase1 (least strict). Set to phase2/phase3/phase4 as the
+# migration progresses.
+
+repos:
+  # -- Standard pre-commit hooks (quick sanity checks) --
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-ast
+        name: "Verify Python files parse"
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # -- Pylint with Py2 idiom checker --
+  - repo: local
+    hooks:
+      - id: pylint-py2-idioms
+        name: "pylint: Py2 idiom checker (phase-gated)"
+        entry: >
+          bash -c '
+            PHASE="${MIGRATION_PHASE:-phase1}"
+            RCFILE=".lint-plugins/pylintrc-${PHASE}"
+            if [ ! -f "$RCFILE" ]; then
+              echo "ERROR: $RCFILE not found. Valid phases: phase1, phase2, phase3, phase4"
+              exit 1
+            fi
+            PYTHONPATH=".lint-plugins:${PYTHONPATH}" \
+              pylint --rcfile="$RCFILE" \
+                     --load-plugins=py2_idioms_checker \
+                     "$@"
+          '
+        language: system
+        types: [python]
+        stages: [pre-commit]
+
+  # -- Flake8 with data-layer checker --
+  - repo: local
+    hooks:
+      - id: flake8-py2-data-layer
+        name: "flake8: Py2 data-layer checks (E950-E953)"
+        entry: >
+          bash -c '
+            PYTHONPATH=".lint-plugins:${PYTHONPATH}" \
+              flake8 --select=E950,E951,E952,E953 "$@"
+          '
+        language: system
+        types: [python]
+        stages: [pre-commit]
+        # Only run on files that deal with binary protocols and serialization
+        files: >-
+          (?x)
+          src/io_protocols/
+          |src/data_processing/
+          |src/storage/

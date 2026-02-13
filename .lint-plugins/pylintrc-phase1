@@ -1,0 +1,31 @@
+# pylintrc-phase1 -- Py2-to-3 Migration: Phase 1 Gate Enforcement
+#
+# Phase 1 focus:
+#   - All .py files must have the four __future__ imports
+#   - Flag Py2-only stdlib imports (so replacement planning can start)
+#   - Flag implicit relative imports (blocking for Py3)
+#
+# Usage:
+#   pylint --rcfile=.lint-plugins/pylintrc-phase1 \
+#          --load-plugins=py2_idioms_checker \
+#          src/ tests/
+
+[MAIN]
+load-plugins=py2_idioms_checker
+init-hook='import sys; sys.path.insert(0, ".lint-plugins")'
+
+# Only run our custom checkers plus basic fatal errors
+disable=all
+enable=
+    py2-missing-future-import,
+    py2-only-import,
+    py2-implicit-relative-import,
+    fatal
+
+[FORMAT]
+max-line-length=120
+
+[REPORTS]
+output-format=text
+reports=no
+score=no

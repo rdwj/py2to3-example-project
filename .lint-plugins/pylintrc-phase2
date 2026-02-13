@@ -1,0 +1,42 @@
+# pylintrc-phase2 -- Py2-to-3 Migration: Phase 2 Enforcement
+#
+# Phase 2 adds to Phase 1:
+#   - Print statement detection
+#   - Except comma syntax detection
+#   - xrange() detection
+#   - dict.iteritems()/iterkeys()/itervalues() detection
+#   - dict.has_key() detection
+#   - file() builtin detection
+#   - long type / L suffix detection
+#
+# Usage:
+#   pylint --rcfile=.lint-plugins/pylintrc-phase2 \
+#          --load-plugins=py2_idioms_checker \
+#          src/ tests/
+
+[MAIN]
+load-plugins=py2_idioms_checker
+init-hook='import sys; sys.path.insert(0, ".lint-plugins")'
+
+disable=all
+enable=
+    py2-missing-future-import,
+    py2-only-import,
+    py2-implicit-relative-import,
+    py2-print-statement,
+    py2-except-comma-syntax,
+    py2-xrange-usage,
+    py2-dict-iter-method,
+    py2-has-key,
+    py2-file-builtin,
+    py2-long-type,
+    py2-long-literal,
+    fatal
+
+[FORMAT]
+max-line-length=120
+
+[REPORTS]
+output-format=text
+reports=no
+score=no

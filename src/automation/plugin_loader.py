@@ -11,6 +11,8 @@ Uses Py2-specific function/method attributes (``func_name``, ``func_defaults``,
 in Python 3.
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import imp

@@ -43,7 +43,7 @@ def batch_with_index(iterable, batch_size):
     Uses ``itertools.izip`` to pair each batch with its ordinal.
     """
     batches = batch_readings(iterable, batch_size)
-    for pair in itertools.izip(itertools.count(), batches):
+    for pair in zip(itertools.count(), batches):
         yield pair
 
 
@@ -63,8 +63,8 @@ def sliding_window(iterable, window_size):
     iterator = iter(iterable)
 
     # Fill the initial window
-    for _ in xrange(window_size):
-        window.append(iterator.next())
+    for _ in range(window_size):
+        window.append(next(iterator))
     yield tuple(window)
 
     # Slide forward one element at a time
@@ -99,7 +99,7 @@ def iter_group_items(grouped_dict):
     Uses ``dict.iteritems()`` which returns a lazy iterator in
     Python 2; in Python 3 ``dict.items()`` is already lazy.
     """
-    return grouped_dict.iteritems()
+    return grouped_dict.items()
 
 
 def iter_group_keys(grouped_dict):
@@ -108,7 +108,7 @@ def iter_group_keys(grouped_dict):
     Uses ``dict.iterkeys()`` -- lazy in Py2, replaced by
     ``dict.keys()`` in Py3.
     """
-    return grouped_dict.iterkeys()
+    return grouped_dict.keys()
 
 
 # ---------------------------------------------------------------------------
@@ -122,7 +122,7 @@ def common_tags(config_a, config_b):
     ``viewkeys()`` returns a set-like view in Python 2.7; in Python 3
     ``dict.keys()`` itself returns a view.
     """
-    return config_a.viewkeys() & config_b.viewkeys()
+    return config_a.keys() & config_b.keys()
 
 
 def changed_values(old_config, new_config):
@@ -134,14 +134,14 @@ def changed_values(old_config, new_config):
     """
     return dict(
         (k, (old_config.get(k), new_config.get(k)))
-        for k, _ in old_config.viewitems() ^ new_config.viewitems()
+        for k, _ in old_config.items() ^ new_config.items()
         if k in old_config and k in new_config
     )
 
 
 def added_keys(old_config, new_config):
     """Return keys in *new_config* that are not in *old_config*."""
-    return new_config.viewkeys() - old_config.viewkeys()
+    return new_config.keys() - old_config.keys()
 
 
 def config_values_snapshot(config_dict):
@@ -150,7 +150,7 @@ def config_values_snapshot(config_dict):
     Uses ``dict.viewvalues()`` which has no direct Py3 equivalent
     (it maps to ``dict.values()``).
     """
-    return list(config_dict.viewvalues())
+    return list(config_dict.values())
 
 
 # ---------------------------------------------------------------------------
@@ -163,7 +163,7 @@ def scale_readings(readings, factor):
     Uses ``itertools.imap`` which became the builtin ``map`` in
     Python 3.
     """
-    return itertools.imap(lambda r: r * factor, readings)
+    return map(lambda r: r * factor, readings)
 
 
 def filter_valid_readings(readings, min_quality=192):
@@ -172,7 +172,7 @@ def filter_valid_readings(readings, min_quality=192):
     Uses ``itertools.ifilter`` which became the builtin ``filter``
     in Python 3.
     """
-    return itertools.ifilter(lambda r: r.quality >= min_quality, readings)
+    return filter(lambda r: r.quality >= min_quality, readings)
 
 
 def zip_timestamps(readings_a, readings_b):
@@ -180,7 +180,7 @@ def zip_timestamps(readings_a, readings_b):
 
     Uses ``itertools.izip`` -- lazy in Py2, renamed to ``zip`` in Py3.
     """
-    return itertools.izip(readings_a, readings_b)
+    return zip(readings_a, readings_b)
 
 
 # ---------------------------------------------------------------------------
@@ -193,7 +193,7 @@ def extract_values(readings):
     ``map()`` returns a list in Python 2; in Python 3 it returns a
     lazy iterator.
     """
-    return map(lambda r: r.decoded_value, readings)
+    return list(map(lambda r: r.decoded_value, readings))
 
 
 def good_readings(readings):
@@ -201,7 +201,7 @@ def good_readings(readings):
 
     ``filter()`` returns a list in Python 2.
     """
-    return filter(lambda r: r.quality >= 192, readings)
+    return list(filter(lambda r: r.quality >= 192, readings))
 
 
 def paired_channels(channel_a, channel_b):
@@ -209,7 +209,7 @@ def paired_channels(channel_a, channel_b):
 
     ``zip()`` returns a list in Python 2.
     """
-    return zip(channel_a, channel_b)
+    return list(zip(channel_a, channel_b))
 
 
 # ---------------------------------------------------------------------------
@@ -222,7 +222,7 @@ def take_next(iterator):
     In Python 3 the ``.next()`` method was removed; you must use
     ``next(iterator)`` instead.
     """
-    return iterator.next()
+    return next(iterator)
 
 
 def peek(iterator):
@@ -231,7 +231,7 @@ def peek(iterator):
     Returns ``(value, new_iterator)`` where *new_iterator* replays
     the peeked value.
     """
-    value = iterator.next()
+    value = next(iterator)
     return value, itertools.chain([value], iterator)
 
 

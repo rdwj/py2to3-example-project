@@ -6,11 +6,8 @@ Handles CSV files exported from various plant historians and third-party
 systems.  These files arrive in a zoo of encodings -- Latin-1 from the
 German site, Shift-JIS from the Japanese facility, UTF-8 from the newer
 REST API exports, and plain ASCII from the legacy DCS historian.  The
-CSV module in Python 2 does not handle unicode natively, so we use a
-wrapper that decodes rows after reading.
-
-The processor also maps historian-specific column names to the platform's
-internal field names via a configurable CsvFieldMapper.
+processor maps historian-specific column names to the platform's internal
+field names via a configurable CsvFieldMapper.
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
@@ -18,65 +15,54 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import csv
 import codecs
-
-from StringIO import StringIO
+import io
 
 from core.exceptions import DataError, EncodingError, ParseError
 from core.string_helpers import safe_decode, safe_encode, detect_encoding
 from core.config_loader import load_platform_config
 
 
-# The Python 2 csv module requires files opened in binary mode ('rb')
-# and does not understand unicode.  We read bytes and decode after.
-CSV_READ_MODE = "rb"
+# In Python 3 the csv module works with text mode, not binary.
+CSV_READ_MODE = "r"
 
-# Default encoding assumption when no BOM or hint is present.  Python 2's
-# default encoding is ASCII, and we match that assumption to avoid silent
-# data corruption when processing files from the legacy historian.
+# Default encoding assumption when no BOM or hint is present.
 DEFAULT_ENCODING = "ascii"
 
-# BOM markers for auto-detection
-_BOM_UTF8 = "\xef\xbb\xbf"
-_BOM_UTF16_LE = "\xff\xfe"
-_BOM_UTF16_BE = "\xfe\xff"
+# BOM markers for auto-detection (as bytes for comparison against raw reads)
+_BOM_UTF8 = b"\xef\xbb\xbf"
+_BOM_UTF16_LE = b"\xff\xfe"
+_BOM_UTF16_BE = b"\xfe\xff"
 
 
 # ---------------------------------------------------------------------------
-# Unicode CSV reader wrapper
+# CSV reader/writer -- simplified for Python 3 (native unicode support)
 # ---------------------------------------------------------------------------
 
-def unicode_csv_reader(file_obj, encoding="utf-8", dialect=csv.excel, **kwargs):
-    """Wrap ``csv.reader`` to yield rows of unicode strings.
+def unicode_csv_reader(file_obj, dialect=csv.excel, **kwargs):
+    """Wrap ``csv.reader`` to yield rows of strings.
 
-    The standard ``csv`` module in Python 2 operates on byte strings.
-    This wrapper reads each row as bytes, then decodes every cell to
-    unicode using the specified encoding.  This pattern is straight
-    from the Python 2 csv module documentation.
+    In Python 3 the csv module operates on text strings natively, so
+    no decode step is needed.  The ``encoding`` kwarg from the Py2
+    wrapper is accepted and ignored for call-site compatibility.
     """
+    kwargs.pop("encoding", None)
     reader = csv.reader(file_obj, dialect=dialect, **kwargs)
     for row in reader:
-        yield [cell.decode(encoding, "replace") for cell in row]
+        yield row
 
 
-def unicode_csv_writer(file_obj, encoding="utf-8", dialect=csv.excel, **kwargs):
-    """Return a wrapper around ``csv.writer`` that encodes unicode to bytes
-    before writing.
+def unicode_csv_writer(file_obj, dialect=csv.excel, **kwargs):
+    """Return a csv.writer wrapper.
 
-    Yields a writer-like object with a ``writerow`` method.
+    In Python 3 the csv module handles str natively.  The ``encoding``
+    kwarg is accepted and ignored for call-site compatibility.
     """
+    kwargs.pop("encoding", None)
     writer = csv.writer(file_obj, dialect=dialect, **kwargs)
 
     class _UnicodeWriter(object):
         def writerow(self, row):
-            encoded_row = []
-            for cell in row:
-                if isinstance(cell, unicode):
-                    encoded_row.append(cell.encode(encoding, "replace"))
-                elif isinstance(cell, str):
-                    encoded_row.append(cell)
-                else:
-                    encoded_row.append(str(cell))
-            writer.writerow(encoded_row)
+            writer.writerow([str(cell) for cell in row])
 
         def writerows(self, rows):
             for row in rows:
@@ -119,11 +105,8 @@ class CsvFieldMapper(object):
         """
         result = []
         for col in header_row:
-            if isinstance(col, unicode):
-                key = col.lower().strip()
-            else:
-                key = col.decode("utf-8", "replace").lower().strip()
-            if self._mappings.has_key(key):
+            key = col.lower().strip()
+            if key in self._mappings:
                 result.append(self._mappings[key])
             else:
                 result.append(col)
@@ -131,7 +114,7 @@ class CsvFieldMapper(object):
 
     def transform_value(self, internal_name, raw_value):
         """Apply the registered transform function for a field, if any."""
-        if self._transforms.has_key(internal_name):
+        if internal_name in self._transforms:
             return self._transforms[internal_name](raw_value)
         return raw_value
 
@@ -157,16 +140,16 @@ class CsvProcessor(object):
     def read_csv(self, file_path, encoding=None, has_header=True):
         """Read a CSV file and return a list of record dicts.
 
-        Opens the file in binary mode ('rb') as required by the Python 2
-        csv module.  Detects encoding from BOM if not specified.
+        Opens the file in text mode with the detected encoding, as
+        required by the Python 3 csv module.
         """
         if encoding is None:
             encoding = self._detect_file_encoding(file_path)
 
         records = []
-        f = open(file_path, CSV_READ_MODE)
+        f = open(file_path, "r", newline="", encoding=encoding)
         try:
-            reader = unicode_csv_reader(f, encoding=encoding)
+            reader = unicode_csv_reader(f)
             header = None
 
             for row_num, row in enumerate(reader):
@@ -180,7 +163,7 @@ class CsvProcessor(object):
                     record = self._build_record(header, row, row_num)
                     records.append(record)
                     self._processed_count += 1
-                except DataError, e:
+                except DataError as e:
                     self._error_count += 1
         finally:
             f.close()
@@ -190,14 +173,13 @@ class CsvProcessor(object):
     def read_csv_string(self, csv_text, encoding="utf-8", has_header=True):
         """Parse CSV data from an in-memory string.
 
-        Uses StringIO to wrap the text for the csv reader.  The input
-        must be a byte string (str) since the csv module requires it.
+        Uses io.StringIO to wrap the text for the csv reader.
         """
-        if isinstance(csv_text, unicode):
-            csv_text = csv_text.encode(encoding)
+        if isinstance(csv_text, bytes):
+            csv_text = csv_text.decode(encoding)
 
-        buf = StringIO(csv_text)
-        reader = unicode_csv_reader(buf, encoding=encoding)
+        buf = io.StringIO(csv_text)
+        reader = unicode_csv_reader(buf)
         records = []
         header = None
 
@@ -210,38 +192,27 @@ class CsvProcessor(object):
             try:
                 record = self._build_record(header, row, row_num)
                 records.append(record)
-            except DataError, e:
+            except DataError as e:
                 self._error_count += 1
 
         return records
 
     def write_csv(self, file_path, records, field_names, encoding="utf-8"):
-        """Write records to a CSV file using codecs.open for encoded output.
+        """Write records to a CSV file.
 
-        Uses ``codecs.open()`` to ensure the output is written in the
-        requested encoding.  The header row may contain non-ASCII field
-        names (e.g. u"Temperatur\u00b0C" for German sites).
+        Opens in text mode with the requested encoding.
         """
-        # Non-ASCII headers -- use unicode string literals
-        header_line = u",".join(field_names)
-
-        out = codecs.open(file_path, "wb", encoding=encoding, errors="replace")
+        out = open(file_path, "w", newline="", encoding=encoding, errors="replace")
         try:
-            # Write header encoded as the target encoding
-            encoded_header = header_line.encode(encoding, "replace")
-            out.write(encoded_header + "\n")
+            writer = csv.writer(out)
+            writer.writerow(field_names)
 
             for record in records:
                 cells = []
                 for name in field_names:
-                    value = record.get(name, u"")
-                    if isinstance(value, unicode):
-                        cells.append(value.encode(encoding, "replace"))
-                    elif isinstance(value, str):
-                        cells.append(value)
-                    else:
-                        cells.append(str(value))
-                out.write(",".join(cells) + "\n")
+                    value = record.get(name, "")
+                    cells.append(str(value))
+                writer.writerow(cells)
         finally:
             out.close()
 
@@ -255,7 +226,7 @@ class CsvProcessor(object):
         if not records:
             return 0
 
-        field_names = records[0].keys()
+        field_names = list(records[0].keys())
         self.write_csv(output_path, records, field_names, encoding=to_encoding)
         return len(records)
 
@@ -274,7 +245,7 @@ class CsvProcessor(object):
 
         if len(row) < len(header):
             # Pad short rows with empty strings
-            row = row + [u""] * (len(header) - len(row))
+            row = row + [""] * (len(header) - len(row))
 
         record = {}
         for i, field_name in enumerate(header):

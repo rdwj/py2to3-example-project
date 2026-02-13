@@ -45,48 +45,48 @@ def build_erpx400_layout():
 
 def process_file(file_path, cache_dir):
     """Parse a single mainframe batch file and report results."""
-    print "=" * 60
-    print "Processing: %s" % file_path
-    print "Started:    %s" % time.strftime("%Y-%m-%d %H:%M:%S")
-    print "=" * 60
+    print("=" * 60)
+    print("Processing: %s" % file_path)
+    print("Started:    %s" % time.strftime("%Y-%m-%d %H:%M:%S"))
+    print("=" * 60)
 
     layout = build_erpx400_layout()
     parser = MainframeParser(layout, cache_dir=cache_dir)
 
-    f = file(file_path, "rb")
+    f = open(file_path, "rb")
     try:
         file_size = os.path.getsize(file_path)
-        expected_records = file_size / RECORD_LENGTH
-        print "File size:  %d bytes (%d expected records)" % (
+        expected_records = file_size // RECORD_LENGTH
+        print("File size:  %d bytes (%d expected records)" % (
             file_size, expected_records,
-        )
+        ))
     finally:
         f.close()
 
     records = parser.parse_file(file_path)
-    print ""
-    print "Parse complete: %d records, %d errors" % (
+    print("")
+    print("Parse complete: %d records, %d errors" % (
         parser.records_parsed(), parser.errors_encountered(),
-    )
+    ))
 
     # Print first few records as a sanity check
     for rec in records[:5]:
-        print "  #%04d  %-20s  ACCT=%s  AMT=%s  TYPE=%s" % (
+        print("  #%04d  %-20s  ACCT=%s  AMT=%s  TYPE=%s" % (
             rec.record_number,
             rec.get("ACCT-NAME", "???"),
             rec.get("ACCT-NUMBER", "???"),
             rec.get("TRANS-AMT", "???"),
             rec.get("REC-TYPE", "??"),
-        )
+        ))
     if len(records) > 5:
-        print "  ... (%d more records)" % (len(records) - 5)
+        print("  ... (%d more records)" % (len(records) - 5))
 
     return len(records), parser.errors_encountered()
 
 
 def main():
     if len(sys.argv) < 2:
-        print "Usage: %s <input_dir_or_file> [--cache-dir DIR]" % sys.argv[0]
+        print("Usage: %s <input_dir_or_file> [--cache-dir DIR]" % sys.argv[0])
         sys.exit(1)
 
     input_path = sys.argv[1]
@@ -105,9 +105,9 @@ def main():
                 f for f in os.listdir(input_path) if f.endswith(".dat")
             )
             if not dat_files:
-                print "No .dat files found in %s" % input_path
+                print("No .dat files found in %s" % input_path)
                 sys.exit(0)
-            print "Found %d batch file(s) in %s" % (len(dat_files), input_path)
+            print("Found %d batch file(s) in %s" % (len(dat_files), input_path))
             for fname in dat_files:
                 full_path = os.path.join(input_path, fname)
                 n, errs = process_file(full_path, cache_dir)
@@ -116,18 +116,18 @@ def main():
         elif os.path.isfile(input_path):
             total_records, total_errors = process_file(input_path, cache_dir)
         else:
-            print "ERROR: Path not found: %s" % input_path
+            print("ERROR: Path not found: %s" % input_path)
             sys.exit(1)
-    except (PlatformError, DataError, ParseError), e:
-        print "BATCH ERROR: %s" % str(e)
+    except (PlatformError, DataError, ParseError) as e:
+        print("BATCH ERROR: %s" % str(e))
         sys.exit(2)
-    except Exception, e:
-        print "UNEXPECTED ERROR: %s" % str(e)
+    except Exception as e:
+        print("UNEXPECTED ERROR: %s" % str(e))
         sys.exit(2)
 
-    print ""
-    print "Batch import finished at %s" % time.strftime("%Y-%m-%d %H:%M:%S")
-    print "Total records: %d   Total errors: %d" % (total_records, total_errors)
+    print("")
+    print("Batch import finished at %s" % time.strftime("%Y-%m-%d %H:%M:%S"))
+    print("Total records: %d   Total errors: %d" % (total_records, total_errors))
     if total_errors > 0:
         sys.exit(1)
 

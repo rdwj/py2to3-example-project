@@ -165,7 +165,7 @@ class TestOpcUaClientEncoding:
         """Captures: _dec decodes UTF-8 bytes to unicode."""
         raw = u"caf\u00e9".encode("utf-8")
         result = client._dec(raw)
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         assert u"\u00e9" in result
 
     @pytest.mark.py2_behavior
@@ -173,7 +173,7 @@ class TestOpcUaClientEncoding:
         """Captures: _dec falls back to latin-1 for non-UTF-8 bytes."""
         raw = b"\xe9\xe8\xea"  # latin-1 e-acute, e-grave, e-circumflex
         result = client._dec(raw)
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         assert u"\u00e9" in result
 
     @pytest.mark.py2_behavior
@@ -181,7 +181,7 @@ class TestOpcUaClientEncoding:
         """Captures: _dec decodes Shift-JIS for Japanese site labels."""
         raw = u"\u6e29\u5ea6".encode("shift_jis")  # "temperature" in Japanese
         result = client._dec(raw)
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
 
     @pytest.mark.py2_behavior
     def test_dec_ultimate_latin1_fallback(self, client):
@@ -189,7 +189,7 @@ class TestOpcUaClientEncoding:
         # Bytes that are valid latin-1 but not valid in other encodings
         raw = b"\x80\x81\x82"
         result = client._dec(raw)
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
 
     def test_enc_fallbacks_ordering(self):
         """Captures: encoding candidates are tried in priority order."""

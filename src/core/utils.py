@@ -9,9 +9,9 @@ functions that didn't fit neatly elsewhere.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import functools
 import sys
 import os
-from sets import Set as OrderedSet   # pre-2.6 habit; used for dedup w/ order
 
 # ---------------------------------------------------------------------------
 # Function-calling helpers
@@ -24,8 +24,8 @@ def call_with_args(func, args, kwargs=None):
     for dispatching plugin callbacks.
     """
     if kwargs is None:
-        return apply(func, args)
-    return apply(func, args, kwargs)
+        return func(*args)
+    return func(*args, **kwargs)
 
 
 def aggregate_values(func, sequence, initial=None):
@@ -35,8 +35,8 @@ def aggregate_values(func, sequence, initial=None):
     ``functools.reduce``.
     """
     if initial is not None:
-        return reduce(func, sequence, initial)
-    return reduce(func, sequence)
+        return functools.reduce(func, sequence, initial)
+    return functools.reduce(func, sequence)
 
 
 # ---------------------------------------------------------------------------
@@ -49,7 +49,7 @@ def intern_tag(tag_name):
     """Intern a sensor tag name so that repeated lookups use identity
     comparison instead of value comparison.  ``intern()`` is a builtin
     in Python 2 and ``sys.intern()`` in Python 3."""
-    tag_name = intern(tag_name)
+    tag_name = sys.intern(tag_name)
     _interned_tags[tag_name] = tag_name
     return tag_name
 
@@ -63,7 +63,7 @@ def get_nested(mapping, *keys):
     removed in Python 3 in favour of the ``in`` operator."""
     current = mapping
     for key in keys:
-        if not hasattr(current, "has_key") or not current.has_key(key):
+        if not isinstance(current, dict) or key not in current:
             return None
         current = current[key]
     return current
@@ -73,7 +73,7 @@ def merge_dicts(*dicts):
     """Merge several dicts left-to-right.  Later keys win."""
     result = {}
     for d in dicts:
-        if d.has_key("__override__"):
+        if "__override__" in d:
             result.clear()
         result.update(d)
     return result
@@ -91,7 +91,7 @@ def debug_repr(obj):
         log.debug("value=" + `value`)
     and we wrapped it to make the pattern greppable.
     """
-    return `obj`
+    return repr(obj)
 
 
 def values_differ(a, b):
@@ -100,7 +100,7 @@ def values_differ(a, b):
     ``<>`` is a synonym for ``!=`` in Python 2 but was removed in
     Python 3.
     """
-    return a <> b
+    return a != b
 
 
 # ---------------------------------------------------------------------------
@@ -110,16 +110,16 @@ def values_differ(a, b):
 def sample_indices(start, stop, step=1):
     """Generate index positions for sampling a data buffer.
 
-    Uses ``xrange()`` which is the lazy iterator version of ``range()``
+    Uses ``range()`` which is the lazy iterator version of ``range()``
     in Python 2.  In Python 3 ``range()`` is already lazy.
     """
-    return list(xrange(start, stop, step))
+    return list(range(start, stop, step))
 
 
 def chunked_range(total, chunk_size):
     """Yield (start, end) tuples that partition ``[0, total)`` into
     chunks of at most *chunk_size*."""
-    for offset in xrange(0, total, chunk_size):
+    for offset in range(0, total, chunk_size):
         yield offset, min(offset + chunk_size, total)
 
 
@@ -130,12 +130,12 @@ def chunked_range(total, chunk_size):
 def prompt_user(message, default=None):
     """Prompt the operator on the console and return their response.
 
-    Uses ``raw_input()`` which returns a ``str`` (bytes) in Python 2.
+    Uses ``input()`` which returns a ``str`` (bytes) in Python 2.
     In Python 3 ``input()`` replaces it and returns ``str`` (text).
     """
     if default is not None:
         message = "%s [%s]: " % (message, default)
-    response = raw_input(message)
+    response = input(message)
     if not response and default is not None:
         return default
     return response
@@ -143,7 +143,7 @@ def prompt_user(message, default=None):
 
 def confirm_action(message):
     """Ask the user for a yes/no confirmation."""
-    answer = raw_input(message + " (y/n): ")
+    answer = input(message + " (y/n): ")
     return answer.strip().lower() in ("y", "yes")
 
 
@@ -158,7 +158,7 @@ def unique_tags(tag_sequence):
     in Python 2.6 when the builtin ``set`` type became standard, but
     this code predates that transition.
     """
-    seen = OrderedSet()
+    seen = set()
     result = []
     for tag in tag_sequence:
         if tag not in seen:

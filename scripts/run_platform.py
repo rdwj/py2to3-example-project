@@ -65,14 +65,14 @@ def parse_args(argv):
             opts["verbose"] = True
             i += 1
         else:
-            print "Unknown option: %s" % argv[i]
+            print("Unknown option: %s" % argv[i])
             i += 1
     return opts
 
 
 def init_platform(config_path=None):
     """Load configuration and initialise core subsystems."""
-    print "Initialising platform..."
+    print("Initialising platform...")
     config = load_platform_config(config_path)
     config.dump()
 
@@ -83,74 +83,74 @@ def init_platform(config_path=None):
     )
     scheduler = TaskScheduler()
 
-    print "Platform subsystems ready"
+    print("Platform subsystems ready")
     return config, db, cache, scheduler
 
 
 def run_interactive(config, db, cache, scheduler):
-    """Interactive command loop using raw_input()."""
-    print ""
-    print "Type 'help' for available commands."
+    """Interactive command loop using input()."""
+    print("")
+    print("Type 'help' for available commands.")
     while True:
         try:
-            cmd = raw_input("platform> ").strip().lower()
+            cmd = input("platform> ").strip().lower()
         except (EOFError, KeyboardInterrupt):
-            print ""
-            print "Shutting down..."
+            print("")
+            print("Shutting down...")
             break
 
         if cmd == "help":
             for name, desc in sorted(COMMANDS.items()):
-                print "  %-10s %s" % (name, desc)
+                print("  %-10s %s" % (name, desc))
         elif cmd == "status":
-            print "Database:  %s" % db
-            print "Cache:     %s entries" % cache
-            print "Scheduler: %s" % scheduler
+            print("Database:  %s" % db)
+            print("Cache:     %s entries" % cache)
+            print("Scheduler: %s" % scheduler)
         elif cmd == "report":
             try:
                 gen = ReportGenerator()
-                print "Report generation started at %s" % time.strftime("%Y-%m-%d %H:%M:%S")
-            except Exception, e:
-                print "Report error: %s" % str(e)
+                print("Report generation started at %s" % time.strftime("%Y-%m-%d %H:%M:%S"))
+            except Exception as e:
+                print("Report error: %s" % str(e))
         elif cmd == "quit":
-            print "Shutting down platform..."
+            print("Shutting down platform...")
             break
         elif cmd == "":
             continue
         else:
-            print "Unknown command: %s  (type 'help')" % cmd
+            print("Unknown command: %s  (type 'help')" % cmd)
 
 
 def run_batch(config, db, cache, scheduler):
     """Non-interactive batch mode for cron or systemd."""
-    print "Running in batch mode..."
+    print("Running in batch mode...")
     try:
         incoming = config.get("mainframe", "incoming_dir",
                               fallback="/opt/platform/incoming/mainframe")
         if os.path.isdir(incoming):
             for fname in os.listdir(incoming):
                 if fname.endswith(".dat"):
-                    print "Processing %s" % fname
+                    print("Processing %s" % fname)
         else:
-            print "Incoming directory not found: %s" % incoming
-    except Exception, e:
-        print "Batch processing error: %s" % str(e)
+            print("Incoming directory not found: %s" % incoming)
+    except Exception as e:
+        print("Batch processing error: %s" % str(e))
         return 1
-    print "Batch processing complete"
+    print("Batch processing complete")
     return 0
 
 
 def main():
-    print BANNER
+    print(BANNER)
     opts = parse_args(sys.argv)
 
     try:
         config, db, cache, scheduler = init_platform(opts["config"])
-    except PlatformError, e:
-        print "FATAL: Platform init failed: %s" % str(e)
+    except PlatformError as e:
+        print("FATAL: Platform init failed: %s" % str(e))
         sys.exit(1)
-    except Exception, e:
-        print "FATAL: Unexpected error during init: %s" % str(e)
+    except Exception as e:
+        print("FATAL: Unexpected error during init: %s" % str(e))
         sys.exit(1)
 
     if opts["batch"]:
@@ -159,7 +159,7 @@ def main():
     else:
         run_interactive(config, db, cache, scheduler)
 
-    print "Platform stopped."
+    print("Platform stopped.")
 
 
 if __name__ == "__main__":

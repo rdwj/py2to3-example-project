@@ -17,8 +17,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import re
 import hashlib
-import commands
-import __builtin__
+import subprocess
+import builtins
+import functools
 
 from core.exceptions import DataError
 from core.string_helpers import safe_decode, safe_encode, detect_encoding
@@ -66,16 +67,15 @@ class TextFingerprint(object):
     """
 
     def __init__(self, text):
-        if isinstance(text, unicode):
+        if isinstance(text, str):
             normalised = text.lower().strip()
         else:
             normalised = safe_decode(text).lower().strip()
 
         # Collapse whitespace runs to single spaces
-        normalised = re.sub(r"\s+", u" ", normalised)
+        normalised = re.sub(r"\s+", " ", normalised)
 
-        # hashlib.md5() in Python 2 accepts str (bytes) directly;
-        # in Python 3 it requires explicit bytes
+        # hashlib.md5() requires explicit bytes in Python 3
         encoded = safe_encode(normalised, "utf-8")
         self._hash = hashlib.md5(encoded).hexdigest()
         self._length = len(normalised)
@@ -114,7 +114,7 @@ class TextAnalyzer(object):
 
     Provides keyword extraction, similarity scoring against a reference
     library, and integration with external text processing tools via
-    the ``commands`` module for system-level NLP utilities.
+    the ``subprocess`` module.
     """
 
     def __init__(self, language="en"):
@@ -130,45 +130,43 @@ class TextAnalyzer(object):
         """Extract the most significant keywords from maintenance text.
 
         Uses term frequency as the ranking signal.  Stop words and short
-        tokens are filtered out.  ``map()`` and ``filter()`` return lists
-        in Python 2; in Python 3 they return iterators.
+        tokens are filtered out.
         """
         if top_n is None:
             top_n = DEFAULT_TOP_KEYWORDS
 
-        if isinstance(text, str):
+        if isinstance(text, bytes):
             text = safe_decode(text)
 
         # Tokenise using the regex pattern with UNICODE flag
         tokens = _TOKEN_PATTERN.findall(text)
 
         # Normalise to lowercase
-        tokens = map(lambda t: t.lower(), tokens)
+        tokens = list(map(lambda t: t.lower(), tokens))
 
         # Filter stop words and short tokens
-        tokens = filter(
+        tokens = list(filter(
             lambda t: t not in _STOP_WORDS and len(t) >= MIN_KEYWORD_LENGTH,
             tokens,
-        )
+        ))
 
         # Count frequencies
         freq = {}
         for token in tokens:
-            if freq.has_key(token):
+            if token in freq:
                 freq[token] += 1
             else:
                 freq[token] = 1
 
         # Sort by frequency descending, then alphabetically
-        ranked = sorted(freq.iteritems(), key=lambda pair: (-pair[1], pair[0]))
+        ranked = sorted(freq.items(), key=lambda pair: (-pair[1], pair[0]))
         return ranked[:top_n]
 
     def compute_similarity(self, text_a, text_b):
         """Compute a Jaccard similarity score between two texts.
 
         Uses keyword sets (not raw tokens) for comparison, which is
-        more robust against word order differences.  ``reduce()`` is a
-        builtin in Python 2; moved to functools in Python 3.
+        more robust against word order differences.
         """
         keywords_a = set([kw for kw, _ in self.extract_keywords(text_a, top_n=50)])
         keywords_b = set([kw for kw, _ in self.extract_keywords(text_b, top_n=50)])
@@ -185,8 +183,8 @@ class TextAnalyzer(object):
     def batch_similarity(self, texts):
         """Compute pairwise similarity scores for a batch of texts.
 
-        Uses ``reduce()`` to accumulate the total similarity mass for
-        reporting average similarity in a document collection.
+        Uses ``functools.reduce()`` to accumulate the total similarity
+        mass for reporting average similarity in a document collection.
         """
         keyword_sets = []
         for text in texts:
@@ -194,8 +192,8 @@ class TextAnalyzer(object):
             keyword_sets.append(kws)
 
         pairs = []
-        for i in xrange(len(keyword_sets)):
-            for j in xrange(i + 1, len(keyword_sets)):
+        for i in range(len(keyword_sets)):
+            for j in range(i + 1, len(keyword_sets)):
                 set_a = keyword_sets[i]
                 set_b = keyword_sets[j]
                 if set_a or set_b:
@@ -207,7 +205,7 @@ class TextAnalyzer(object):
         if not pairs:
             return pairs, 0.0
 
-        total = reduce(lambda acc, p: acc + p[2], pairs, 0.0)
+        total = functools.reduce(lambda acc, p: acc + p[2], pairs, 0.0)
         average = total / len(pairs)
         return pairs, average
 
@@ -224,7 +222,7 @@ class TextAnalyzer(object):
         best_label = None
         best_score = 0.0
 
-        for label, ref_texts in library.iteritems():
+        for label, ref_texts in library.items():
             for ref_text in ref_texts:
                 score = self.compute_similarity(text, ref_text)
                 if score > best_score:
@@ -244,11 +242,10 @@ class TextAnalyzer(object):
     def run_external_analyzer(self, text, tool_path):
         """Run an external text analysis tool and return its output.
 
-        Uses the ``commands`` module (removed in Python 3, replaced by
-        ``subprocess``) to invoke a command-line NLP tool such as
-        ``hunspell`` for spell-checking or a custom tokeniser.
+        Uses the ``subprocess`` module to invoke a command-line NLP tool
+        such as ``hunspell`` for spell-checking or a custom tokeniser.
         """
-        if isinstance(text, unicode):
+        if isinstance(text, str):
             text = text.encode("utf-8")
 
         # Write text to a temp file for the external tool
@@ -261,7 +258,7 @@ class TextAnalyzer(object):
             f.close()
 
         cmd = "%s %s" % (tool_path, tmp_path)
-        output = commands.getoutput(cmd)
+        output = subprocess.getoutput(cmd)
 
         try:
             import os
@@ -274,19 +271,15 @@ class TextAnalyzer(object):
     def batch_fingerprint(self, texts):
         """Compute fingerprints for a batch of texts.
 
-        Uses ``map()`` as a list producer (Python 2 behaviour).
         Returns a list of (text_index, TextFingerprint) tuples.
         """
-        fingerprints = map(lambda t: TextFingerprint(t), texts)
-        # Check the builtin types are available via __builtin__
-        assert hasattr(__builtin__, "map"), "Expected map in __builtin__"
+        fingerprints = list(map(lambda t: TextFingerprint(t), texts))
+        # Check the builtin types are available via builtins
+        assert hasattr(builtins, "map"), "Expected map in builtins"
         return list(enumerate(fingerprints))
 
     def deduplicate(self, texts):
-        """Remove duplicate texts based on fingerprint matching.
-
-        Uses ``filter()`` as a list producer to exclude duplicates.
-        """
+        """Remove duplicate texts based on fingerprint matching."""
         seen = set()
         def is_unique(text):
             fp = TextFingerprint(text)
@@ -295,4 +288,4 @@ class TextAnalyzer(object):
             seen.add(fp.digest)
             return True
 
-        return filter(is_unique, texts)
+        return list(filter(is_unique, texts))

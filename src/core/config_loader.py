@@ -12,14 +12,14 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 import sys
-import ConfigParser
-import __builtin__
+import configparser
+import builtins
 
 # Default ceiling for any numeric configuration value that the caller
 # does not explicitly cap.  ``sys.maxint`` is the largest positive
 # integer on the platform (2**31-1 or 2**63-1); it does not exist in
 # Python 3 which has arbitrary-precision ints and uses ``sys.maxsize``.
-DEFAULT_MAX = sys.maxint
+DEFAULT_MAX = sys.maxsize
 
 # Default config file search paths, in priority order
 CONFIG_SEARCH_PATHS = [
@@ -34,7 +34,7 @@ class PlatformConfig(object):
     for typed access and environment-variable substitution."""
 
     def __init__(self, config_path=None):
-        self._parser = ConfigParser.SafeConfigParser()
+        self._parser = configparser.ConfigParser()
         self._path = config_path
         self._loaded = False
 
@@ -48,7 +48,7 @@ class PlatformConfig(object):
             self._path = path
 
         if self._path and os.path.isfile(self._path):
-            print "Loading config from", self._path
+            print("Loading config from", self._path)
             self._parser.read(self._path)
             self._loaded = True
             return
@@ -56,13 +56,13 @@ class PlatformConfig(object):
         for search_dir in CONFIG_SEARCH_PATHS:
             candidate = os.path.join(search_dir, "platform.ini")
             if os.path.isfile(candidate):
-                print "Found config at", candidate
+                print("Found config at", candidate)
                 self._parser.read(candidate)
                 self._path = candidate
                 self._loaded = True
                 return
 
-        print "WARNING: no configuration file found; using defaults"
+        print("WARNING: no configuration file found; using defaults")
 
     def is_loaded(self):
         return self._loaded
@@ -75,7 +75,7 @@ class PlatformConfig(object):
         try:
             value = self._parser.get(section, key)
             return self._interpolate_env(value)
-        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        except (configparser.NoSectionError, configparser.NoOptionError):
             return fallback
 
     def get_int(self, section, key, fallback=0, max_value=None):
@@ -85,12 +85,12 @@ class PlatformConfig(object):
         try:
             value = int(raw)
         except (ValueError, TypeError):
-            print "Config warning: bad integer for [%s] %s = %r" % (section, key, raw)
+            print("Config warning: bad integer for [%s] %s = %r" % (section, key, raw))
             return fallback
 
         ceiling = max_value if max_value is not None else DEFAULT_MAX
         if value > ceiling:
-            print "Config warning: clamping [%s] %s to max %d" % (section, key, ceiling)
+            print("Config warning: clamping [%s] %s to max %d" % (section, key, ceiling))
             value = ceiling
         return value
 
@@ -101,7 +101,7 @@ class PlatformConfig(object):
         try:
             return float(raw)
         except (ValueError, TypeError):
-            print "Config warning: bad float for [%s] %s = %r" % (section, key, raw)
+            print("Config warning: bad float for [%s] %s = %r" % (section, key, raw))
             return fallback
 
     def get_bool(self, section, key, fallback=False):
@@ -122,7 +122,7 @@ class PlatformConfig(object):
     def items(self, section):
         try:
             return self._parser.items(section)
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             return []
 
     # ---------------------------------------------------------------
@@ -162,17 +162,17 @@ class PlatformConfig(object):
     def dump(self):
         """Print the loaded configuration to stdout for diagnostics."""
         if not self._loaded:
-            print "Config not loaded yet"
+            print("Config not loaded yet")
             return
-        print "--- Platform Configuration ---"
-        print "Source:", self._path
-        print "Default encoding:", self.default_encoding()
-        print "sys.maxint:", DEFAULT_MAX
+        print("--- Platform Configuration ---")
+        print("Source:", self._path)
+        print("Default encoding:", self.default_encoding())
+        print("sys.maxsize:", DEFAULT_MAX)
         for section in self._parser.sections():
-            print "[%s]" % section
+            print("[%s]" % section)
             for key, value in self._parser.items(section):
-                print "  %s = %s" % (key, value)
-        print "--- End Configuration ---"
+                print("  %s = %s" % (key, value))
+        print("--- End Configuration ---")
 
 
 # -------------------------------------------------------------------
@@ -195,4 +195,4 @@ def get_builtin_names():
     """Return the list of builtin names via the ``__builtin__`` module.
 
     In Python 3 the module was renamed to ``builtins``."""
-    return dir(__builtin__)
+    return dir(builtins)

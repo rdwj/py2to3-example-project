@@ -45,7 +45,7 @@ class TestUnescapeHtmlEntities:
     def test_byte_string_decoded(self):
         """Captures: byte string input decoded to unicode first."""
         result = unescape_html_entities("A &amp; B")
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
 
 
 class TestTruncatedRepr:

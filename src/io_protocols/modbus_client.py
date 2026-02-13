@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import socket
 import struct
 import time
-import thread
+import _thread
 
 from src.core.types import DataPoint, register_view
 from src.core.exceptions import ModbusError
@@ -31,18 +31,15 @@ DEFAULT_PORT = 502
 
 
 def crc16_modbus(data):
-    """CRC-16 for MODBUS RTU.  Uses integer division (/) not floor
-    division (//) -- Py2 truncation is correct for positive ints."""
+    """CRC-16 for MODBUS RTU.  In Py3, iterating over bytes yields ints directly."""
     crc = 0xFFFF
     for byte_val in data:
-        if isinstance(byte_val, str):
-            byte_val = ord(byte_val)
         crc = crc ^ byte_val
-        for _ in xrange(8):
+        for _ in range(8):
             if crc & 0x0001:
-                crc = (crc / 2) ^ _CRC16_POLY
+                crc = (crc >> 1) ^ _CRC16_POLY
             else:
-                crc = crc / 2
+                crc = crc >> 1
     return crc & 0xFFFF
 
 
@@ -50,7 +47,7 @@ class ModbusFrame(object):
     """MODBUS TCP ADU -- MBAP header plus PDU."""
     _transaction_counter = 0
 
-    def __init__(self, unit_id, function_code, payload=""):
+    def __init__(self, unit_id, function_code, payload=b""):
         ModbusFrame._transaction_counter += 1
         self.transaction_id = ModbusFrame._transaction_counter & 0xFFFF
         self.unit_id = unit_id
@@ -89,7 +86,7 @@ class RegisterBank(object):
     def __init__(self, base_address, raw_data):
         self.base_address = base_address
         self._raw = raw_data
-        self._count = len(raw_data) / 2  # integer division, 2 bytes per reg
+        self._count = len(raw_data) // 2  # integer division, 2 bytes per reg
 
     def get_register(self, address):
         offset = (address - self.base_address) * 2
@@ -99,9 +96,9 @@ class RegisterBank(object):
         return struct.unpack(">H", self._raw[offset:offset + 2])[0]
 
     def get_register_view(self, start_addr, count):
-        """Zero-copy view via buffer() -- becomes memoryview() in Py3."""
+        """Zero-copy view via memoryview()."""
         offset = (start_addr - self.base_address) * 2
-        return buffer(self._raw, offset, count * 2)
+        return memoryview(self._raw)[offset:offset + count * 2]
 
     def get_float32(self, address):
         offset = (address - self.base_address) * 2
@@ -121,19 +118,19 @@ class ModbusClient(object):
         self.unit_id = unit_id
         self.timeout = timeout
         self._sock = None
-        self._lock = thread.allocate_lock()
+        self._lock = _thread.allocate_lock()
         self._connected = False
         self._poll_active = False
 
     def connect(self):
-        print "MODBUS: connecting to %s:%d unit %d" % (self.host, self.port, self.unit_id)
+        print("MODBUS: connecting to %s:%d unit %d" % (self.host, self.port, self.unit_id))
         try:
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._sock.settimeout(self.timeout)
             self._sock.connect((self.host, self.port))
             self._connected = True
-            print "MODBUS: connected"
-        except socket.error, e:
+            print("MODBUS: connected")
+        except socket.error as e:
             raise ModbusError("Connection failed: %s" % e)
 
     def disconnect(self):
@@ -141,39 +138,39 @@ class ModbusClient(object):
         if self._sock:
             try:
                 self._sock.close()
-            except socket.error, e:
-                print "MODBUS: disconnect warning -- %s" % e
+            except socket.error as e:
+                print("MODBUS: disconnect warning -- %s" % e)
             self._sock = None
             self._connected = False
 
     def read_holding_registers(self, start_addr, quantity):
-        """Read holding registers.  Socket recv() returns str in Py2."""
+        """Read holding registers.  Socket recv() returns bytes in Py3."""
         frame = ModbusFrame.build_read_holding(self.unit_id, start_addr, quantity)
         response = self._transact(frame)
         if len(response) < 2:
             raise ModbusError("Truncated response")
-        resp_fc = ord(response[0])
+        resp_fc = response[0]
         if resp_fc & 0x80:
-            exc = ord(response[1])
+            exc = response[1]
             raise ModbusError("Slave exception: %s" % MODBUS_EXCEPTIONS.get(exc, "Unknown"),
                               function_code=resp_fc & 0x7F, exception_code=exc)
-        byte_count = ord(response[1])
-        print "MODBUS: read %d regs at %d" % (quantity, start_addr)
+        byte_count = response[1]
+        print("MODBUS: read %d regs at %d" % (quantity, start_addr))
         return RegisterBank(start_addr, response[2:2 + byte_count])
 
     def write_single_register(self, address, value):
         frame = ModbusFrame.build_write_single(self.unit_id, address, value)
         response = self._transact(frame)
-        if ord(response[0]) & 0x80:
-            exc = ord(response[1])
+        if response[0] & 0x80:
+            exc = response[1]
             raise ModbusError("Write failed: %s" % MODBUS_EXCEPTIONS.get(exc, "Unknown"),
-                              function_code=ord(response[0]) & 0x7F, exception_code=exc)
-        print "MODBUS: wrote %d to reg %d" % (value, address)
+                              function_code=response[0] & 0x7F, exception_code=exc)
+        print("MODBUS: wrote %d to reg %d" % (value, address))
 
     def start_polling(self, address, quantity, interval_sec, callback):
-        """Background poll via thread.start_new_thread()."""
+        """Background poll via _thread.start_new_thread()."""
         self._poll_active = True
-        thread.start_new_thread(self._poll_loop, (address, quantity, interval_sec, callback))
+        _thread.start_new_thread(self._poll_loop, (address, quantity, interval_sec, callback))
 
     def stop_polling(self):
         self._poll_active = False
@@ -189,9 +186,9 @@ class ModbusClient(object):
                 raise ModbusError("Incomplete MBAP header")
             _txn, _proto, length, _unit = struct.unpack(">HHHB", hdr)
             return self._recv_exact(length - 1)
-        except socket.timeout, e:
+        except socket.timeout as e:
             raise ModbusError("Timeout from %s:%d" % (self.host, self.port))
-        except socket.error, e:
+        except socket.error as e:
             self._connected = False
             raise ModbusError("Socket error: %s" % e)
         finally:
@@ -206,18 +203,18 @@ class ModbusClient(object):
                 break
             chunks.append(chunk)
             got += len(chunk)
-        return "".join(chunks)
+        return b"".join(chunks)
 
     def _poll_loop(self, address, quantity, interval_sec, callback):
         while self._poll_active:
             try:
                 bank = self.read_holding_registers(address, quantity)
                 points = []
-                for i in xrange(quantity):
+                for i in range(quantity):
                     addr = address + i
                     tag = "PLC_%s_%d" % (self.host.replace(".", "_"), addr)
                     points.append(DataPoint(tag, bank.get_register(addr)))
                 callback(points)
-            except ModbusError, e:
-                print "MODBUS: poll error -- %s" % e
+            except ModbusError as e:
+                print("MODBUS: poll error -- %s" % e)
             time.sleep(interval_sec)

@@ -42,10 +42,10 @@ class TestScheduledTask:
     def test_construction_uses_long_id(self):
         """Captures: task_id assigned via long() (removed in Py3)."""
         # Reset counter for deterministic test
-        ScheduledTask._next_id = 0L
+        ScheduledTask._next_id = 0
         task = ScheduledTask("test_task", lambda: None)
         assert task.task_id >= 1
-        assert isinstance(task.task_id, (int, long))
+        assert isinstance(task.task_id, int)
 
     def test_initial_state(self):
         """Captures: initial field values after construction."""

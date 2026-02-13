@@ -151,20 +151,20 @@ class TestLargeCounter:
     @pytest.mark.py2_behavior
     def test_construction_with_long(self):
         """Captures: initial value stored as long(). long removed in Py3."""
-        counter = LargeCounter(0L)
+        counter = LargeCounter(0)
         assert counter.value == 0
 
     @pytest.mark.py2_behavior
     def test_increment_with_long_literal(self):
         """Captures: increment(1L) uses long literals."""
         counter = LargeCounter()
-        counter.increment(1L)
+        counter.increment(1)
         assert counter.value == 1
 
     @pytest.mark.py2_behavior
     def test_max_value_long_literal(self):
         """Captures: MAX_VALUE is 2**64-1 as long literal."""
-        assert LargeCounter.MAX_VALUE == 18446744073709551615L
+        assert LargeCounter.MAX_VALUE == 18446744073709551615
 
     def test_wraps_on_overflow(self):
         """Captures: counter wraps at MAX_VALUE + 1."""
@@ -176,7 +176,7 @@ class TestLargeCounter:
     def test_long_method(self):
         """Captures: __long__ returns counter value. Removed in Py3."""
         counter = LargeCounter(42)
-        assert long(counter) == 42
+        assert int(counter) == 42
 
     def test_type_check_on_init(self):
         """Captures: non-integer raises TypeError."""

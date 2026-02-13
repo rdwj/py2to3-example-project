@@ -41,8 +41,8 @@ class TestCacheEntry:
         assert entry.key == "key1"
         assert entry.value == "value1"
         assert entry.ttl == 60
-        assert isinstance(entry.created_at, (int, long))
-        assert isinstance(entry.access_count, (int, long))
+        assert isinstance(entry.created_at, int)
+        assert isinstance(entry.access_count, int)
 
     def test_is_expired_false_when_fresh(self):
         """Captures: freshly created entry is not expired."""

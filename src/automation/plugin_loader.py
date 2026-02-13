@@ -5,24 +5,20 @@ Plugin system for the Legacy Industrial Data Platform.
 Metaclass-based plugin registry and dynamic loader for processing plugins.
 Plugins extend the data pipeline without modifying core code -- integrators
 drop a module into the plugins directory and it is picked up on reload.
-
-Uses Py2-specific function/method attributes (``func_name``, ``func_defaults``,
-``func_closure``, ``im_func``, ``im_self``, ``im_class``) renamed or removed
-in Python 3.
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
-import imp
+import importlib
+import importlib.util
 import time
-import operator
 
 from core.exceptions import PlatformError
 
 
-class PluginRegistry(object):
+class PluginRegistry:
     """Global registry of plugin classes, populated by PluginMeta."""
     _plugins = {}
     _load_order = []
@@ -30,7 +26,7 @@ class PluginRegistry(object):
     @classmethod
     def register(cls, name, plugin_class):
         if name in cls._plugins:
-            print "WARNING: replacing plugin %r" % name
+            print("WARNING: replacing plugin %r" % name)
         cls._plugins[name] = plugin_class
         if name not in cls._load_order:
             cls._load_order.append(name)
@@ -54,21 +50,19 @@ class PluginRegistry(object):
 
 
 class PluginMeta(type):
-    """Metaclass that auto-registers ``PluginBase`` subclasses (A12).
-    In Py2 metaclasses use ``__metaclass__``; Py3 uses keyword syntax."""
+    """Metaclass that auto-registers ``PluginBase`` subclasses."""
 
     def __new__(mcs, name, bases, namespace):
         cls = type.__new__(mcs, name, bases, namespace)
         plugin_name = namespace.get("plugin_name")
         if plugin_name is not None:
             PluginRegistry.register(plugin_name, cls)
-            print "Registered plugin: %s (%s)" % (plugin_name, name)
+            print("Registered plugin: %s (%s)" % (plugin_name, name))
         return cls
 
 
-class PluginBase(object):
+class PluginBase(metaclass=PluginMeta):
     """Abstract base for plugins.  Subclasses set ``plugin_name``."""
-    __metaclass__ = PluginMeta
     plugin_name = None
     plugin_version = "0.0"
     plugin_description = ""
@@ -81,7 +75,7 @@ class PluginBase(object):
     def activate(self):
         self.active = True
         self._activated_at = time.time()
-        print "Plugin %r activated" % self.plugin_name
+        print("Plugin %r activated" % self.plugin_name)
 
     def deactivate(self):
         self.active = False
@@ -94,7 +88,7 @@ class PluginBase(object):
                 "active": self.active}
 
 
-class PluginLoader(object):
+class PluginLoader:
     """Lifecycle: discover -> load -> validate -> instantiate -> activate."""
 
     def __init__(self, plugin_directory=None, config=None):
@@ -106,7 +100,7 @@ class PluginLoader(object):
 
     def discover(self):
         if not os.path.isdir(self.plugin_directory):
-            print "Plugin directory not found: %s" % self.plugin_directory
+            print("Plugin directory not found: %s" % self.plugin_directory)
             return []
         found = []
         for fn in sorted(os.listdir(self.plugin_directory)):
@@ -114,73 +108,76 @@ class PluginLoader(object):
                 continue
             mod_name = fn[:-3]
             found.append((mod_name, os.path.join(self.plugin_directory, fn)))
-            print "Discovered plugin: %s" % mod_name
+            print("Discovered plugin: %s" % mod_name)
         return found
 
     def load_module(self, module_name, filepath):
-        """Load or ``reload()`` (B10) a plugin module.  ``reload()`` is a
-        builtin in Py2, moved to ``importlib.reload()`` in Py3."""
+        """Load or reload a plugin module."""
         try:
             if module_name in self._loaded_modules:
-                print "Reloading: %s" % module_name
-                reload(self._loaded_modules[module_name])
+                print("Reloading: %s" % module_name)
+                importlib.reload(self._loaded_modules[module_name])
             else:
-                print "Loading: %s" % module_name
-                self._loaded_modules[module_name] = imp.load_source(module_name, filepath)
+                print("Loading: %s" % module_name)
+                spec = importlib.util.spec_from_file_location(module_name, filepath)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                self._loaded_modules[module_name] = mod
             return self._loaded_modules[module_name]
-        except Exception, e:
+        except Exception as e:
             self._load_errors[module_name] = str(e)
-            print "Failed to load %s: %s" % (module_name, e)
+            print("Failed to load %s: %s" % (module_name, e))
             return None
 
     def load_all(self):
         found = self.discover()
         loaded = sum(1 for mn, fp in found if self.load_module(mn, fp) is not None)
-        print "Loaded %d of %d plugins" % (loaded, len(found))
+        print("Loaded %d of %d plugins" % (loaded, len(found)))
         return loaded
 
     def validate_plugin_class(self, plugin_class):
-        """Validate hooks via ``operator.isCallable()`` (H1, removed in Py3)
-        and function/method introspection attributes."""
+        """Validate hooks are callable and inspect function/method attributes."""
         errors = []
         hook = getattr(plugin_class, "process", None)
         if hook is None:
             errors.append("Missing process()")
-        elif not operator.isCallable(hook):
+        elif not callable(hook):
             errors.append("process not callable")
 
         activate_hook = getattr(plugin_class, "activate", None)
-        if activate_hook is not None and operator.isCallable(activate_hook):
+        if activate_hook is not None and callable(activate_hook):
             self._inspect_method(activate_hook, "activate", errors)
 
         if hasattr(plugin_class, "process"):
             self._inspect_callback(plugin_class.process, "process", errors)
 
         if errors:
-            print "Validation failed for %s: %s" % (plugin_class.__name__, "; ".join(errors))
+            print("Validation failed for %s: %s" % (plugin_class.__name__, "; ".join(errors)))
             return False
         return True
 
     def _inspect_callback(self, callback, name, errors):
-        """Inspect func_name (F1), func_defaults (F2), func_closure (F3)."""
-        actual = callback.func_name
+        """Inspect __name__, __defaults__, __closure__."""
+        actual = callback.__name__
         if actual != name:
-            print "  %r backed by %r" % (name, actual)
-        defaults = callback.func_defaults
+            print("  %r backed by %r" % (name, actual))
+        defaults = callback.__defaults__
         if defaults is not None:
-            print "  %s: %d default(s)" % (name, len(defaults))
-        closure = callback.func_closure
+            print("  %s: %d default(s)" % (name, len(defaults)))
+        closure = callback.__closure__
         if closure is not None:
-            print "  WARNING: %s closes over %d var(s)" % (name, len(closure))
+            print("  WARNING: %s closes over %d var(s)" % (name, len(closure)))
 
     def _inspect_method(self, method, name, errors):
-        """Inspect im_func (F4), im_self (F5), im_class (F6)."""
-        if not hasattr(method, "im_func"):
+        """Inspect __func__, __self__, and declaring class."""
+        if not hasattr(method, "__func__"):
             return
-        print "  %s wraps %s" % (name, method.im_func.func_name)
-        if method.im_self is not None:
-            print "  %s bound to %r" % (name, method.im_self)
-        print "  %s from %s" % (name, method.im_class.__name__)
+        print("  %s wraps %s" % (name, method.__func__.__name__))
+        if method.__self__ is not None:
+            print("  %s bound to %r" % (name, method.__self__))
+        # In Py3 bound methods don't have im_class; use type(__self__) instead
+        if method.__self__ is not None:
+            print("  %s from %s" % (name, type(method.__self__).__name__))
 
     def validate_all(self):
         return sum(1 for _, pc in PluginRegistry.all_plugins()
@@ -196,9 +193,9 @@ class PluginLoader(object):
         try:
             inst = pcls(config=merged)
             self._instances[plugin_name] = inst
-            print "Instantiated: %s v%s" % (plugin_name, inst.plugin_version)
+            print("Instantiated: %s v%s" % (plugin_name, inst.plugin_version))
             return inst
-        except Exception, e:
+        except Exception as e:
             raise PlatformError("Failed to instantiate %s: %s" % (plugin_name, e))
 
     def instantiate_all(self, plugin_configs=None):
@@ -210,8 +207,8 @@ class PluginLoader(object):
             try:
                 self.instantiate_plugin(pn, cfgs.get(pn))
                 count += 1
-            except PlatformError, e:
-                print "Skipping %s: %s" % (pn, e)
+            except PlatformError as e:
+                print("Skipping %s: %s" % (pn, e))
         return count
 
     def activate_plugin(self, plugin_name):
@@ -223,37 +220,37 @@ class PluginLoader(object):
 
     def activate_all(self):
         activated = 0
-        for pn, inst in self._instances.iteritems():
+        for pn, inst in self._instances.items():
             try:
                 inst.activate()
                 activated += 1
-            except Exception, e:
-                print "Failed to activate %s: %s" % (pn, e)
-        print "Activated %d of %d plugins" % (activated, len(self._instances))
+            except Exception as e:
+                print("Failed to activate %s: %s" % (pn, e))
+        print("Activated %d of %d plugins" % (activated, len(self._instances)))
         return activated
 
     def get_active_plugins(self):
-        return [(n, i) for n, i in self._instances.iteritems() if i.active]
+        return [(n, i) for n, i in self._instances.items() if i.active]
 
     def process_data(self, data_points):
         results = {}
         for pn, inst in self.get_active_plugins():
             try:
                 results[pn] = inst.process(data_points)
-            except Exception, e:
-                print "Plugin %s error: %s" % (pn, e)
+            except Exception as e:
+                print("Plugin %s error: %s" % (pn, e))
                 results[pn] = None
         return results
 
     def reload_plugin(self, plugin_name):
-        """Hot-reload via ``reload()`` (B10)."""
+        """Hot-reload a plugin module."""
         mod = self._loaded_modules.get(plugin_name)
         if mod is None:
             raise PlatformError("Module %s not loaded" % plugin_name)
         existing = self._instances.get(plugin_name)
         if existing is not None:
             existing.deactivate()
-        reload(mod)
+        importlib.reload(mod)
         self.instantiate_plugin(plugin_name)
         self.activate_plugin(plugin_name)
 

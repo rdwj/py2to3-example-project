@@ -11,9 +11,9 @@ plant control systems.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from mainframe_parser import MainframeParser, CopybookLayout, MainframeRecord
-from csv_processor import CsvProcessor, CsvFieldMapper
-from xml_transformer import XmlTransformer, XmlNodeMapper
-from json_handler import JsonHandler, JsonRecordSet
-from text_analyzer import TextAnalyzer, TextFingerprint
-from log_parser import LogParser, LogEntry, LogFilter
+from .mainframe_parser import MainframeParser, CopybookLayout, MainframeRecord
+from .csv_processor import CsvProcessor, CsvFieldMapper
+from .xml_transformer import XmlTransformer, XmlNodeMapper
+from .json_handler import JsonHandler, JsonRecordSet
+from .text_analyzer import TextAnalyzer, TextFingerprint
+from .log_parser import LogParser, LogEntry, LogFilter

@@ -9,8 +9,8 @@ from remote hosts via SSH/rsync and stored in /var/log/platform/ for
 centralised analysis.
 
 Some logs are very large (multi-GB syslog archives from busy gateways),
-so the parser uses lazy iteration and popen-based filtering to avoid
-loading entire files into memory.
+so the parser uses lazy iteration and subprocess-based filtering to
+avoid loading entire files into memory.
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
@@ -18,7 +18,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import re
 import time
-import commands
+import subprocess
 
 from core.exceptions import ParseError, DataError
 from core.config_loader import load_platform_config
@@ -90,7 +90,7 @@ class LogEntry(object):
         self.line_number = 0
 
     def severity_rank(self):
-        if _SEVERITY_RANK.has_key(self.level):
+        if self.level in _SEVERITY_RANK:
             return _SEVERITY_RANK[self.level]
         return 0
 
@@ -196,12 +196,10 @@ class LogParser(object):
     def parse_file(self, file_path, assumed_format=None):
         """Parse a log file and return matching entries.
 
-        Uses ``.xreadlines()`` for memory-efficient iteration over very
-        large log files.  ``.xreadlines()`` was deprecated in Python 2.3
-        in favour of iterating the file object directly, but some of our
-        codepaths still use it and it works fine in 2.6/2.7.
+        Iterates the file object directly for memory-efficient processing
+        of very large log files.
         """
-        print "Parsing log file: %s" % file_path
+        print("Parsing log file: %s" % file_path)
         start_time = time.time()
         entries = []
 
@@ -210,7 +208,7 @@ class LogParser(object):
             line_num = 0
             detected_format = assumed_format
 
-            for line in f.xreadlines():
+            for line in f:
                 line_num += 1
                 self._lines_processed += 1
                 line = line.rstrip("\n\r")
@@ -222,7 +220,7 @@ class LogParser(object):
                 if detected_format is None:
                     detected_format = self._detect_format(line)
                     if detected_format is None:
-                        print "WARNING: Could not detect log format from line %d" % line_num
+                        print("WARNING: Could not detect log format from line %d" % line_num)
                         continue
 
                 try:
@@ -230,7 +228,7 @@ class LogParser(object):
                     if entry is not None:
                         if self._filter is None or self._filter.matches(entry):
                             entries.append(entry)
-                except Exception, e:
+                except Exception as e:
                     self._parse_errors.append(
                         "Line %d: %s (content: %s)" % (
                             line_num, str(e),
@@ -241,46 +239,48 @@ class LogParser(object):
             f.close()
 
         elapsed = time.time() - start_time
-        print "Parsed %d entries from %d lines in %.2f seconds" % (
+        print("Parsed %d entries from %d lines in %.2f seconds" % (
             len(entries), line_num, elapsed,
-        )
+        ))
         return entries
 
     def collect_and_parse(self, remote_host, remote_path, local_dir):
         """Collect a log file from a remote host and parse it.
 
-        Uses ``commands.getstatusoutput()`` to run rsync for file
-        transfer.  In Python 3, the ``commands`` module was removed
-        in favour of ``subprocess``.
+        Uses ``subprocess.getstatusoutput()`` to run rsync for file
+        transfer.
         """
         local_path = os.path.join(local_dir, os.path.basename(remote_path))
         rsync_cmd = "rsync -az %s:%s %s" % (remote_host, remote_path, local_path)
 
-        print "Collecting log from %s:%s" % (remote_host, remote_path)
-        status, output = commands.getstatusoutput(rsync_cmd)
+        print("Collecting log from %s:%s" % (remote_host, remote_path))
+        status, output = subprocess.getstatusoutput(rsync_cmd)
 
         if status != 0:
             raise DataError(
                 "Log collection failed (status %d): %s" % (status, output)
             )
 
-        print "Collected %s, parsing..." % local_path
+        print("Collected %s, parsing..." % local_path)
         return self.parse_file(local_path)
 
     def parse_piped(self, command):
-        """Parse log output from a piped command using os.popen().
+        """Parse log output from a piped command using subprocess.
 
         Used for real-time log tailing and filtered collection, e.g.:
             parser.parse_piped("ssh gw01 'tail -10000 /var/log/syslog'")
         """
-        print "Running piped command: %s" % command
-        pipe = os.popen(command, "r")
+        print("Running piped command: %s" % command)
+        proc = subprocess.Popen(
+            command, shell=True, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, text=True,
+        )
         entries = []
         line_num = 0
         detected_format = None
 
         try:
-            for line in pipe:
+            for line in proc.stdout:
                 line_num += 1
                 self._lines_processed += 1
                 line = line.rstrip("\n\r")
@@ -298,12 +298,12 @@ class LogParser(object):
                     if entry is not None:
                         if self._filter is None or self._filter.matches(entry):
                             entries.append(entry)
-                except Exception, e:
+                except Exception as e:
                     self._parse_errors.append("Piped line %d: %s" % (line_num, str(e)))
         finally:
-            pipe.close()
+            proc.wait()
 
-        print "Parsed %d entries from piped command" % len(entries)
+        print("Parsed %d entries from piped command" % len(entries))
         return entries
 
     # ---------------------------------------------------------------
@@ -406,7 +406,7 @@ class LogParser(object):
     def _parse_applog_timestamp(self, ts_str):
         """Parse an application log timestamp like '2024-01-15 14:23:01.456'."""
         try:
-            # Strip milliseconds for strptime (Python 2.6 does not support %f)
+            # Strip milliseconds for strptime
             base = ts_str.split(".")[0]
             t = time.strptime(base, "%Y-%m-%d %H:%M:%S")
             return time.mktime(t)

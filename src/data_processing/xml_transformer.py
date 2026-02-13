@@ -17,8 +17,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 import xml.etree.ElementTree as ET
-from HTMLParser import HTMLParser
-import repr as reprlib_module
+from html.parser import HTMLParser
+import reprlib as reprlib_module
 
 from core.exceptions import ParseError, DataError
 from core.string_helpers import safe_decode, normalise_sensor_label
@@ -46,21 +46,23 @@ class _EntityUnescaper(HTMLParser):
         self._result.append(data)
 
     def handle_entityref(self, name):
-        self._result.append(self.unescape(u"&%s;" % name))
+        from html import unescape
+        self._result.append(unescape("&%s;" % name))
 
     def handle_charref(self, name):
-        self._result.append(self.unescape(u"&#%s;" % name))
+        from html import unescape
+        self._result.append(unescape("&#%s;" % name))
 
     def get_text(self):
-        return u"".join(self._result)
+        return "".join(self._result)
 
 
 def unescape_html_entities(text):
     """Unescape HTML entities in *text* using HTMLParser.
 
-    Returns a unicode string with all entities resolved.
+    Returns a string with all entities resolved.
     """
-    if not isinstance(text, unicode):
+    if not isinstance(text, str):
         text = text.decode("utf-8", "replace")
     parser = _EntityUnescaper()
     parser.feed(text)
@@ -69,7 +71,7 @@ def unescape_html_entities(text):
 
 
 # ---------------------------------------------------------------------------
-# Debug output truncator using the repr module
+# Debug output truncator using the reprlib module
 # ---------------------------------------------------------------------------
 
 _repr_formatter = reprlib_module.Repr()
@@ -80,8 +82,8 @@ _repr_formatter.maxother = 60
 def _truncated_repr(obj):
     """Return a truncated repr of *obj* for debug logging.
 
-    Uses the ``repr`` module (renamed to ``reprlib`` in Python 3) to
-    limit output length when dumping large XML content to the log.
+    Uses the ``reprlib`` module to limit output length when dumping
+    large XML content to the log.
     """
     return _repr_formatter.repr(obj)
 
@@ -127,18 +129,18 @@ class XmlNodeMapper(object):
         }
 
     def get_element_mapping(self, xpath):
-        if self._element_maps.has_key(xpath):
+        if xpath in self._element_maps:
             return self._element_maps[xpath]
         return None
 
     def get_attribute_mapping(self, element_path, attr_name):
         key = (element_path, attr_name)
-        if self._attribute_maps.has_key(key):
+        if key in self._attribute_maps:
             return self._attribute_maps[key]
         return None
 
     def get_text_mapping(self, xpath):
-        if self._text_maps.has_key(xpath):
+        if xpath in self._text_maps:
             return self._text_maps[xpath]
         return None
 
@@ -156,8 +158,8 @@ class XmlTransformer(object):
 
     # Known SCADA namespace URIs -- the export format changed between
     # Experion R400 and R500 and uses different namespace prefixes
-    NAMESPACE_R400 = u"http://honeywell.com/experion/r400/tagdb"
-    NAMESPACE_R500 = u"http://honeywell.com/experion/r500/tagdb"
+    NAMESPACE_R400 = "http://honeywell.com/experion/r400/tagdb"
+    NAMESPACE_R500 = "http://honeywell.com/experion/r500/tagdb"
 
     def __init__(self, node_mapper=None):
         self._node_mapper = node_mapper or XmlNodeMapper()
@@ -166,7 +168,7 @@ class XmlTransformer(object):
 
     def transform_file(self, xml_path, root_element=None):
         """Parse an XML file and transform it into config records."""
-        print "Loading XML from %s" % xml_path
+        print("Loading XML from %s" % xml_path)
 
         tree = ET.parse(xml_path)
         root = tree.getroot()
@@ -174,7 +176,7 @@ class XmlTransformer(object):
         # Detect namespace from root element
         namespace = self._detect_namespace(root)
         if namespace:
-            print "Detected SCADA namespace: %s" % namespace
+            print("Detected SCADA namespace: %s" % namespace)
 
         if root_element is not None:
             root = root.find(root_element)
@@ -184,18 +186,18 @@ class XmlTransformer(object):
                 )
 
         records = self._transform_element(root, "", namespace)
-        print "Transformed %d records from %s" % (len(records), xml_path)
+        print("Transformed %d records from %s" % (len(records), xml_path))
 
         if self._transform_errors:
-            print "Transform errors: %d" % len(self._transform_errors)
+            print("Transform errors: %d" % len(self._transform_errors))
             for err in self._transform_errors[:10]:
-                print "  %s" % err
+                print("  %s" % err)
 
         return records
 
     def transform_string(self, xml_string):
         """Parse XML from a string and transform it."""
-        if isinstance(xml_string, unicode):
+        if isinstance(xml_string, str):
             xml_string = xml_string.encode("utf-8")
         root = ET.fromstring(xml_string)
         namespace = self._detect_namespace(root)
@@ -204,10 +206,8 @@ class XmlTransformer(object):
     def _detect_namespace(self, element):
         """Extract the namespace URI from an element's tag, if present."""
         tag = element.tag
-        if isinstance(tag, str):
-            tag = tag.decode("utf-8", "replace")
-        if tag.startswith(u"{"):
-            ns_end = tag.find(u"}")
+        if tag.startswith("{"):
+            ns_end = tag.find("}")
             if ns_end > 0:
                 return tag[1:ns_end]
         return None
@@ -241,10 +241,6 @@ class XmlTransformer(object):
         for attr_name, attr_value in element.attrib.items():
             attr_name_clean = self._strip_namespace(attr_name, namespace)
 
-            # Unicode string comparison for attribute matching
-            if isinstance(attr_value, str):
-                attr_value = attr_value.decode("utf-8", "replace")
-
             # Unescape any HTML entities in attribute values
             attr_value = unescape_html_entities(attr_value)
 
@@ -257,7 +253,7 @@ class XmlTransformer(object):
                     if mapping["transform"] is not None:
                         value = mapping["transform"](value)
                     record[mapping["name"]] = value
-                except Exception, e:
+                except Exception as e:
                     self._transform_errors.append(
                         "Attribute %s@%s: %s (raw=%s)" % (
                             element_path, attr_name_clean, str(e),
@@ -271,8 +267,6 @@ class XmlTransformer(object):
         # Extract mapped text content
         text = element.text
         if text is not None:
-            if isinstance(text, str):
-                text = text.decode("utf-8", "replace")
             text = unescape_html_entities(text.strip())
 
             text_mapping = self._node_mapper.get_text_mapping(element_path)
@@ -282,7 +276,7 @@ class XmlTransformer(object):
                     if text_mapping["transform"] is not None:
                         value = text_mapping["transform"](value)
                     record[text_mapping["name"]] = value
-                except Exception, e:
+                except Exception as e:
                     self._transform_errors.append(
                         "Text at %s: %s (raw=%s)" % (
                             element_path, str(e), _truncated_repr(text),
@@ -290,18 +284,16 @@ class XmlTransformer(object):
                     )
 
         # Normalise sensor labels if present (handles Japanese kanji etc.)
-        if record.has_key(u"description"):
-            record[u"description"] = normalise_sensor_label(record[u"description"])
+        if "description" in record:
+            record["description"] = normalise_sensor_label(record["description"])
 
-        if not record or (len(record) == 1 and record.has_key("_type")):
+        if not record or (len(record) == 1 and "_type" in record):
             return None
         return record
 
     def _strip_namespace(self, tag, namespace):
         """Remove the namespace prefix from an element tag."""
-        if isinstance(tag, str):
-            tag = tag.decode("utf-8", "replace")
-        if namespace and tag.startswith(u"{%s}" % namespace):
+        if namespace and tag.startswith("{%s}" % namespace):
             return tag[len(namespace) + 2:]
         return tag
 

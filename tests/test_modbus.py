@@ -3,7 +3,6 @@
 Tests for the MODBUS TCP/RTU client: CRC-16 calculation, frame
 construction, RegisterBank with integer division, struct pack/unpack.
 """
-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
@@ -23,45 +22,45 @@ from src.core.exceptions import ModbusError
 class TestCrc16Modbus(unittest.TestCase):
 
     def test_empty_input(self):
-        crc = crc16_modbus("")
+        crc = crc16_modbus(b"")
         self.assertEqual(crc, 0xFFFF)
-        print "CRC empty: 0x%04X" % crc
+        print("CRC empty: 0x%04X" % crc)
 
     def test_deterministic(self):
-        data = "\x01\x03\x00\x00\x00\x0A"
+        data = b"\x01\x03\x00\x00\x00\x0A"
         self.assertEqual(crc16_modbus(data), crc16_modbus(data))
 
     def test_different_data_different_crc(self):
-        a = crc16_modbus("\x01\x02\x03")
-        b = crc16_modbus("\x04\x05\x06")
+        a = crc16_modbus(b"\x01\x02\x03")
+        b = crc16_modbus(b"\x04\x05\x06")
         self.assertNotEqual(a, b)
-        print "CRC differs: 0x%04X vs 0x%04X" % (a, b)
+        print("CRC differs: 0x%04X vs 0x%04X" % (a, b))
 
     def test_result_is_16bit(self):
-        crc = crc16_modbus("\xFF\xAA\x55")
+        crc = crc16_modbus(b"\xFF\xAA\x55")
         self.assertTrue(0 <= crc <= 0xFFFF)
 
 
 class TestModbusFrame(unittest.TestCase):
 
     def test_tcp_adu_structure(self):
-        frame = ModbusFrame(1, 0x03, "\x00\x00\x00\x0A")
+        frame = ModbusFrame(1, 0x03, b"\x00\x00\x00\x0A")
         adu = frame.to_tcp_adu()
-        self.assertIsInstance(adu, str)
+        self.assertIsInstance(adu, bytes)
         txn, proto, length, unit = struct.unpack(">HHHB", adu[:7])
         self.assertEqual(proto, 0x0000)
         self.assertEqual(unit, 1)
         self.assertEqual(length, 1 + 1 + 4)
-        print "TCP ADU: %d bytes, txn=%d" % (len(adu), txn)
+        print("TCP ADU: %d bytes, txn=%d" % (len(adu), txn))
 
     def test_rtu_frame_crc(self):
-        frame = ModbusFrame(1, 0x03, "\x00\x00\x00\x01")
+        frame = ModbusFrame(1, 0x03, b"\x00\x00\x00\x01")
         rtu = frame.to_rtu_frame()
         body, crc_bytes = rtu[:-2], rtu[-2:]
         expected = crc16_modbus(body)
         actual = struct.unpack("<H", crc_bytes)[0]
         self.assertEqual(actual, expected)
-        print "RTU CRC verified: 0x%04X" % actual
+        print("RTU CRC verified: 0x%04X" % actual)
 
     def test_build_read_holding(self):
         frame = ModbusFrame.build_read_holding(2, 100, 10)
@@ -86,12 +85,12 @@ class TestModbusFrame(unittest.TestCase):
 class TestRegisterBank(unittest.TestCase):
 
     def test_count_uses_integer_division(self):
-        bank = RegisterBank(0, "\x00" * 10)
+        bank = RegisterBank(0, b"\x00" * 10)
         self.assertEqual(bank._count, 5)
-        print "Register count: %d" % bank._count
+        print("Register count: %d" % bank._count)
 
     def test_odd_bytes_truncate(self):
-        bank = RegisterBank(0, "\x00" * 11)
+        bank = RegisterBank(0, b"\x00" * 11)
         self.assertEqual(bank._count, 5)  # 11 / 2 = 5
 
     def test_get_register(self):
@@ -110,11 +109,11 @@ class TestRegisterBank(unittest.TestCase):
         self.assertAlmostEqual(bank.get_float32(0), 3.14, places=2)
 
     def test_get_register_view(self):
-        raw = "\x00\x01\x00\x02\x00\x03\x00\x04"
+        raw = b"\x00\x01\x00\x02\x00\x03\x00\x04"
         bank = RegisterBank(0, raw)
         view = bank.get_register_view(1, 2)
         self.assertEqual(len(view), 4)
-        self.assertEqual(str(view), "\x00\x02\x00\x03")
+        self.assertEqual(bytes(view), b"\x00\x02\x00\x03")
 
 
 if __name__ == "__main__":

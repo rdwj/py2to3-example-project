@@ -84,7 +84,7 @@ class TestSafeDecode:
         """Captures: str (bytes) decoded with given encoding."""
         raw = u"caf\u00e9".encode("utf-8")
         result = safe_decode(raw)
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         assert result == u"caf\u00e9"
 
     @pytest.mark.py2_behavior
@@ -92,7 +92,7 @@ class TestSafeDecode:
         """Captures: unencodable bytes replaced with U+FFFD."""
         raw = b"\xFF\xFE"
         result = safe_decode(raw, encoding=u"utf-8", errors=u"replace")
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         assert u"\ufffd" in result
 
     @pytest.mark.py2_behavior
@@ -123,7 +123,7 @@ class TestSafeEncode:
         text = u"caf\u00e9"
         result = safe_encode(text)
         assert isinstance(result, str)
-        assert not isinstance(result, unicode)
+        assert not isinstance(result, str)
         assert result == u"caf\u00e9".encode("utf-8")
 
     @pytest.mark.py2_behavior
@@ -144,7 +144,7 @@ class TestToPlatformString:
         """Captures: unicode encoded to bytes for platform str (Py2 str = bytes)."""
         result = to_platform_string(u"caf\u00e9")
         assert isinstance(result, str)
-        assert not isinstance(result, unicode)
+        assert not isinstance(result, str)
 
     @pytest.mark.py2_behavior
     def test_byte_string_passthrough(self):
@@ -195,7 +195,7 @@ class TestNormaliseSensorLabel:
         isinstance(label, unicode) check."""
         raw = u"caf\u00e9".encode("utf-8")
         result = normalise_sensor_label(raw)
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         assert u"\u00e9" in result
 
     def test_japanese_kanji_label(self):
@@ -223,7 +223,7 @@ class TestSafeConcat:
         """Captures: str parts decoded to unicode before joining.
         Avoids Py2 implicit ASCII decode on str + unicode."""
         result = safe_concat(u"caf\u00e9", " - ", u"r\u00e9sum\u00e9")
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         assert u"caf\u00e9" in result
 
     @pytest.mark.py2_behavior

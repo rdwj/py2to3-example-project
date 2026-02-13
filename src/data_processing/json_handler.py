@@ -5,10 +5,9 @@ JSON data handler for the Legacy Industrial Data Platform.
 Processes JSON feeds from the REST gateway that bridges the plant
 network to the corporate IT systems.  These feeds contain sensor
 metadata, work order records, and inventory updates.  The gateway
-sends JSON as UTF-8 encoded byte streams over HTTP, which in Python 2
-arrive as ``str`` (bytes).
+sends JSON as UTF-8 encoded byte streams over HTTP.
 
-The handler also provides a fallback serialization path using cPickle
+The handler also provides a fallback serialization path using pickle
 for internal record caching when JSON round-trip fidelity is not
 required (e.g. temporary inter-process data passing via shared NFS).
 """
@@ -18,8 +17,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import json
 import time
-import cPickle
-from cStringIO import StringIO
+import pickle
+import io
 
 from core.exceptions import DataError, ParseError
 from core.config_loader import load_platform_config
@@ -29,10 +28,7 @@ from core.config_loader import load_platform_config
 # Larger documents are streamed via the record-at-a-time interface.
 MAX_JSON_SIZE = 50 * 1024 * 1024   # 50 MB
 
-# Default encoding for json.dumps -- Python 2's json module accepts an
-# 'encoding' parameter that tells it how to decode byte strings found
-# in the data.  This parameter was removed in Python 3 since all strings
-# are unicode there.
+# Default encoding for reading JSON byte streams.
 JSON_DEFAULT_ENCODING = "utf-8"
 
 
@@ -63,7 +59,7 @@ class JsonRecordSet(object):
         return iter(self.records)
 
     def get_metadata(self, key, default=None):
-        if self.metadata.has_key(key):
+        if key in self.metadata:
             return self.metadata[key]
         return default
 
@@ -90,14 +86,7 @@ class JsonRecordSet(object):
 # ---------------------------------------------------------------------------
 
 class JsonHandler(object):
-    """Loads, validates, and transforms JSON data from REST gateway feeds.
-
-    Handles the Python 2 json module's quirks around encoding:
-    - ``json.loads()`` accepts ``str`` (bytes) in Python 2 but requires
-      ``str`` (text) in Python 3
-    - ``json.dumps()`` supports an ``encoding`` keyword argument in
-      Python 2 that does not exist in Python 3
-    """
+    """Loads, validates, and transforms JSON data from REST gateway feeds."""
 
     def __init__(self, default_encoding=None):
         self._default_encoding = default_encoding or JSON_DEFAULT_ENCODING
@@ -107,9 +96,7 @@ class JsonHandler(object):
     def load_file(self, file_path):
         """Load a JSON file into a JsonRecordSet.
 
-        Reads the file as raw bytes and passes them directly to
-        ``json.loads()``, which in Python 2 will decode the byte string
-        using its ``encoding`` parameter.
+        Reads the file as text and passes to ``json.loads()``.
         """
         stat = os.stat(file_path)
         if stat.st_size > MAX_JSON_SIZE:
@@ -128,25 +115,24 @@ class JsonHandler(object):
     def load_bytes(self, raw_bytes, source_id=None):
         """Parse JSON from a byte string.
 
-        In Python 2, ``json.loads()`` accepts ``str`` (which is bytes)
-        and will decode it using the encoding specified in the
-        constructor.  In Python 3 this must be ``str`` (text).
+        In Python 3, ``json.loads()`` accepts both ``str`` and ``bytes``.
+        The ``encoding`` parameter was removed in Python 3.9+.
         """
         try:
-            data = json.loads(raw_bytes, encoding=self._default_encoding)
-        except (ValueError, TypeError), e:
+            if isinstance(raw_bytes, bytes):
+                raw_bytes = raw_bytes.decode(self._default_encoding)
+            data = json.loads(raw_bytes)
+        except (ValueError, TypeError) as e:
             raise ParseError("JSON parse error from %s: %s" % (source_id, str(e)))
 
         return self._build_record_set(data, source_id)
 
     def load_stream(self, stream, source_id=None):
-        """Parse JSON from a file-like stream using cStringIO for buffering.
+        """Parse JSON from a file-like stream using io.BytesIO for buffering.
 
-        Reads the entire stream into a cStringIO buffer first, then
-        parses.  This is necessary because some of our HTTP client
-        wrappers yield data in chunks.
+        Reads the entire stream into a buffer first, then parses.
         """
-        buf = StringIO()
+        buf = io.BytesIO()
         while True:
             chunk = stream.read(65536)
             if not chunk:
@@ -160,16 +146,13 @@ class JsonHandler(object):
     def dump_to_file(self, record_set, file_path, pretty=False):
         """Serialize a JsonRecordSet to a JSON file.
 
-        Uses ``json.dumps()`` with the ``encoding`` parameter to control
-        how byte strings embedded in the data are decoded.  The
-        ``ensure_ascii=False`` flag allows direct unicode output for
-        non-ASCII sensor labels (Japanese, German, etc.).
+        Uses ``json.dumps()`` with ``ensure_ascii=False`` to allow
+        direct unicode output for non-ASCII sensor labels.
         """
         data = record_set.to_dict()
 
         kwargs = {
             "ensure_ascii": False,
-            "encoding": self._default_encoding,
         }
         if pretty:
             kwargs["indent"] = 2
@@ -177,57 +160,51 @@ class JsonHandler(object):
 
         json_str = json.dumps(data, **kwargs)
 
-        # json.dumps with ensure_ascii=False may return unicode in Python 2
-        if isinstance(json_str, unicode):
-            json_str = json_str.encode(self._default_encoding)
-
-        f = open(file_path, "wb")
+        f = open(file_path, "w", encoding=self._default_encoding)
         try:
             f.write(json_str)
         finally:
             f.close()
 
     def dump_to_stream(self, record_set, pretty=False):
-        """Serialize a JsonRecordSet to a cStringIO buffer and return it."""
+        """Serialize a JsonRecordSet to an io.BytesIO buffer and return it."""
         data = record_set.to_dict()
 
         kwargs = {
             "ensure_ascii": False,
-            "encoding": self._default_encoding,
         }
         if pretty:
             kwargs["indent"] = 2
 
         json_str = json.dumps(data, **kwargs)
-        if isinstance(json_str, unicode):
-            json_str = json_str.encode(self._default_encoding)
+        json_bytes = json_str.encode(self._default_encoding)
 
-        buf = StringIO()
-        buf.write(json_str)
+        buf = io.BytesIO()
+        buf.write(json_bytes)
         buf.seek(0)
         return buf
 
     # ---------------------------------------------------------------
-    # cPickle fallback serialization
+    # pickle fallback serialization
     # ---------------------------------------------------------------
 
     def pickle_record_set(self, record_set, file_path):
-        """Serialize a JsonRecordSet using cPickle for fast inter-process
+        """Serialize a JsonRecordSet using pickle for fast inter-process
         caching.  This is used for the temporary staging area on the
         shared NFS mount where the batch processor and the real-time
         engine exchange data.
         """
         f = open(file_path, "wb")
         try:
-            cPickle.dump(record_set, f, cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(record_set, f, pickle.HIGHEST_PROTOCOL)
         finally:
             f.close()
 
     def unpickle_record_set(self, file_path):
-        """Deserialize a cPickle'd JsonRecordSet from the staging area."""
+        """Deserialize a pickle'd JsonRecordSet from the staging area."""
         f = open(file_path, "rb")
         try:
-            data = cPickle.load(f)
+            data = pickle.load(f)
         finally:
             f.close()
 
@@ -249,7 +226,7 @@ class JsonHandler(object):
         for idx, record in enumerate(record_set.iter_records()):
             missing = []
             for field in required_fields:
-                if not record.has_key(field):
+                if field not in record:
                     missing.append(field)
             if missing:
                 self._validation_errors.append(
@@ -274,13 +251,13 @@ class JsonHandler(object):
 
         for record in record_set.iter_records():
             new_record = {}
-            for key, value in record.iteritems():
+            for key, value in record.items():
                 new_key = field_map.get(key, key)
 
-                if value_transforms.has_key(new_key):
+                if new_key in value_transforms:
                     try:
                         value = value_transforms[new_key](value)
-                    except Exception, e:
+                    except Exception as e:
                         self._validation_errors.append(
                             "Transform error for %s: %s" % (new_key, str(e))
                         )
@@ -303,7 +280,7 @@ class JsonHandler(object):
                 record_set.add_record(item)
         elif isinstance(data, dict):
             # Extract metadata from envelope
-            for key in data.iterkeys():
+            for key in data.keys():
                 if key == "records":
                     continue
                 record_set.set_metadata(key, data[key])

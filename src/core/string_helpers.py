@@ -11,8 +11,8 @@ does not have to reinvent it.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from StringIO import StringIO
-from cStringIO import StringIO as FastStringIO
+from io import StringIO
+from io import BytesIO as FastStringIO
 
 # ---------------------------------------------------------------------------
 # Encoding detection heuristics
@@ -38,8 +38,8 @@ def detect_encoding(raw_bytes):
     (latin-1 never raises because every byte 0x00-0xFF is a valid
     codepoint).
     """
-    if not isinstance(raw_bytes, str):
-        # Already unicode -- nothing to detect
+    if not isinstance(raw_bytes, bytes):
+        # Already str -- nothing to detect
         return u"utf-8"
 
     for enc in _ENCODING_CANDIDATES:
@@ -58,31 +58,31 @@ def detect_encoding(raw_bytes):
 def safe_decode(value, encoding=u"utf-8", errors=u"replace"):
     """Decode a byte string to unicode, replacing unencodable bytes
     rather than raising."""
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return value
-    if isinstance(value, basestring):
+    if isinstance(value, bytes):
         return value.decode(encoding, errors)
-    return unicode(value)
+    return str(value)
 
 
 def safe_encode(value, encoding=u"utf-8", errors=u"replace"):
     """Encode a unicode string to bytes.  Byte strings pass through
     unchanged."""
-    if isinstance(value, str) and not isinstance(value, unicode):
+    if isinstance(value, bytes):
         return value
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return value.encode(encoding, errors)
-    return str(value)
+    return str(value).encode(encoding, errors)
 
 
 def to_platform_string(value, encoding=u"utf-8"):
     """Normalise *value* to the platform's native string type (``str``
-    in Python 2, which is bytes).  Used at I/O boundaries where the
+    in Python 3, which is text).  Used at I/O boundaries where the
     rest of the stack expects plain ``str``."""
-    if isinstance(value, unicode):
-        return value.encode(encoding)
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         return value
+    if isinstance(value, bytes):
+        return value.decode(encoding)
     return str(value)
 
 
@@ -96,8 +96,8 @@ def normalise_sensor_label(label):
     inconsistent normalization forms -- the Japanese labels in particular
     caused duplicate-key bugs until we added this step."""
     import unicodedata
-    if not isinstance(label, unicode):
-        label = label.decode(u"utf-8", u"replace")
+    if not isinstance(label, str):
+        label = label.decode(u"utf-8", u"replace") if isinstance(label, bytes) else str(label)
     label = unicodedata.normalize(u"NFC", label)
     # Strip C0/C1 control characters except tab and newline
     cleaned = u""
@@ -121,12 +121,12 @@ def safe_concat(*parts):
     """
     decoded = []
     for part in parts:
-        if isinstance(part, unicode):
+        if isinstance(part, str):
             decoded.append(part)
-        elif isinstance(part, basestring):
+        elif isinstance(part, bytes):
             decoded.append(part.decode(u"utf-8", u"replace"))
         else:
-            decoded.append(unicode(part))
+            decoded.append(str(part))
     return u"".join(decoded)
 
 
@@ -134,7 +134,7 @@ def build_csv_line(fields, separator=u","):
     """Join fields into a single CSV line, ensuring consistent encoding."""
     encoded_fields = []
     for f in fields:
-        text = safe_decode(f) if isinstance(f, basestring) else unicode(f)
+        text = safe_decode(f) if isinstance(f, (str, bytes)) else str(f)
         if separator in text or u'"' in text or u"\n" in text:
             text = u'"' + text.replace(u'"', u'""') + u'"'
         encoded_fields.append(text)
@@ -149,11 +149,11 @@ def make_text_buffer(initial=u""):
     """Return a StringIO buffer pre-loaded with *initial* text."""
     buf = StringIO()
     if initial:
-        buf.write(safe_encode(initial))
+        buf.write(initial)
     return buf
 
 
-def make_binary_buffer(initial=""):
+def make_binary_buffer(initial=b""):
     """Return a fast C-based StringIO buffer for binary data assembly."""
     buf = FastStringIO()
     if initial:
@@ -170,8 +170,8 @@ def validate_roundtrip(text, encoding=u"utf-8"):
     without data loss.  Used as a pre-flight check before writing to
     systems that only support a specific encoding (e.g. the reporting
     subsystem's email sender defaults to Latin-1)."""
-    if not isinstance(text, unicode):
-        text = text.decode(u"utf-8", u"replace")
+    if not isinstance(text, str):
+        text = text.decode(u"utf-8", u"replace") if isinstance(text, bytes) else str(text)
     try:
         encoded = text.encode(encoding)
         decoded = encoded.decode(encoding)

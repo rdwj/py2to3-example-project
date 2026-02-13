@@ -3,31 +3,33 @@
 Database layer for the Legacy Industrial Data Platform.
 
 SQLite-backed storage for sensor readings, event logs, and serialised
-objects.  Custom pickle reducers registered via ``copy_reg`` (renamed
-``copyreg`` in Py3) allow ``DataPoint`` to be stored in BLOB columns.
+objects.  Custom pickle reducers registered via ``copyreg`` allow
+``DataPoint`` to be stored in BLOB columns.
 """
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import time
 import sqlite3
-import copy_reg
-import cPickle
-import types
+import copyreg
+import pickle
 
 from src.core.exceptions import DatabaseError, StorageError
 from src.core.types import DataPoint
 
-# -- Custom pickle support for DataPoint (old-style class) --
+# -- Custom pickle support for DataPoint --
+
 
 def _pickle_data_point(dp):
-    """copy_reg reducer.  ``copy_reg`` renamed ``copyreg`` in Py3."""
+    """copyreg reducer for DataPoint."""
     return _unpickle_data_point, (dp.tag, dp.value, dp.timestamp, dp.quality)
+
 
 def _unpickle_data_point(tag, value, timestamp, quality):
     return DataPoint(tag, value, timestamp, quality)
 
-copy_reg.pickle(types.InstanceType, _pickle_data_point)
+
+copyreg.pickle(DataPoint, _pickle_data_point)
 
 # -- SQL templates --
 
@@ -43,9 +45,8 @@ _SCHEMA = [
 ]
 
 
-class QueryBuilder(object):
-    """Fluent parameterised SQL builder.  sqlite3 returns ``str``
-    (bytes) for TEXT in Py2, ``str`` (text) in Py3."""
+class QueryBuilder:
+    """Fluent parameterised SQL builder."""
 
     def __init__(self, table):
         self._table = table
@@ -81,7 +82,7 @@ class QueryBuilder(object):
         return sql, tuple(self._params)
 
 
-class TransactionContext(object):
+class TransactionContext:
     """Commit-on-success, rollback-on-failure context manager."""
 
     def __init__(self, connection):
@@ -89,29 +90,28 @@ class TransactionContext(object):
 
     def __enter__(self):
         self._conn.execute("BEGIN")
-        print "  [txn] BEGIN"
+        print("  [txn] BEGIN")
         return self._conn
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type is None:
             try:
                 self._conn.execute("COMMIT")
-                print "  [txn] COMMIT"
-            except StandardError, e:
+                print("  [txn] COMMIT")
+            except Exception as e:
                 self._conn.execute("ROLLBACK")
                 raise DatabaseError("commit failed: %s" % e)
         else:
             try:
                 self._conn.execute("ROLLBACK")
-                print "  [txn] ROLLBACK (%s)" % exc_type.__name__
-            except StandardError, e:
-                print "  [txn] ROLLBACK failed: %s" % e
+                print("  [txn] ROLLBACK (%s)" % exc_type.__name__)
+            except Exception as e:
+                print("  [txn] ROLLBACK failed: %s" % e)
             return False
 
 
-class DatabaseManager(object):
-    """SQLite storage engine.  Query TEXT comes back as ``str`` (bytes)
-    in Py2.  BLOBs return ``buffer`` in Py2, ``bytes`` in Py3."""
+class DatabaseManager:
+    """SQLite storage engine."""
 
     _INS_READING = (
         "INSERT INTO sensor_readings "
@@ -127,8 +127,8 @@ class DatabaseManager(object):
         try:
             self._conn = sqlite3.connect(self._db_path, timeout=self._timeout)
             self._conn.execute("PRAGMA journal_mode=WAL")
-            print "Connected to database: %s" % self._db_path
-        except Exception, e:
+            print("Connected to database: %s" % self._db_path)
+        except Exception as e:
             raise DatabaseError("cannot open %s: %s" % (self._db_path, e))
 
     def close(self):
@@ -141,8 +141,8 @@ class DatabaseManager(object):
             for s in _SCHEMA:
                 self._conn.execute(s)
             self._conn.commit()
-            print "Schema verified"
-        except StandardError, e:
+            print("Schema verified")
+        except Exception as e:
             raise DatabaseError("schema creation failed: %s" % e)
 
     def transaction(self):
@@ -158,8 +158,8 @@ class DatabaseManager(object):
                 sensor_id, dp.tag, dp.value, dp.quality,
                 dp.timestamp, blob, time.time()))
             self._conn.commit()
-            print "Stored reading: %s = %s" % (dp.tag, dp.value)
-        except Exception, e:
+            print("Stored reading: %s = %s" % (dp.tag, dp.value))
+        except Exception as e:
             raise DatabaseError("insert failed for %s: %s" % (sensor_id, e))
 
     def store_readings_batch(self, readings):
@@ -170,10 +170,10 @@ class DatabaseManager(object):
                 blob = sqlite3.Binary(raw) if raw else None
                 conn.execute(self._INS_READING, (
                     sid, dp.tag, dp.value, dp.quality, dp.timestamp, blob, now))
-            print "Batch inserted %d readings" % len(readings)
+            print("Batch inserted %d readings" % len(readings))
 
     def fetch_readings(self, tag, limit=100):
-        """Most recent readings.  TEXT columns are ``str`` (bytes) in Py2."""
+        """Most recent readings for a given tag."""
         try:
             cur = self._conn.cursor()
             cur.execute(
@@ -181,43 +181,48 @@ class DatabaseManager(object):
                 "FROM sensor_readings WHERE tag=? ORDER BY timestamp DESC LIMIT ?",
                 (tag, limit))
             rows = cur.fetchall()
-            print "Fetched %d readings for %s" % (len(rows), tag)
+            print("Fetched %d readings for %s" % (len(rows), tag))
             return rows
-        except Exception, e:
+        except Exception as e:
             raise DatabaseError("query failed for %s: %s" % (tag, e))
 
     def get_raw_frame(self, reading_id):
-        """Retrieve BLOB.  Returns ``buffer`` in Py2, ``bytes`` in Py3."""
+        """Retrieve BLOB as bytes.
+
+        CRITICAL Py2->Py3 fix: In Py2, ``str(buffer(data))`` returned
+        raw bytes.  In Py3, ``str(memoryview(data))`` returns a repr
+        string like ``<memory at 0x...>``, causing silent data corruption.
+        Use ``bytes(row[0])`` to safely extract the raw bytes.
+        """
         try:
             cur = self._conn.cursor()
             cur.execute("SELECT raw_frame FROM sensor_readings WHERE id=?", (reading_id,))
             row = cur.fetchone()
-            return str(row[0]) if row and row[0] is not None else None
-        except Exception, e:
+            return bytes(row[0]) if row and row[0] is not None else None
+        except Exception as e:
             raise DatabaseError("BLOB retrieval failed for id %d: %s" % (reading_id, e))
 
     def log_event(self, event_type, source, payload_obj=None):
-        """Record event.  Payload pickled with protocol 2 (highest in Py2;
-        Py3 added protocols 3-5)."""
+        """Record event.  Payload pickled with protocol 2."""
         blob = None
         if payload_obj is not None:
             try:
-                blob = sqlite3.Binary(cPickle.dumps(payload_obj, 2))
-            except StandardError, e:
-                print "WARNING: pickle failed: %s" % e
+                blob = sqlite3.Binary(pickle.dumps(payload_obj, 2))
+            except Exception as e:
+                print("WARNING: pickle failed: %s" % e)
         try:
             self._conn.execute(
                 "INSERT INTO events (event_type,source,payload,timestamp) VALUES (?,?,?,?)",
                 (event_type, source, blob, time.time()))
             self._conn.commit()
-        except Exception, e:
+        except Exception as e:
             raise DatabaseError("event insert failed: %s" % e)
 
     def fetch_events(self, event_type=None, limit=50):
-        qb = QueryBuilder("events").select("id","event_type","source","payload","timestamp")
+        qb = QueryBuilder("events").select("id", "event_type", "source", "payload", "timestamp")
         if event_type is not None:
             qb.where("event_type = ?", event_type)
-        sql, params = qb.order_by("timestamp","DESC").limit(limit).build()
+        sql, params = qb.order_by("timestamp", "DESC").limit(limit).build()
         try:
             cur = self._conn.cursor()
             cur.execute(sql, params)
@@ -226,29 +231,29 @@ class DatabaseManager(object):
                 payload = None
                 if row[3] is not None:
                     try:
-                        payload = cPickle.loads(str(row[3]))
-                    except StandardError, e:
-                        print "WARNING: unpickle failed for event %d: %s" % (row[0], e)
+                        payload = pickle.loads(bytes(row[3]))
+                    except Exception as e:
+                        print("WARNING: unpickle failed for event %d: %s" % (row[0], e))
                 results.append({"id": row[0], "event_type": row[1],
                                 "source": row[2], "payload": payload,
                                 "timestamp": row[4]})
             return results
-        except Exception, e:
+        except Exception as e:
             raise DatabaseError("event query failed: %s" % e)
 
     def put_object(self, key, obj):
-        """Serialise with ``cPickle`` protocol 2 and store."""
+        """Serialise with pickle protocol 2 and store."""
         try:
-            pickled = cPickle.dumps(obj, 2)
-        except StandardError, e:
+            pickled = pickle.dumps(obj, 2)
+        except Exception as e:
             raise StorageError("cannot serialise %r: %s" % (key, e))
         try:
             self._conn.execute(
                 "INSERT OR REPLACE INTO object_store (key,pickled,protocol,updated_at) "
                 "VALUES (?,?,?,?)", (key, sqlite3.Binary(pickled), 2, time.time()))
             self._conn.commit()
-            print "Stored object: %s (%d bytes, protocol 2)" % (key, len(pickled))
-        except Exception, e:
+            print("Stored object: %s (%d bytes, protocol 2)" % (key, len(pickled)))
+        except Exception as e:
             raise DatabaseError("put_object failed for %r: %s" % (key, e))
 
     def get_object(self, key):
@@ -256,8 +261,8 @@ class DatabaseManager(object):
             cur = self._conn.cursor()
             cur.execute("SELECT pickled FROM object_store WHERE key=?", (key,))
             row = cur.fetchone()
-            return cPickle.loads(str(row[0])) if row else None
-        except StandardError, e:
+            return pickle.loads(bytes(row[0])) if row else None
+        except Exception as e:
             raise StorageError("cannot deserialise %r: %s" % (key, e))
 
     def purge_readings_before(self, cutoff_ts):
@@ -266,14 +271,14 @@ class DatabaseManager(object):
             cur.execute("DELETE FROM sensor_readings WHERE timestamp < ?", (cutoff_ts,))
             deleted = cur.rowcount
             self._conn.commit()
-            print "Purged %d readings older than %.0f" % (deleted, cutoff_ts)
+            print("Purged %d readings older than %.0f" % (deleted, cutoff_ts))
             return deleted
-        except Exception, e:
+        except Exception as e:
             raise DatabaseError("purge failed: %s" % e)
 
     def vacuum(self):
         try:
             self._conn.execute("VACUUM")
-            print "VACUUM complete"
-        except Exception, e:
-            print "VACUUM failed (non-fatal): %s" % e
+            print("VACUUM complete")
+        except Exception as e:
+            print("VACUUM failed (non-fatal): %s" % e)

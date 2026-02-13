@@ -10,7 +10,6 @@ Captures pre-migration behavior of:
 - __builtin__ module (renamed builtins in Py3)
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

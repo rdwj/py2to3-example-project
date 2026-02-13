@@ -13,7 +13,6 @@ so the parser uses lazy iteration and subprocess-based filtering to
 avoid loading entire files into memory.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import re
@@ -69,7 +68,7 @@ _SEVERITY_RANK = {
 # LogEntry -- a single parsed log line
 # ---------------------------------------------------------------------------
 
-class LogEntry(object):
+class LogEntry:
     """A single parsed log entry with structured fields."""
 
     __slots__ = (
@@ -110,7 +109,7 @@ class LogEntry(object):
 # LogFilter -- criteria-based log entry filtering
 # ---------------------------------------------------------------------------
 
-class LogFilter(object):
+class LogFilter:
     """Filter log entries by severity, hostname, process, time range,
     and message content patterns."""
 
@@ -176,7 +175,7 @@ class LogFilter(object):
 # LogParser -- the main parsing engine
 # ---------------------------------------------------------------------------
 
-class LogParser(object):
+class LogParser:
     """Parse log files from multiple sources into structured LogEntry objects.
 
     Supports syslog, application log, and SCADA event log formats.

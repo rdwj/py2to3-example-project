@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
 - SYNC_BYTE as str literal "\\xAA" (byte in Py2, text in Py3)
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -67,7 +66,7 @@ def build_pressure_packet(sensor_id=0x0002, pressure_pa=101325):
 # Mock serial port source
 # ---------------------------------------------------------------------------
 
-class ByteSource(object):
+class ByteSource:
     """File-like object that returns bytes from a buffer."""
     def __init__(self, data):
         if isinstance(data, str):

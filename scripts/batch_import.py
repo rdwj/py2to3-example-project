@@ -14,7 +14,6 @@ Usage:
     python3 scripts/batch_import.py <input_dir_or_file> [--cache-dir DIR]
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

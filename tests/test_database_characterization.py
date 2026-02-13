@@ -10,7 +10,6 @@ Captures pre-migration behavior of:
 - copy_reg pickle reducer for DataPoint
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -222,7 +221,7 @@ class TestDatabaseManagerEvents:
     def test_event_pickle_roundtrip_with_unicode(self, db_manager):
         """Captures: pickle roundtrip of unicode strings through BLOB column.
         cPickle protocol 2 handles unicode differently than Py3 pickle."""
-        payload = {u"tag": u"caf\u00e9", u"desc": u"r\u00e9sum\u00e9"}
+        payload = {"tag": "caf\u00e9", "desc": "r\u00e9sum\u00e9"}
         db_manager.log_event("INFO", "test", payload_obj=payload)
         events = db_manager.fetch_events("INFO")
         assert events[0]["payload"] == payload
@@ -260,7 +259,7 @@ class TestDatabaseManagerObjectStore:
     @pytest.mark.py2_behavior
     def test_put_and_get_unicode_values(self, db_manager):
         """Captures: cPickle handles unicode strings in protocol 2."""
-        obj = {u"label": u"Temp\u00e9rature", u"unit": u"\u00b0C"}
+        obj = {"label": "Temp\u00e9rature", "unit": "\u00b0C"}
         db_manager.put_object("unicode_test", obj)
         result = db_manager.get_object("unicode_test")
         assert result == obj
@@ -304,9 +303,9 @@ class TestDatabaseEncodingBoundaries:
         """Captures: unicode tag stored in TEXT column.
         Py2 sqlite3 returns str for TEXT; Py3 returns str (text)."""
         from src.core.types import DataPoint
-        dp = DataPoint(u"caf\u00e9-sensor", 42.0, timestamp=1000000.0)
-        db_manager.store_reading(u"S-\u00e9", dp)
-        rows = db_manager.fetch_readings(u"caf\u00e9-sensor")
+        dp = DataPoint("caf\u00e9-sensor", 42.0, timestamp=1000000.0)
+        db_manager.store_reading("S-\u00e9", dp)
+        rows = db_manager.fetch_readings("caf\u00e9-sensor")
         assert len(rows) >= 1
 
     @pytest.mark.py2_behavior
@@ -320,7 +319,7 @@ class TestDatabaseEncodingBoundaries:
     @pytest.mark.py2_behavior
     def test_pickle_latin1_payload(self, db_manager):
         """Captures: cPickle roundtrip of Latin-1 encoded byte strings."""
-        payload = {"raw": b"\xe9\xe8\xea", "label": u"caf\u00e9"}
+        payload = {"raw": b"\xe9\xe8\xea", "label": "caf\u00e9"}
         db_manager.log_event("TEST", "enc", payload_obj=payload)
         events = db_manager.fetch_events("TEST")
         assert events[0]["payload"]["raw"] == b"\xe9\xe8\xea"

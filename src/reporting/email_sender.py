@@ -8,7 +8,6 @@ list is managed via the platform INI file because the original operators
 preferred editing a config section over using a web interface.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 import time
@@ -50,10 +49,10 @@ class AlertThreshold:
             return None
         if self.high_limit is not None and value > self.high_limit + self.deadband:
             self._last_triggered = now
-            return "HIGH: %.2f exceeds limit %.2f" % (value, self.high_limit)
+            return f"HIGH: {value:.2f} exceeds limit {self.high_limit:.2f}"
         if self.low_limit is not None and value < self.low_limit - self.deadband:
             self._last_triggered = now
-            return "LOW: %.2f below limit %.2f" % (value, self.low_limit)
+            return f"LOW: {value:.2f} below limit {self.low_limit:.2f}"
         return None
 
 
@@ -99,7 +98,7 @@ class EmailSender:
 
     def add_distribution_list(self, name, recipients):
         self._distribution_lists[name] = list(recipients)
-        print("Distribution list '%s': %d recipients" % (name, len(recipients)))
+        print(f"Distribution list '{name}': {len(recipients)} recipients")
 
     def get_distribution_list(self, name):
         return self._distribution_lists.get(name, [])
@@ -112,12 +111,12 @@ class EmailSender:
             addrs = [a.strip() for a in value.split(",") if a.strip()]
             if addrs:
                 self._distribution_lists[key] = addrs
-        print("Loaded %d distribution lists" % len(self._distribution_lists))
+        print(f"Loaded {len(self._distribution_lists)} distribution lists")
 
     def send_alert(self, alert):
         """Deliver a single EmailAlert via SMTP."""
         if not isinstance(alert, EmailAlert):
-            raise EmailError("Expected EmailAlert, got %s" % type(alert).__name__)
+            raise EmailError(f"Expected EmailAlert, got {type(alert).__name__}")
         msg = alert.to_mime_message()
         try:
             conn = smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=30)
@@ -128,24 +127,24 @@ class EmailSender:
                     conn.login(self.username, self.password)
                 conn.sendmail(alert.sender, alert.recipients, msg.as_string())
                 self._send_count += 1
-                print("Alert sent to %d recipients: %s" % (len(alert.recipients), alert.subject))
+                print(f"Alert sent to {len(alert.recipients)} recipients: {alert.subject}")
             finally:
                 conn.quit()
         except smtplib.SMTPAuthenticationError as e:
-            print("SMTP auth failed for %s: %s" % (self.smtp_host, e))
-            raise EmailError("SMTP auth failed: %s" % e)
+            print(f"SMTP auth failed for {self.smtp_host}: {e}")
+            raise EmailError(f"SMTP auth failed: {e}")
         except smtplib.SMTPRecipientsRefused as e:
-            print("Recipients refused: %s" % e)
-            raise EmailError("Recipients refused: %s" % e)
+            print(f"Recipients refused: {e}")
+            raise EmailError(f"Recipients refused: {e}")
         except (smtplib.SMTPException, socket.error) as e:
-            print("SMTP error sending to %s: %s" % (self.smtp_host, e))
-            raise EmailError("Send failed: %s" % e)
+            print(f"SMTP error sending to {self.smtp_host}: {e}")
+            raise EmailError(f"Send failed: {e}")
 
     def send_to_list(self, list_name, subject, body, priority=3):
         """Compose and send an alert to a named distribution list."""
         recipients = self.get_distribution_list(list_name)
         if not recipients:
-            print("No recipients in list '%s', skipping" % list_name)
+            print(f"No recipients in list '{list_name}', skipping")
             return
         alert = EmailAlert(subject, body, recipients, priority=priority)
         self.send_alert(alert)
@@ -155,13 +154,13 @@ class EmailSender:
         lines = [
             "INDUSTRIAL PLATFORM ALARM NOTIFICATION",
             "=" * 45, "",
-            "Tag:       %s" % safe_decode(tag),
-            "Severity:  %d" % severity,
-            "Message:   %s" % safe_decode(message),
+            f"Tag:       {safe_decode(tag)}",
+            f"Severity:  {severity}",
+            f"Message:   {safe_decode(message)}",
         ]
         if value is not None:
-            lines.append("Value:     %.4f" % value)
-        lines.append("Time:      %s" % time.strftime("%Y-%m-%d %H:%M:%S"))
+            lines.append(f"Value:     {value:.4f}")
+        lines.append(f"Time:      {time.strftime('%Y-%m-%d %H:%M:%S')}")
         lines.append("")
         lines.append("--- Automated alert from the Industrial Data Platform ---")
         return "\n".join(lines)
@@ -169,12 +168,12 @@ class EmailSender:
     def send_alarm_notification(self, list_name, tag, message, severity, value=None):
         """Compose and send an alarm notification."""
         body = self.compose_alarm_body(tag, message, severity, value)
-        subject = "[ALARM SEV%d] %s: %s" % (severity, tag, message[:50])
+        subject = f"[ALARM SEV{severity}] {tag}: {message[:50]}"
         self.send_to_list(list_name, subject, body, priority=min(severity, 5))
 
     def send_daily_digest(self, list_name, report_content):
         """Send a daily summary report as an email digest."""
-        subject = "Daily Platform Summary - %s" % time.strftime("%Y-%m-%d")
+        subject = f"Daily Platform Summary - {time.strftime('%Y-%m-%d')}"
         body = report_content if isinstance(report_content, str) else safe_decode(report_content)
         self.send_to_list(list_name, subject, body, priority=5)
 

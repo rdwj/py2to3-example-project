@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
 - basestring/unicode type checks
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -209,20 +208,20 @@ class TestSortingAndTypeChecks:
     def test_is_string(self):
         """Captures: isinstance(value, basestring). basestring removed in Py3."""
         assert is_string("bytes") is True
-        assert is_string(u"unicode") is True
+        assert is_string("unicode") is True
         assert is_string(42) is False
 
     @pytest.mark.py2_behavior
     def test_is_text(self):
         """Captures: isinstance(value, str). In Py3, all str literals are text."""
-        assert is_text(u"text") is True
+        assert is_text("text") is True
         assert is_text("bytes") is True
 
     @pytest.mark.py2_behavior
     def test_is_binary(self):
         """Captures: isinstance(value, bytes). In Py3, str is not bytes."""
         assert is_binary(b"bytes") is True
-        assert is_binary(u"text") is False
+        assert is_binary("text") is False
 
     @pytest.mark.py2_behavior
     def test_register_view(self):

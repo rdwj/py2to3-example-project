@@ -13,7 +13,6 @@ structures, and produces the configuration dicts consumed by the
 real-time alarm processing engine.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import xml.etree.ElementTree as ET
@@ -92,7 +91,7 @@ def _truncated_repr(obj):
 # XmlNodeMapper -- maps XML element paths to internal field names
 # ---------------------------------------------------------------------------
 
-class XmlNodeMapper(object):
+class XmlNodeMapper:
     """Maps SCADA XML element paths and attributes to internal field names.
 
     The SCADA export uses deeply nested paths like:
@@ -149,7 +148,7 @@ class XmlNodeMapper(object):
 # XmlTransformer -- the main transform engine
 # ---------------------------------------------------------------------------
 
-class XmlTransformer(object):
+class XmlTransformer:
     """Transform SCADA configuration XML into internal data structures.
 
     Parses the XML, walks the element tree, applies node mappings, and

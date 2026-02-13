@@ -3,7 +3,6 @@
 Tests for report generation: captured print output, exec templates,
 unicode content, reduce() aggregation, print >>sys.stderr.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -23,17 +22,17 @@ from tests.conftest import assert_unicode
 class TestReportSection(unittest.TestCase):
 
     def test_unicode_title(self):
-        assert_unicode(self, ReportSection(u"Summary \u2014 2024").title)
+        assert_unicode(self, ReportSection("Summary \u2014 2024").title)
 
     def test_add_line_decodes_bytes(self):
-        sec = ReportSection(u"S")
+        sec = ReportSection("S")
         sec.add_line("ASCII line")
         assert_unicode(self, sec.content_lines[0])
 
     def test_render(self):
-        sec = ReportSection(u"Test")
-        sec.add_line(u"Line one")
-        self.assertIn(u"=== Test ===", sec.render())
+        sec = ReportSection("Test")
+        sec.add_line("Line one")
+        self.assertIn("=== Test ===", sec.render())
         print("Section rendered")
 
 
@@ -63,7 +62,7 @@ class TestReportTemplate(unittest.TestCase):
 class TestDailySummary(unittest.TestCase):
 
     def setUp(self):
-        self.gen = ReportGenerator(config={"site_name": u"Test Plant"})
+        self.gen = ReportGenerator(config={"site_name": "Test Plant"})
 
     def test_sections(self):
         data = {"T": [DataPoint("T", 22.0), DataPoint("T", 24.0)]}
@@ -87,9 +86,9 @@ class TestDailySummary(unittest.TestCase):
 class TestAlarmReport(unittest.TestCase):
 
     def test_unicode_site(self):
-        gen = ReportGenerator(config={"site_name": u"Werk M\u00fcnchen"})
-        alarms = [{"tag": "X", "message": u"\u00dcber", "severity": 3, "timestamp": time.time()}]
-        self.assertIn(u"M\u00fcnchen", u"\n".join(s.render() for s in gen.generate_alarm_report(alarms)))
+        gen = ReportGenerator(config={"site_name": "Werk M\u00fcnchen"})
+        alarms = [{"tag": "X", "message": "\u00dcber", "severity": 3, "timestamp": time.time()}]
+        self.assertIn("M\u00fcnchen", "\n".join(s.render() for s in gen.generate_alarm_report(alarms)))
 
     def test_severity_filter(self):
         alarms = [{"tag": "A", "message": "low", "severity": 1, "timestamp": 0},
@@ -102,26 +101,26 @@ class TestAlarmReport(unittest.TestCase):
 class TestRendering(unittest.TestCase):
 
     def setUp(self):
-        self.gen = ReportGenerator(config={"site_name": u"Plant B"})
+        self.gen = ReportGenerator(config={"site_name": "Plant B"})
 
     def test_default(self):
-        output = self.gen.render_report([ReportSection(u"H", [u"body"])])
+        output = self.gen.render_report([ReportSection("H", ["body"])])
         assert_unicode(self, output)
-        self.assertIn(u"Industrial Data Platform", output)
+        self.assertIn("Industrial Data Platform", output)
 
     def test_with_template(self):
         self.gen.register_template(ReportTemplate("c", "for s in sections:\n    lines.append(s.title)\n"))
-        self.assertIn(u"X", self.gen.render_report([ReportSection(u"X")], template_name="c"))
+        self.assertIn("X", self.gen.render_report([ReportSection("X")], template_name="c"))
 
     def test_fallback_on_error(self):
         self.gen.register_template(ReportTemplate("broken", "raise RuntimeError\n"))
         old = sys.stderr
         sys.stderr = StringIO()
         try:
-            output = self.gen.render_report([ReportSection(u"F")], template_name="broken")
+            output = self.gen.render_report([ReportSection("F")], template_name="broken")
         finally:
             sys.stderr = old
-        self.assertIn(u"Industrial Data Platform", output)
+        self.assertIn("Industrial Data Platform", output)
 
 
 class TestReduceBuiltin(unittest.TestCase):
@@ -133,7 +132,7 @@ class TestReduceBuiltin(unittest.TestCase):
         self.assertEqual(reduce(lambda a, b: a if a < b else b, [5, 3, 8]), 3)
 
     def test_concat(self):
-        result = reduce(lambda a, b: a + b, [u"A", u"|", u"B"])
+        result = reduce(lambda a, b: a + b, ["A", "|", "B"])
         assert_unicode(self, result)
         print("reduce() OK")
 

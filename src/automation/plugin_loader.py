@@ -7,7 +7,6 @@ Plugins extend the data pipeline without modifying core code -- integrators
 drop a module into the plugins directory and it is picked up on reload.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

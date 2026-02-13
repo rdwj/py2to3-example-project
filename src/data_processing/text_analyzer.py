@@ -13,7 +13,6 @@ extraction for classification, and similarity scoring for matching new
 fault descriptions against a library of known failure modes.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import re
 import hashlib
@@ -58,7 +57,7 @@ DEFAULT_TOP_KEYWORDS = 20
 # TextFingerprint -- content hash for duplicate detection
 # ---------------------------------------------------------------------------
 
-class TextFingerprint(object):
+class TextFingerprint:
     """Content-addressable fingerprint for duplicate detection.
 
     Computes an MD5 hash of the normalised text content.  Two documents
@@ -109,7 +108,7 @@ class TextFingerprint(object):
 # TextAnalyzer -- keyword extraction, similarity, classification
 # ---------------------------------------------------------------------------
 
-class TextAnalyzer(object):
+class TextAnalyzer:
     """Analyzes unstructured maintenance text for classification and search.
 
     Provides keyword extraction, similarity scoring against a reference

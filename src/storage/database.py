@@ -7,7 +7,6 @@ objects.  Custom pickle reducers registered via ``copyreg`` allow
 ``DataPoint`` to be stored in BLOB columns.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import time
 import sqlite3

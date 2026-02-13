@@ -12,7 +12,6 @@ Captures pre-migration behavior of:
 - struct.pack for sensor dump binary format
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -98,7 +97,7 @@ class TestFileStoreText:
     def test_store_report_unicode_encoded(self, store):
         """Captures: unicode content written as text in Py3.
         read_report returns str (text) in Py3, not bytes."""
-        store.store_report("unicode.txt", u"caf\u00e9 r\u00e9sum\u00e9")
+        store.store_report("unicode.txt", "caf\u00e9 r\u00e9sum\u00e9")
         content = store.read_report("unicode.txt")
         assert content is not None
         # In Py3, read_report returns str (text)
@@ -185,11 +184,11 @@ class TestFileStoreEncodingBoundaries:
     @pytest.mark.py2_behavior
     def test_store_report_latin1_encoding(self, store):
         """Captures: store_report with explicit latin-1 encoding."""
-        store.store_report("latin.txt", u"\u00e9\u00e8\u00ea", encoding="latin-1")
+        store.store_report("latin.txt", "\u00e9\u00e8\u00ea", encoding="latin-1")
         content = store.read_report("latin.txt", encoding="latin-1")
         assert content is not None
         # In Py3, read_report returns str (text); verify the accented chars
-        assert u"\u00e9" in content
+        assert "\u00e9" in content
 
     @pytest.mark.py2_behavior
     def test_store_binary_with_null_bytes(self, store):

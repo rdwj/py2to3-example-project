@@ -8,7 +8,6 @@ provides helpers for environment-variable interpolation and sanity
 checking of required keys.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -29,7 +28,7 @@ CONFIG_SEARCH_PATHS = [
 ]
 
 
-class PlatformConfig(object):
+class PlatformConfig:
     """Thin wrapper around ``SafeConfigParser`` with convenience methods
     for typed access and environment-variable substitution."""
 
@@ -62,7 +61,7 @@ class PlatformConfig(object):
         # An explicit path was provided but the file doesn't exist --
         # do not fall through to the search-path discovery loop.
         if self._path:
-            print("WARNING: config file not found: %s" % self._path)
+            print(f"WARNING: config file not found: {self._path}")
             return
 
         for search_dir in CONFIG_SEARCH_PATHS:
@@ -97,12 +96,12 @@ class PlatformConfig(object):
         try:
             value = int(raw)
         except (ValueError, TypeError):
-            print("Config warning: bad integer for [%s] %s = %r" % (section, key, raw))
+            print(f"Config warning: bad integer for [{section}] {key} = {raw!r}")
             return fallback
 
         ceiling = max_value if max_value is not None else DEFAULT_MAX
         if value > ceiling:
-            print("Config warning: clamping [%s] %s to max %d" % (section, key, ceiling))
+            print(f"Config warning: clamping [{section}] {key} to max {ceiling}")
             value = ceiling
         return value
 
@@ -113,7 +112,7 @@ class PlatformConfig(object):
         try:
             return float(raw)
         except (ValueError, TypeError):
-            print("Config warning: bad float for [%s] %s = %r" % (section, key, raw))
+            print(f"Config warning: bad float for [{section}] {key} = {raw!r}")
             return fallback
 
     def get_bool(self, section, key, fallback=False):
@@ -181,9 +180,9 @@ class PlatformConfig(object):
         print("Default encoding:", self.default_encoding())
         print("sys.maxsize:", DEFAULT_MAX)
         for section in self._parser.sections():
-            print("[%s]" % section)
+            print(f"[{section}]")
             for key, value in self._parser.items(section):
-                print("  %s = %s" % (key, value))
+                print(f"  {key} = {value}")
         print("--- End Configuration ---")
 
 

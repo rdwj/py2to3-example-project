@@ -10,7 +10,6 @@ Captures pre-migration behavior of:
   integer division /, dict.iteritems(), StandardError
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -252,9 +251,9 @@ class TestCacheEncodingBoundaries:
     def test_cache_unicode_value(self):
         """Captures: caching unicode values; sha fingerprint handles them."""
         mgr = CacheManager(max_size=10)
-        mgr.set(u"unicode_key", {u"label": u"caf\u00e9"})
-        result = mgr.get(u"unicode_key")
-        assert result[u"label"] == u"caf\u00e9"
+        mgr.set("unicode_key", {"label": "caf\u00e9"})
+        result = mgr.get("unicode_key")
+        assert result["label"] == "caf\u00e9"
 
     @pytest.mark.py2_behavior
     def test_cache_binary_value(self):

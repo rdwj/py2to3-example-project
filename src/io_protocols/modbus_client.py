@@ -4,7 +4,6 @@ MODBUS TCP/RTU client for the Legacy Industrial Data Platform.
 Reads holding registers from SCADA PLCs over TCP sockets.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import socket
 import struct
@@ -43,7 +42,7 @@ def crc16_modbus(data):
     return crc & 0xFFFF
 
 
-class ModbusFrame(object):
+class ModbusFrame:
     """MODBUS TCP ADU -- MBAP header plus PDU."""
     _transaction_counter = 0
 
@@ -80,7 +79,7 @@ class ModbusFrame(object):
             self.function_code, len(self.payload))
 
 
-class RegisterBank(object):
+class RegisterBank:
     """In-memory cache of PLC holding registers with zero-copy views."""
 
     def __init__(self, base_address, raw_data):
@@ -109,7 +108,7 @@ class RegisterBank(object):
             self.base_address, self._count)
 
 
-class ModbusClient(object):
+class ModbusClient:
     """MODBUS TCP client with persistent connection and background polling."""
 
     def __init__(self, host, port=DEFAULT_PORT, unit_id=1, timeout=DEFAULT_TIMEOUT):

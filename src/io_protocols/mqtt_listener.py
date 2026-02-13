@@ -4,7 +4,6 @@ MQTT-like message listener for the Legacy Industrial Data Platform.
 Simplified MQTT v3.1.1 over raw TCP for IoT sensor gateway telemetry.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import socket
 import struct
@@ -31,7 +30,7 @@ _CONNACK_MSG = {0x00: "Accepted", 0x01: "Bad protocol", 0x02: "ID rejected",
 DEFAULT_PORT = 1883
 
 
-class MqttMessage(object):
+class MqttMessage:
     """Received message.  Payload is bytes from socket."""
 
     def __init__(self, topic, payload, timestamp=None):
@@ -62,7 +61,7 @@ class MqttMessage(object):
         return "MqttMessage(%r, %d bytes)" % (self.topic, len(self.payload))
 
 
-class MqttSubscription(object):
+class MqttSubscription:
     """Topic subscription with queue.Queue() buffer."""
 
     def __init__(self, topic_filter, qos=0, maxq=10000):
@@ -109,7 +108,7 @@ class MqttSubscription(object):
         return len(fp) == len(tp)
 
 
-class MqttListener(object):
+class MqttListener:
     """Raw TCP MQTT client dispatching to subscriptions."""
 
     def __init__(self, host, port=DEFAULT_PORT, client_id=None, keepalive=60):

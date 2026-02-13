@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
   ord() on bytes, struct.pack with str concatenation
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -92,10 +91,10 @@ class TestMqttMessage:
     @pytest.mark.py2_behavior
     def test_json_payload_with_unicode_values(self):
         """Captures: json.loads with encoding= handling unicode content."""
-        payload = json.dumps({u"label": u"caf\u00e9", u"value": 23.5})
+        payload = json.dumps({"label": "caf\u00e9", "value": 23.5})
         msg = MqttMessage("sensors/intl", payload)
         result = msg.json_payload()
-        assert u"\u00e9" in result["label"]
+        assert "\u00e9" in result["label"]
 
     @pytest.mark.py2_behavior
     def test_json_payload_with_byte_string(self):
@@ -250,7 +249,7 @@ class TestMqttEncodingBoundaries:
     @pytest.mark.py2_behavior
     def test_json_payload_with_non_ascii_utf8(self):
         """Captures: JSON with UTF-8 encoded non-ASCII via encoding= param."""
-        data = {u"name": u"caf\u00e9", u"value": 23.5}
+        data = {"name": "caf\u00e9", "value": 23.5}
         payload = json.dumps(data, ensure_ascii=False).encode("utf-8")
         msg = MqttMessage("intl/data", payload)
         result = msg.json_payload()

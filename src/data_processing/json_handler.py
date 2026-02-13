@@ -12,7 +12,6 @@ for internal record caching when JSON round-trip fidelity is not
 required (e.g. temporary inter-process data passing via shared NFS).
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import json
@@ -36,7 +35,7 @@ JSON_DEFAULT_ENCODING = "utf-8"
 # JsonRecordSet -- a batch of records with metadata
 # ---------------------------------------------------------------------------
 
-class JsonRecordSet(object):
+class JsonRecordSet:
     """A collection of JSON records with batch metadata.
 
     Represents a single REST gateway response payload, which contains
@@ -85,7 +84,7 @@ class JsonRecordSet(object):
 # JsonHandler -- main JSON processing engine
 # ---------------------------------------------------------------------------
 
-class JsonHandler(object):
+class JsonHandler:
     """Loads, validates, and transforms JSON data from REST gateway feeds."""
 
     def __init__(self, default_encoding=None):

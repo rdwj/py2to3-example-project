@@ -9,7 +9,6 @@ Python 3).  The hierarchy allows callers to catch broad categories
 timeout).
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 

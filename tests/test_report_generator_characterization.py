@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
   unicode() constructor, isinstance checks
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -35,8 +34,8 @@ class TestReportSection:
 
     def test_construction_with_unicode_title(self):
         """Captures: unicode title stored directly."""
-        section = ReportSection(u"Test Section \u2014 Data")
-        assert section.title == u"Test Section \u2014 Data"
+        section = ReportSection("Test Section \u2014 Data")
+        assert section.title == "Test Section \u2014 Data"
         assert section.content_lines == []
 
     @pytest.mark.py2_behavior
@@ -49,38 +48,38 @@ class TestReportSection:
     def test_construction_with_non_string(self):
         """Captures: non-string title converted via unicode()."""
         section = ReportSection(42)
-        assert section.title == u"42"
+        assert section.title == "42"
 
     def test_add_line_unicode(self):
         """Captures: unicode lines appended directly."""
-        section = ReportSection(u"Test")
-        section.add_line(u"Line with caf\u00e9")
+        section = ReportSection("Test")
+        section.add_line("Line with caf\u00e9")
         assert len(section.content_lines) == 1
-        assert u"caf\u00e9" in section.content_lines[0]
+        assert "caf\u00e9" in section.content_lines[0]
 
     @pytest.mark.py2_behavior
     def test_add_line_str_decoded(self):
         """Captures: str lines decoded via safe_decode().
         isinstance(line, basestring) branch."""
-        section = ReportSection(u"Test")
+        section = ReportSection("Test")
         section.add_line("plain str line")
         assert len(section.content_lines) == 1
 
     def test_add_line_non_string(self):
         """Captures: non-string converted via unicode()."""
-        section = ReportSection(u"Test")
+        section = ReportSection("Test")
         section.add_line(42)
-        assert section.content_lines[0] == u"42"
+        assert section.content_lines[0] == "42"
 
     def test_render(self):
         """Captures: render produces header + body separated by newline."""
-        section = ReportSection(u"Header")
-        section.add_line(u"line 1")
-        section.add_line(u"line 2")
+        section = ReportSection("Header")
+        section.add_line("line 1")
+        section.add_line("line 2")
         rendered = section.render()
-        assert u"=== Header ===" in rendered
-        assert u"line 1" in rendered
-        assert u"line 2" in rendered
+        assert "=== Header ===" in rendered
+        assert "line 1" in rendered
+        assert "line 2" in rendered
 
 
 # ---------------------------------------------------------------------------
@@ -129,7 +128,7 @@ class TestReportGenerator:
     @pytest.fixture
     def generator(self):
         return ReportGenerator(config={
-            "site_name": u"Test Plant",
+            "site_name": "Test Plant",
             "output_dir": "/tmp/reports",
         })
 
@@ -149,11 +148,11 @@ class TestReportGenerator:
         assert len(sections) >= 2
         # Header section
         rendered = sections[0].render()
-        assert u"Daily Summary" in rendered
-        assert u"Test Plant" in rendered
+        assert "Daily Summary" in rendered
+        assert "Test Plant" in rendered
         # Stats section
         stats_rendered = sections[1].render()
-        assert u"TEMP-001" in stats_rendered
+        assert "TEMP-001" in stats_rendered
 
     @pytest.mark.py2_behavior
     def test_daily_summary_with_numeric_values(self, generator):
@@ -164,7 +163,7 @@ class TestReportGenerator:
         }
         sections = generator.generate_daily_summary(sensor_data)
         stats = sections[1].render()
-        assert u"FLOW-001" in stats
+        assert "FLOW-001" in stats
 
     def test_alarm_report(self, generator):
         """Captures: alarm report generation with severity filter."""
@@ -202,27 +201,27 @@ class TestReportGenerator:
         sections = generator.generate_trend_report(trend_data)
         assert len(sections) >= 2
         trends = sections[1].render()
-        assert u"TEMP-001" in trends
+        assert "TEMP-001" in trends
 
     def test_render_report_default(self, generator):
         """Captures: render_report without template produces default output."""
         sections = [
-            ReportSection(u"Header"),
-            ReportSection(u"Body"),
+            ReportSection("Header"),
+            ReportSection("Body"),
         ]
-        sections[0].add_line(u"line 1")
+        sections[0].add_line("line 1")
         output = generator.render_report(sections)
         assert generator.DEFAULT_TITLE in output
-        assert u"Header" in output
+        assert "Header" in output
 
     @pytest.mark.py2_behavior
     def test_render_report_with_template(self, generator):
         """Captures: render_report with registered template uses exec."""
         template = ReportTemplate("custom", "lines.append('Custom: %s' % site_name)")
         generator.register_template(template)
-        sections = [ReportSection(u"Test")]
+        sections = [ReportSection("Test")]
         output = generator.render_report(sections, template_name="custom")
-        assert u"Custom: Test Plant" in output
+        assert "Custom: Test Plant" in output
 
     def test_register_template_wrong_type(self, generator):
         """Captures: non-ReportTemplate raises ReportError."""
@@ -239,34 +238,34 @@ class TestReportGeneratorEncoding:
 
     @pytest.fixture
     def generator(self):
-        return ReportGenerator(config={"site_name": u"caf\u00e9 Plant"})
+        return ReportGenerator(config={"site_name": "caf\u00e9 Plant"})
 
     def test_section_with_unicode_content(self, generator):
         """Captures: unicode content flows through sections correctly."""
-        section = ReportSection(u"r\u00e9sum\u00e9 Section")
-        section.add_line(u"Temp: 23.5\u00b0C")
+        section = ReportSection("r\u00e9sum\u00e9 Section")
+        section.add_line("Temp: 23.5\u00b0C")
         rendered = section.render()
-        assert u"\u00e9" in rendered
-        assert u"\u00b0" in rendered
+        assert "\u00e9" in rendered
+        assert "\u00b0" in rendered
 
     @pytest.mark.py2_behavior
     def test_alarm_with_unicode_message(self, generator):
         """Captures: unicode in alarm messages handled by basestring checks."""
         alarms = [{
-            "tag": u"SENSOR-\u00b0C",
-            "message": u"Temp\u00e9rature \u00e9lev\u00e9e",
+            "tag": "SENSOR-\u00b0C",
+            "message": "Temp\u00e9rature \u00e9lev\u00e9e",
             "severity": 3,
             "timestamp": time.time(),
         }]
         sections = generator.generate_alarm_report(alarms)
         active = sections[1].render()
-        assert u"\u00e9" in active
+        assert "\u00e9" in active
 
     @pytest.mark.py2_behavior
     def test_save_report_encodes_unicode(self, generator, tmp_path):
         """Captures: save_report encodes unicode to bytes via safe_encode.
         isinstance(content, basestring) check; basestring removed in Py3."""
-        content = u"Report with caf\u00e9"
+        content = "Report with caf\u00e9"
         filepath = str(tmp_path / "report.txt")
         generator._output_dir = str(tmp_path)
         generator.save_report(content, "report.txt")

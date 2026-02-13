@@ -9,7 +9,6 @@ centralises the messy encode/decode logic so that every other module
 does not have to reinvent it.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from io import StringIO
 from io import BytesIO as FastStringIO
@@ -21,12 +20,12 @@ from io import BytesIO as FastStringIO
 # Common encodings encountered across our installed base, ordered by
 # probability.  We try each one in sequence until decode succeeds.
 _ENCODING_CANDIDATES = [
-    u"utf-8",
-    u"latin-1",
-    u"cp1252",
-    u"shift_jis",
-    u"iso-8859-15",
-    u"ascii",
+    "utf-8",
+    "latin-1",
+    "cp1252",
+    "shift_jis",
+    "iso-8859-15",
+    "ascii",
 ]
 
 
@@ -40,7 +39,7 @@ def detect_encoding(raw_bytes):
     """
     if not isinstance(raw_bytes, bytes):
         # Already str -- nothing to detect
-        return u"utf-8"
+        return "utf-8"
 
     for enc in _ENCODING_CANDIDATES:
         try:
@@ -48,14 +47,14 @@ def detect_encoding(raw_bytes):
             return enc
         except (UnicodeDecodeError, LookupError):
             continue
-    return u"latin-1"
+    return "latin-1"
 
 
 # ---------------------------------------------------------------------------
 # Safe conversion functions
 # ---------------------------------------------------------------------------
 
-def safe_decode(value, encoding=u"utf-8", errors=u"replace"):
+def safe_decode(value, encoding="utf-8", errors="replace"):
     """Decode a byte string to unicode, replacing unencodable bytes
     rather than raising."""
     if isinstance(value, str):
@@ -65,7 +64,7 @@ def safe_decode(value, encoding=u"utf-8", errors=u"replace"):
     return str(value)
 
 
-def safe_encode(value, encoding=u"utf-8", errors=u"replace"):
+def safe_encode(value, encoding="utf-8", errors="replace"):
     """Encode a unicode string to bytes.  Byte strings pass through
     unchanged."""
     if isinstance(value, bytes):
@@ -75,7 +74,7 @@ def safe_encode(value, encoding=u"utf-8", errors=u"replace"):
     return str(value).encode(encoding, errors)
 
 
-def to_platform_string(value, encoding=u"utf-8"):
+def to_platform_string(value, encoding="utf-8"):
     """Normalise *value* to the platform's native string type (``str``
     in Python 3, which is text).  Used at I/O boundaries where the
     rest of the stack expects plain ``str``."""
@@ -97,12 +96,12 @@ def normalise_sensor_label(label):
     caused duplicate-key bugs until we added this step."""
     import unicodedata
     if not isinstance(label, str):
-        label = label.decode(u"utf-8", u"replace") if isinstance(label, bytes) else str(label)
-    label = unicodedata.normalize(u"NFC", label)
+        label = label.decode("utf-8", "replace") if isinstance(label, bytes) else str(label)
+    label = unicodedata.normalize("NFC", label)
     # Strip C0/C1 control characters except tab and newline
-    cleaned = u""
+    cleaned = ""
     for ch in label:
-        if unicodedata.category(ch).startswith(u"C") and ch not in u"\t\n":
+        if unicodedata.category(ch).startswith("C") and ch not in "\t\n":
             continue
         cleaned += ch
     return cleaned.strip()
@@ -124,19 +123,19 @@ def safe_concat(*parts):
         if isinstance(part, str):
             decoded.append(part)
         elif isinstance(part, bytes):
-            decoded.append(part.decode(u"utf-8", u"replace"))
+            decoded.append(part.decode("utf-8", "replace"))
         else:
             decoded.append(str(part))
-    return u"".join(decoded)
+    return "".join(decoded)
 
 
-def build_csv_line(fields, separator=u","):
+def build_csv_line(fields, separator=","):
     """Join fields into a single CSV line, ensuring consistent encoding."""
     encoded_fields = []
     for f in fields:
         text = safe_decode(f) if isinstance(f, (str, bytes)) else str(f)
-        if separator in text or u'"' in text or u"\n" in text:
-            text = u'"' + text.replace(u'"', u'""') + u'"'
+        if separator in text or '"' in text or "\n" in text:
+            text = '"' + text.replace('"', '""') + '"'
         encoded_fields.append(text)
     return separator.join(encoded_fields)
 
@@ -145,7 +144,7 @@ def build_csv_line(fields, separator=u","):
 # StringIO helpers for in-memory text assembly
 # ---------------------------------------------------------------------------
 
-def make_text_buffer(initial=u""):
+def make_text_buffer(initial=""):
     """Return a StringIO buffer pre-loaded with *initial* text."""
     buf = StringIO()
     if initial:
@@ -165,13 +164,13 @@ def make_binary_buffer(initial=b""):
 # Encoding round-trip validation
 # ---------------------------------------------------------------------------
 
-def validate_roundtrip(text, encoding=u"utf-8"):
+def validate_roundtrip(text, encoding="utf-8"):
     """Return True if *text* survives an encode-then-decode round trip
     without data loss.  Used as a pre-flight check before writing to
     systems that only support a specific encoding (e.g. the reporting
     subsystem's email sender defaults to Latin-1)."""
     if not isinstance(text, str):
-        text = text.decode(u"utf-8", u"replace") if isinstance(text, bytes) else str(text)
+        text = text.decode("utf-8", "replace") if isinstance(text, bytes) else str(text)
     try:
         encoded = text.encode(encoding)
         decoded = encoded.decode(encoding)

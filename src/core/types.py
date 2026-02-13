@@ -7,7 +7,6 @@ sensor readings, data points, counters, and the registry machinery
 that automatically tracks every sensor type in the running system.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import functools
 import time
@@ -43,7 +42,7 @@ def get_sensor_class(sensor_type):
 # ---------------------------------------------------------------------------
 
 @functools.total_ordering
-class DataPoint(object):
+class DataPoint:
     """A single timestamped measurement from any source.
 
     Old-style class intentionally -- this code predates the project's
@@ -93,7 +92,7 @@ class DataPoint(object):
 # SensorReading -- new-style class with auto-registration metaclass
 # ---------------------------------------------------------------------------
 
-class SensorReading(object, metaclass=SensorMeta):
+class SensorReading(metaclass=SensorMeta):
     """Base class for typed sensor readings.
 
     Subclasses set ``sensor_type`` and get registered automatically so
@@ -162,7 +161,7 @@ class VibrationReading(SensorReading):
 # LargeCounter -- uses long type for 64-bit event counters
 # ---------------------------------------------------------------------------
 
-class LargeCounter(object):
+class LargeCounter:
     """Monotonically increasing 64-bit counter for high-throughput
     event tracking (totaliser pulses, packet counts, etc.).
 

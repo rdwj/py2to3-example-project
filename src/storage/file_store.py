@@ -6,7 +6,6 @@ Handles processed reports, exported data, and binary sensor dumps on
 the local filesystem.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import time
@@ -56,7 +55,7 @@ class StoragePath:
             if not os.path.isdir(d):
                 os.makedirs(d)
                 os.chmod(d, DIR_PERMISSIONS)
-                print("Created directory: %s" % d)
+                print(f"Created directory: {d}")
 
     def resolve(self, *parts):
         return os.path.join(self._root, *parts)
@@ -84,9 +83,9 @@ class FileStore:
             with open(dest, "w", encoding=encoding) as f:
                 f.write(content)
             os.chmod(dest, FILE_PERMISSIONS)
-            print("Wrote report: %s (%d bytes)" % (dest, os.path.getsize(dest)))
+            print(f"Wrote report: {dest} ({os.path.getsize(dest)} bytes)")
         except IOError as e:
-            raise StorageError("failed to write report %s: %s" % (filename, e))
+            raise StorageError(f"failed to write report {filename}: {e}")
 
     def store_binary(self, filename, data, subdir=None):
         """Write raw binary data in ``'wb'`` mode."""
@@ -95,13 +94,13 @@ class FileStore:
             with open(dest, "wb") as f:
                 f.write(data)
             os.chmod(dest, FILE_PERMISSIONS)
-            print("Wrote binary: %s (%d bytes)" % (dest, len(data)))
+            print(f"Wrote binary: {dest} ({len(data)} bytes)")
         except IOError as e:
-            raise StorageError("failed to write binary %s: %s" % (filename, e))
+            raise StorageError(f"failed to write binary {filename}: {e}")
 
     def store_sensor_dump(self, sensor_id, readings, raw_frames):
         """Combined dump: length-prefixed raw frames + reading fields."""
-        fname = "%s_%s.dump" % (sensor_id, time.strftime("%Y%m%d_%H%M%S"))
+        fname = f"{sensor_id}_{time.strftime('%Y%m%d_%H%M%S')}.dump"
         dest = self._path.resolve(_DIR_RAW_DUMPS, fname)
         try:
             with open(dest, "wb") as f:
@@ -116,10 +115,9 @@ class FileStore:
                     f.write(tag)
                     f.write(struct.pack(">dI", dp.timestamp, dp.quality))
             os.chmod(dest, FILE_PERMISSIONS_RESTRICTED)
-            print("Sensor dump: %s (%d frames, %d readings)" % (
-                fname, len(raw_frames), len(readings)))
+            print(f"Sensor dump: {fname} ({len(raw_frames)} frames, {len(readings)} readings)")
         except (IOError, struct.error) as e:
-            raise StorageError("sensor dump failed for %s: %s" % (sensor_id, e))
+            raise StorageError(f"sensor dump failed for {sensor_id}: {e}")
 
     def store_export(self, filename, content, encoding="utf-8"):
         dest = self._path.resolve(_DIR_EXPORTS, filename)
@@ -127,9 +125,9 @@ class FileStore:
             with open(dest, "w", encoding=encoding) as f:
                 f.write(content)
             os.chmod(dest, FILE_PERMISSIONS)
-            print("Wrote export: %s" % dest)
+            print(f"Wrote export: {dest}")
         except IOError as e:
-            raise StorageError("export failed for %s: %s" % (filename, e))
+            raise StorageError(f"export failed for {filename}: {e}")
 
     def read_report(self, filename, encoding="utf-8"):
         """Returns the report content as a string, decoded with the
@@ -143,7 +141,7 @@ class FileStore:
             with open(src, "r", encoding=encoding) as f:
                 return f.read()
         except IOError as e:
-            raise StorageError("cannot read report %s: %s" % (filename, e))
+            raise StorageError(f"cannot read report {filename}: {e}")
 
     def read_binary(self, filename, subdir=None):
         src = self._path.resolve(subdir or _DIR_RAW_DUMPS, filename)
@@ -153,7 +151,7 @@ class FileStore:
             with open(src, "rb") as f:
                 return f.read()
         except IOError as e:
-            raise StorageError("cannot read binary %s: %s" % (filename, e))
+            raise StorageError(f"cannot read binary {filename}: {e}")
 
     def list_reports(self):
         d = self._path.reports_dir()
@@ -183,8 +181,8 @@ class FileStore:
                          for f in files if os.path.isfile(os.path.join(d, f)))
             total_files += len(files)
             total_bytes += nbytes
-            print("  %-12s  %4d files  %10d bytes" % (name, len(files), nbytes))
-        print("  Total: %d files, %d bytes" % (total_files, total_bytes))
+            print(f"  {name:<12}  {len(files):4d} files  {nbytes:10d} bytes")
+        print(f"  Total: {total_files} files, {total_bytes} bytes")
 
     def purge_before(self, cutoff_ts, subdir=None):
         """Delete files modified before *cutoff_ts*."""
@@ -202,7 +200,7 @@ class FileStore:
                 if os.path.isfile(p) and os.path.getmtime(p) < cutoff_ts:
                     os.remove(p)
                     removed += 1
-        print("Purged %d files older than %.0f" % (removed, cutoff_ts))
+        print(f"Purged {removed} files older than {cutoff_ts:.0f}")
         return removed
 
     def clear_temp(self):

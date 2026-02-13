@@ -7,7 +7,6 @@ configuration snapshots.  Uses ``hashlib`` for key hashing, ``pickle``
 for serialisation, and integer division ``//`` for bucket assignment.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import time

@@ -15,7 +15,6 @@ Captures pre-migration behavior of:
 This module IS the str/unicode boundary, so every test is encoding-relevant.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -42,14 +41,14 @@ class TestDetectEncoding:
     def test_unicode_input_returns_utf8(self):
         """Captures: unicode input (not str) returns 'utf-8' immediately.
         isinstance(raw_bytes, str) check; Py3 str is always text."""
-        result = detect_encoding(u"already unicode")
-        assert result == u"utf-8"
+        result = detect_encoding("already unicode")
+        assert result == "utf-8"
 
     @pytest.mark.parametrize("raw,expected_enc", [
-        (b"plain ascii", u"utf-8"),
-        (u"caf\u00e9".encode("utf-8"), u"utf-8"),
-        (b"\xe9\xe8\xea", u"latin-1"),  # not valid UTF-8
-        (u"\u6e29\u5ea6".encode("shift_jis"), u"latin-1"),  # latin-1 precedes shift_jis and decodes any bytes
+        (b"plain ascii", "utf-8"),
+        ("caf\u00e9".encode("utf-8"), "utf-8"),
+        (b"\xe9\xe8\xea", "latin-1"),  # not valid UTF-8
+        ("\u6e29\u5ea6".encode("shift_jis"), "latin-1"),  # latin-1 precedes shift_jis and decodes any bytes
     ])
     @pytest.mark.py2_behavior
     def test_byte_string_detection(self, raw, expected_enc):
@@ -63,7 +62,7 @@ class TestDetectEncoding:
         raw = b"\x80\x81\x82\x83\x84"
         result = detect_encoding(raw)
         # Either utf-8 (unlikely for these bytes) or latin-1
-        assert result in (u"latin-1", u"utf-8", u"cp1252")
+        assert result in ("latin-1", "utf-8", "cp1252")
 
 
 # ---------------------------------------------------------------------------
@@ -76,30 +75,30 @@ class TestSafeDecode:
     @pytest.mark.py2_behavior
     def test_unicode_passthrough(self):
         """Captures: unicode input returned unchanged."""
-        text = u"caf\u00e9"
+        text = "caf\u00e9"
         assert safe_decode(text) is text
 
     @pytest.mark.py2_behavior
     def test_byte_string_decoded(self):
         """Captures: str (bytes) decoded with given encoding."""
-        raw = u"caf\u00e9".encode("utf-8")
+        raw = "caf\u00e9".encode("utf-8")
         result = safe_decode(raw)
         assert isinstance(result, str)
-        assert result == u"caf\u00e9"
+        assert result == "caf\u00e9"
 
     @pytest.mark.py2_behavior
     def test_replace_errors(self):
         """Captures: unencodable bytes replaced with U+FFFD."""
         raw = b"\xFF\xFE"
-        result = safe_decode(raw, encoding=u"utf-8", errors=u"replace")
+        result = safe_decode(raw, encoding="utf-8", errors="replace")
         assert isinstance(result, str)
-        assert u"\ufffd" in result
+        assert "\ufffd" in result
 
     @pytest.mark.py2_behavior
     def test_non_string_converted(self):
         """Captures: non-string types converted via unicode()."""
-        assert safe_decode(42) == u"42"
-        assert safe_decode(3.14) == u"3.14"
+        assert safe_decode(42) == "42"
+        assert safe_decode(3.14) == "3.14"
 
 
 # ---------------------------------------------------------------------------
@@ -120,10 +119,10 @@ class TestSafeEncode:
     @pytest.mark.py2_behavior
     def test_unicode_encoded(self):
         """Captures: str encoded to bytes with given encoding."""
-        text = u"caf\u00e9"
+        text = "caf\u00e9"
         result = safe_encode(text)
         assert isinstance(result, bytes)
-        assert result == u"caf\u00e9".encode("utf-8")
+        assert result == "caf\u00e9".encode("utf-8")
 
     @pytest.mark.py2_behavior
     def test_non_string_uses_str(self):
@@ -141,9 +140,9 @@ class TestToPlatformString:
     @pytest.mark.py2_behavior
     def test_unicode_to_str(self):
         """Captures: str input returned as-is (Py3 platform str is text)."""
-        result = to_platform_string(u"caf\u00e9")
+        result = to_platform_string("caf\u00e9")
         assert isinstance(result, str)
-        assert result == u"caf\u00e9"
+        assert result == "caf\u00e9"
 
     @pytest.mark.py2_behavior
     def test_byte_string_decoded(self):
@@ -170,38 +169,38 @@ class TestNormaliseSensorLabel:
         """Captures: label normalized to NFC form."""
         import unicodedata
         # NFD form of e-acute: e + combining acute
-        nfd_label = u"caf\u0065\u0301"
+        nfd_label = "caf\u0065\u0301"
         result = normalise_sensor_label(nfd_label)
-        assert u"\u00e9" in result  # NFC form
+        assert "\u00e9" in result  # NFC form
 
     def test_strip_control_characters(self):
         """Captures: C0/C1 control chars removed except tab/newline."""
-        label = u"TEMP\x00-001\x01"
+        label = "TEMP\x00-001\x01"
         result = normalise_sensor_label(label)
-        assert u"\x00" not in result
-        assert u"\x01" not in result
-        assert u"TEMP" in result
+        assert "\x00" not in result
+        assert "\x01" not in result
+        assert "TEMP" in result
 
     def test_preserve_tab_and_newline(self):
         """Captures: tab and newline are NOT stripped."""
-        label = u"TEMP\t001\n"
+        label = "TEMP\t001\n"
         result = normalise_sensor_label(label)
-        assert u"\t" in result
+        assert "\t" in result
 
     @pytest.mark.py2_behavior
     def test_byte_string_decoded(self):
         """Captures: byte string input decoded to unicode first.
         isinstance(label, unicode) check."""
-        raw = u"caf\u00e9".encode("utf-8")
+        raw = "caf\u00e9".encode("utf-8")
         result = normalise_sensor_label(raw)
         assert isinstance(result, str)
-        assert u"\u00e9" in result
+        assert "\u00e9" in result
 
     def test_japanese_kanji_label(self):
         """Captures: Japanese sensor labels handled correctly."""
-        label = u"\u6e29\u5ea6\u30bb\u30f3\u30b5\u30fc"  # "temperature sensor" in Japanese
+        label = "\u6e29\u5ea6\u30bb\u30f3\u30b5\u30fc"  # "temperature sensor" in Japanese
         result = normalise_sensor_label(label)
-        assert u"\u6e29\u5ea6" in result
+        assert "\u6e29\u5ea6" in result
 
 
 # ---------------------------------------------------------------------------
@@ -214,22 +213,22 @@ class TestSafeConcat:
     @pytest.mark.py2_behavior
     def test_all_unicode(self):
         """Captures: all unicode parts joined directly."""
-        result = safe_concat(u"hello", u" ", u"world")
-        assert result == u"hello world"
+        result = safe_concat("hello", " ", "world")
+        assert result == "hello world"
 
     @pytest.mark.py2_behavior
     def test_mixed_str_unicode(self):
         """Captures: str parts decoded to unicode before joining.
         Avoids Py2 implicit ASCII decode on str + unicode."""
-        result = safe_concat(u"caf\u00e9", " - ", u"r\u00e9sum\u00e9")
+        result = safe_concat("caf\u00e9", " - ", "r\u00e9sum\u00e9")
         assert isinstance(result, str)
-        assert u"caf\u00e9" in result
+        assert "caf\u00e9" in result
 
     @pytest.mark.py2_behavior
     def test_non_string_parts(self):
         """Captures: non-string parts converted via unicode()."""
-        result = safe_concat(u"value=", 42, u" quality=", 192)
-        assert result == u"value=42 quality=192"
+        result = safe_concat("value=", 42, " quality=", 192)
+        assert result == "value=42 quality=192"
 
 
 # ---------------------------------------------------------------------------
@@ -242,22 +241,22 @@ class TestBuildCsvLine:
     def test_simple_fields(self):
         """Captures: fields joined with separator."""
         result = build_csv_line(["a", "b", "c"])
-        assert result == u"a,b,c"
+        assert result == "a,b,c"
 
     def test_fields_with_separator_quoted(self):
         """Captures: fields containing separator get double-quoted."""
         result = build_csv_line(["hello,world", "plain"])
-        assert u'"hello,world"' in result
+        assert '"hello,world"' in result
 
     def test_fields_with_quotes_escaped(self):
         """Captures: double-quotes in fields are doubled."""
         result = build_csv_line(['say "hello"'])
-        assert u'""hello""' in result
+        assert '""hello""' in result
 
     def test_custom_separator(self):
         """Captures: custom separator used instead of comma."""
-        result = build_csv_line(["a", "b", "c"], separator=u";")
-        assert result == u"a;b;c"
+        result = build_csv_line(["a", "b", "c"], separator=";")
+        assert result == "a;b;c"
 
 
 # ---------------------------------------------------------------------------
@@ -270,7 +269,7 @@ class TestStringIOHelpers:
     @pytest.mark.py2_behavior
     def test_make_text_buffer(self):
         """Captures: StringIO from StringIO module (renamed io.StringIO in Py3)."""
-        buf = make_text_buffer(u"initial")
+        buf = make_text_buffer("initial")
         buf.write(" more")
         content = buf.getvalue()
         assert "initial" in content or "more" in content
@@ -293,25 +292,25 @@ class TestValidateRoundtrip:
 
     def test_ascii_roundtrip(self):
         """Captures: ASCII text survives any encoding round-trip."""
-        assert validate_roundtrip(u"plain ascii") is True
+        assert validate_roundtrip("plain ascii") is True
 
     def test_utf8_roundtrip(self):
         """Captures: UTF-8 encoded unicode survives round-trip."""
-        assert validate_roundtrip(u"caf\u00e9 r\u00e9sum\u00e9") is True
+        assert validate_roundtrip("caf\u00e9 r\u00e9sum\u00e9") is True
 
     def test_latin1_roundtrip_fails_for_cjk(self):
         """Captures: CJK text fails Latin-1 round-trip."""
-        assert validate_roundtrip(u"\u6e29\u5ea6", encoding=u"latin-1") is False
+        assert validate_roundtrip("\u6e29\u5ea6", encoding="latin-1") is False
 
     def test_ascii_roundtrip_fails_for_accented(self):
         """Captures: accented chars fail ASCII round-trip."""
-        assert validate_roundtrip(u"caf\u00e9", encoding=u"ascii") is False
+        assert validate_roundtrip("caf\u00e9", encoding="ascii") is False
 
     @pytest.mark.py2_behavior
     def test_byte_string_input_decoded_first(self):
         """Captures: byte string input decoded to unicode before round-trip.
         isinstance(text, unicode) check."""
-        raw = u"caf\u00e9".encode("utf-8")
+        raw = "caf\u00e9".encode("utf-8")
         result = validate_roundtrip(raw)
         # After decode and re-encode, should still match
         assert result is True

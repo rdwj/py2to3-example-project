@@ -10,7 +10,6 @@ processor maps historian-specific column names to the platform's internal
 field names via a configurable CsvFieldMapper.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import csv
@@ -60,7 +59,7 @@ def unicode_csv_writer(file_obj, dialect=csv.excel, **kwargs):
     kwargs.pop("encoding", None)
     writer = csv.writer(file_obj, dialect=dialect, **kwargs)
 
-    class _UnicodeWriter(object):
+    class _UnicodeWriter:
         def writerow(self, row):
             writer.writerow([str(cell) for cell in row])
 
@@ -75,7 +74,7 @@ def unicode_csv_writer(file_obj, dialect=csv.excel, **kwargs):
 # CsvFieldMapper -- translates historian column names to internal names
 # ---------------------------------------------------------------------------
 
-class CsvFieldMapper(object):
+class CsvFieldMapper:
     """Maps external CSV column headers to the platform's internal field names.
 
     Different historians export with different column names for the same
@@ -123,7 +122,7 @@ class CsvFieldMapper(object):
 # CsvProcessor -- main CSV ingestion engine
 # ---------------------------------------------------------------------------
 
-class CsvProcessor(object):
+class CsvProcessor:
     """Process CSV files from plant historians into internal record dicts.
 
     Handles encoding detection, BOM stripping, field mapping, and value

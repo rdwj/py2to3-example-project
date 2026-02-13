@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
   unicode isinstance checks, dict.has_key()
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -157,16 +156,16 @@ class TestOpcUaClientEncoding:
     @pytest.mark.py2_behavior
     def test_dec_unicode_passthrough(self, client):
         """Captures: _dec returns unicode input unchanged."""
-        text = u"already unicode caf\u00e9"
+        text = "already unicode caf\u00e9"
         assert client._dec(text) == text
 
     @pytest.mark.py2_behavior
     def test_dec_utf8_bytes(self, client):
         """Captures: _dec decodes UTF-8 bytes to unicode."""
-        raw = u"caf\u00e9".encode("utf-8")
+        raw = "caf\u00e9".encode("utf-8")
         result = client._dec(raw)
         assert isinstance(result, str)
-        assert u"\u00e9" in result
+        assert "\u00e9" in result
 
     @pytest.mark.py2_behavior
     def test_dec_latin1_fallback(self, client):
@@ -174,12 +173,12 @@ class TestOpcUaClientEncoding:
         raw = b"\xe9\xe8\xea"  # latin-1 e-acute, e-grave, e-circumflex
         result = client._dec(raw)
         assert isinstance(result, str)
-        assert u"\u00e9" in result
+        assert "\u00e9" in result
 
     @pytest.mark.py2_behavior
     def test_dec_shift_jis(self, client):
         """Captures: _dec decodes Shift-JIS for Japanese site labels."""
-        raw = u"\u6e29\u5ea6".encode("shift_jis")  # "temperature" in Japanese
+        raw = "\u6e29\u5ea6".encode("shift_jis")  # "temperature" in Japanese
         result = client._dec(raw)
         assert isinstance(result, str)
 

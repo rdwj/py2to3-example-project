@@ -8,7 +8,6 @@ from sensor data.  Report templates are evaluated dynamically via
 Python code -- a decision made in 2009 that nobody has revisited.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import functools
 import sys
@@ -69,11 +68,11 @@ class ReportTemplate:
         try:
             exec(self.code_string, namespace)
         except SyntaxError as e:
-            print("Template syntax error in '%s': %s" % (self.name, e), file=sys.stderr)
-            raise ReportError("Bad template syntax: %s" % e)
+            print(f"Template syntax error in '{self.name}': {e}", file=sys.stderr)
+            raise ReportError(f"Bad template syntax: {e}")
         except Exception as e:
-            print("Template execution error in '%s': %s" % (self.name, e), file=sys.stderr)
-            raise ReportError("Template failed: %s" % e)
+            print(f"Template execution error in '{self.name}': {e}", file=sys.stderr)
+            raise ReportError(f"Template failed: {e}")
         return namespace["lines"]
 
 
@@ -93,7 +92,7 @@ class ReportGenerator:
 
     def register_template(self, template):
         if not isinstance(template, ReportTemplate):
-            raise ReportError("Expected ReportTemplate, got %s" % type(template).__name__)
+            raise ReportError(f"Expected ReportTemplate, got {type(template).__name__}")
         self.templates[template.name] = template
 
     def generate_daily_summary(self, sensor_data, report_date=None):
@@ -105,7 +104,7 @@ class ReportGenerator:
         header = ReportSection("Daily Summary \u2014 " + str(report_date))
         header.add_line("Site: " + self._site_name)
         header.add_line("Generated: " + str(time.strftime("%Y-%m-%d %H:%M:%S")))
-        header.add_line("Total sensors reporting: %d" % len(sensor_data))
+        header.add_line(f"Total sensors reporting: {len(sensor_data)}")
         sections.append(header)
 
         stats = ReportSection("Sensor Statistics")
@@ -126,11 +125,11 @@ class ReportGenerator:
 
             tag_label = safe_decode(tag) if not isinstance(tag, str) else tag
             line = "  " + tag_label + ": "
-            line = line + "avg=%.2f, min=%.2f, max=%.2f, n=%d" % (avg, min_val, max_val, len(values))
+            line = line + f"avg={avg:.2f}, min={min_val:.2f}, max={max_val:.2f}, n={len(values)}"
             stats.add_line(line)
 
         sections.append(stats)
-        print("Daily summary generated for %s (%d sensors)" % (report_date, len(sensor_data)))
+        print(f"Daily summary generated for {report_date} ({len(sensor_data)} sensors)")
         return sections
 
     def generate_alarm_report(self, alarms, severity_filter=None):
@@ -144,7 +143,7 @@ class ReportGenerator:
         if severity_filter is not None:
             alarms = [a for a in alarms if a.get("severity", 0) >= severity_filter]
 
-        active = ReportSection("Active Alarms (%d)" % len(alarms))
+        active = ReportSection(f"Active Alarms ({len(alarms)})")
         for alarm in alarms:
             msg = alarm.get("message", "")
             if not isinstance(msg, str):
@@ -154,11 +153,11 @@ class ReportGenerator:
             tag_text = safe_decode(alarm.get("tag", "UNKNOWN"))
             ts = alarm.get("timestamp", 0)
             ts_str = time.strftime("%H:%M:%S", time.localtime(ts)) if ts else "--:--:--"
-            line = "  [%s] %s: %s (sev=%d)" % (ts_str, tag_text, msg, alarm.get("severity", 0))
+            line = f"  [{ts_str}] {tag_text}: {msg} (sev={alarm.get('severity', 0)})"
             active.add_line(line)
 
         sections.append(active)
-        print("Alarm report generated: %d alarms" % len(alarms))
+        print(f"Alarm report generated: {len(alarms)} alarms")
         return sections
 
     def generate_trend_report(self, trend_data, period_label="Last 24h"):
@@ -178,12 +177,11 @@ class ReportGenerator:
             pct = (delta / values[0] * 100.0) if values[0] != 0 else 0.0
             avg = functools.reduce(lambda a, b: a + b, values) / len(values)
             arrow = "\u2191" if delta > 0 else "\u2193" if delta < 0 else "\u2192"
-            trends.add_line("  %s %s: %.2f \u2192 %.2f (%+.1f%%)" % (
-                arrow, tag_label, values[0], values[-1], pct))
-            trends.add_line("    Average: %.2f, Samples: %d" % (avg, len(values)))
+            trends.add_line(f"  {arrow} {tag_label}: {values[0]:.2f} \u2192 {values[-1]:.2f} ({pct:+.1f}%)")
+            trends.add_line(f"    Average: {avg:.2f}, Samples: {len(values)}")
 
         sections.append(trends)
-        print("Trend report generated for %d sensors" % len(trend_data))
+        print(f"Trend report generated for {len(trend_data)} sensors")
         return sections
 
     def render_report(self, sections, template_name=None):
@@ -194,16 +192,16 @@ class ReportGenerator:
                            "report_time": time.strftime("%Y-%m-%d %H:%M:%S")}
                 lines = self.templates[template_name].evaluate(context)
                 output = "\n".join([safe_decode(l) for l in lines])
-                print("Report rendered via template '%s'" % template_name)
+                print(f"Report rendered via template '{template_name}'")
                 return output
             except ReportError as e:
-                print("Template render failed, falling back: %s" % e, file=sys.stderr)
+                print(f"Template render failed, falling back: {e}", file=sys.stderr)
 
         parts = [self.DEFAULT_TITLE, ""]
         for section in sections:
             parts.append(section.render())
         output = "\n".join(parts)
-        print("Report rendered (%d sections, %d chars)" % (len(sections), len(output)))
+        print(f"Report rendered ({len(sections)} sections, {len(output)} chars)")
         return output
 
     def save_report(self, content, filename):
@@ -215,7 +213,7 @@ class ReportGenerator:
         try:
             with open(filepath, "wb") as fh:
                 fh.write(encoded)
-            print("Report saved to %s (%d bytes)" % (filepath, len(encoded)))
+            print(f"Report saved to {filepath} ({len(encoded)} bytes)")
         except IOError as e:
-            print("Failed to save report to %s: %s" % (filepath, e), file=sys.stderr)
-            raise ReportError("Could not write report: %s" % e)
+            print(f"Failed to save report to {filepath}: {e}", file=sys.stderr)
+            raise ReportError(f"Could not write report: {e}")

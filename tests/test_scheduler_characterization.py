@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
   xrange, sys.exitfunc, sys.exc_type/exc_value, dict.iteritems/itervalues
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

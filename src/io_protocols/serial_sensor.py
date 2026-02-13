@@ -4,7 +4,6 @@ RS-485 serial sensor reader for the Legacy Industrial Data Platform.
 Packet format: [SYNC 0xAA] [LEN] [ID_HI] [ID_LO] [TYPE] [PAYLOAD...] [CHK]
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import struct
 import time
@@ -21,7 +20,7 @@ _TYPE_NAMES = {0x01: "Temperature", 0x02: "Pressure",
                0x03: "Flow", 0x04: "Vibration"}
 
 
-class SensorPacket(object):
+class SensorPacket:
     """Validated RS-485 sensor packet.  Payload is bytes."""
 
     def __init__(self, sensor_id, sensor_type, payload, timestamp=None):
@@ -60,7 +59,7 @@ class SensorPacket(object):
             self.sensor_id, self.sensor_type, len(self.payload))
 
 
-class SensorPacketStream(object):
+class SensorPacketStream:
     """Iterator yielding SensorPackets from a raw byte source."""
 
     def __init__(self, source, strict=False):
@@ -110,7 +109,7 @@ class SensorPacketStream(object):
             return SensorPacket(sid, stype, payload)
 
 
-class SerialSensorReader(object):
+class SerialSensorReader:
     """Manages RS-485 serial port and sensor registry."""
 
     def __init__(self, port_path, baud_rate=9600, timeout=2.0):

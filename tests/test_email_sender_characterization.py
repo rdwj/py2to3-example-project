@@ -10,7 +10,6 @@ Captures pre-migration behavior of:
   except comma syntax, print statement
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -105,8 +104,8 @@ class TestEmailAlert:
     @pytest.mark.py2_behavior
     def test_to_mime_message_unicode_body(self):
         """Captures: unicode body encoded via safe_encode before MIME wrapping."""
-        alert = EmailAlert(u"Alerte \u00e9lev\u00e9e",
-                           u"Temp\u00e9rature critique",
+        alert = EmailAlert("Alerte \u00e9lev\u00e9e",
+                           "Temp\u00e9rature critique",
                            ["ops@plant.local"])
         msg = alert.to_mime_message()
         assert msg is not None
@@ -157,7 +156,7 @@ class TestEmailSender:
     def test_compose_alarm_body_unicode_tag(self):
         """Captures: safe_encode on unicode tag/message for alarm body."""
         sender = EmailSender()
-        body = sender.compose_alarm_body(u"caf\u00e9-TEMP", u"Temp\u00e9rature", 2)
+        body = sender.compose_alarm_body("caf\u00e9-TEMP", "Temp\u00e9rature", 2)
         assert body is not None
         assert len(body) > 0
 

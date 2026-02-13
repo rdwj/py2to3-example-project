@@ -3,7 +3,6 @@
 Shared test fixtures and helpers for the platform test suite.
 These predate pytest adoption; plain functions called from setUp().
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -22,8 +21,8 @@ def make_sensor_bytes(raw_hex):
     return bytes.fromhex(raw_hex)
 
 
-def make_unicode_tag(base=u"Sensor", suffix=u"\u00b0C"):
-    return base + u"-" + suffix
+def make_unicode_tag(base="Sensor", suffix="\u00b0C"):
+    return base + "-" + suffix
 
 
 def make_ebcdic_string(text):

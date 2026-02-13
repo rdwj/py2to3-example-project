@@ -3,7 +3,6 @@
 Tests for mainframe batch parser: EBCDIC, COMP-3 packed decimal,
 fixed-width fields, CopybookLayout, MainframeRecord.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

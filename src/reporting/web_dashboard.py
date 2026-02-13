@@ -12,7 +12,6 @@ Uses ``http.server`` for HTTP, ``http.cookies`` for sessions, and
 data-acquisition loop isn't blocked.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import time
 import urllib.parse
@@ -45,11 +44,11 @@ class SessionManager:
         self._next_id = 1
 
     def create_session(self, username):
-        sid = "SID%d_%d" % (self._next_id, int(time.time()))
+        sid = f"SID{self._next_id}_{int(time.time())}"
         self._next_id += 1
         self._sessions[sid] = {"username": username, "created": time.time(),
                                "last_access": time.time()}
-        print("Session created: %s (%s)" % (sid, username))
+        print(f"Session created: {sid} ({username})")
         return sid
 
     def get_session(self, sid):
@@ -84,7 +83,7 @@ class SessionManager:
         for sid in expired:
             del self._sessions[sid]
         if expired:
-            print("Expired %d stale sessions" % len(expired))
+            print(f"Expired {len(expired)} stale sessions")
 
     @property
     def active_count(self):
@@ -100,7 +99,7 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
     rpc_proxy = None
 
     def do_GET(self):
-        print("Dashboard request: %s %s" % (self.command, self.path))
+        print(f"Dashboard request: {self.command} {self.path}")
         path = self.path.split("?")[0]
         qs = self.path.split("?")[1] if "?" in self.path else ""
 
@@ -126,10 +125,10 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
             "<html><head><title>Platform Status \u2014 Dashboard</title></head><body>",
             "<h1>Platform Status</h1>",
             "<table border='1' cellpadding='4'>",
-            "<tr><td>Sensors</td><td>%d</td></tr>" % n_sensors,
-            "<tr><td>Alarms</td><td>%d</td></tr>" % n_alarms,
-            "<tr><td>Time</td><td>%s</td></tr>" % time.strftime("%Y-%m-%d %H:%M:%S"),
-            "<tr><td>Sessions</td><td>%d</td></tr>" % self.session_manager.active_count,
+            f"<tr><td>Sensors</td><td>{n_sensors}</td></tr>",
+            f"<tr><td>Alarms</td><td>{n_alarms}</td></tr>",
+            f"<tr><td>Time</td><td>{time.strftime('%Y-%m-%d %H:%M:%S')}</td></tr>",
+            f"<tr><td>Sessions</td><td>{self.session_manager.active_count}</td></tr>",
             "</table>",
             "<p><a href='/sensors'>Sensors</a> | <a href='/alarms'>Alarms</a></p>",
             "</body></html>",
@@ -157,11 +156,10 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
                     val = r.get("value", 0) if isinstance(r, dict) else r
                     ts = r.get("timestamp", 0) if isinstance(r, dict) else 0
                     ts_s = time.strftime("%H:%M:%S", time.localtime(ts)) if ts else "--"
-                    rows.append("<tr><td>%s</td><td>%.2f</td><td>%s</td></tr>" % (
-                        tag_disp, float(val), ts_s))
+                    rows.append(f"<tr><td>{tag_disp}</td><td>{float(val):.2f}</td><td>{ts_s}</td></tr>")
         rows.append("</table>")
         back = urllib.parse.quote("/status")
-        rows.append("<p><a href='%s'>Back</a></p></body></html>" % back)
+        rows.append(f"<p><a href='{back}'>Back</a></p></body></html>")
         self._send_html("\n".join(rows))
 
     def _serve_alarms(self):
@@ -172,9 +170,7 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
             for a in self.alarm_history:
                 ts = a.get("timestamp", 0)
                 ts_s = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts)) if ts else "--"
-                rows.append("<tr><td>%s</td><td>%s</td><td>%d</td><td>%s</td></tr>" % (
-                    ts_s, safe_decode(a.get("tag", "")),
-                    a.get("severity", 0), safe_decode(a.get("message", ""))))
+                rows.append(f"<tr><td>{ts_s}</td><td>{safe_decode(a.get('tag', ''))}</td><td>{a.get('severity', 0)}</td><td>{safe_decode(a.get('message', ''))}</td></tr>")
         rows.append("</table><p><a href='/'>Back</a></p></body></html>")
         self._send_html("\n".join(rows))
 
@@ -186,14 +182,15 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
                     self.sensor_data.update(fresh)
                 print("Refreshed data via XML-RPC")
             except Exception as e:
-                print("XML-RPC refresh failed: %s" % e)
+                print(f"XML-RPC refresh failed: {e}")
         entries = []
         if self.sensor_data:
             for tag, readings in self.sensor_data.items():
                 if readings:
                     last = readings[-1]
                     val = last.get("value", 0) if isinstance(last, dict) else last
-                    entries.append('"%s": %.4f' % (tag.replace('"', '\\"'), float(val)))
+                    escaped_tag = tag.replace('"', '\\"')
+                    entries.append(f'"{escaped_tag}": {float(val):.4f}')
         body = "{" + ", ".join(entries) + "}"
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
@@ -220,7 +217,7 @@ class DashboardHandler(http.server.BaseHTTPRequestHandler):
         return self.session_manager.create_session("anonymous")
 
     def log_message(self, format, *args):
-        print("Dashboard [%s] %s" % (time.strftime("%H:%M:%S"), format % args))
+        print(f"Dashboard [{time.strftime('%H:%M:%S')}] {format % args}")
 
 
 class DashboardServer:
@@ -244,7 +241,7 @@ class DashboardServer:
         self.rpc_proxy = None
         if rpc_endpoint:
             self.rpc_proxy = xmlrpc.client.ServerProxy(rpc_endpoint)
-            print("XML-RPC endpoint configured: %s" % rpc_endpoint)
+            print(f"XML-RPC endpoint configured: {rpc_endpoint}")
 
     def update_sensor_data(self, data):
         self.sensor_data = data
@@ -262,7 +259,7 @@ class DashboardServer:
         self._server = http.server.HTTPServer((self.host, self.port), DashboardHandler)
         self._running = True
         params = urllib.parse.urlencode({"view": "status", "format": "html"})
-        print("Dashboard at http://%s:%d/?%s" % (self.host, self.port, params))
+        print(f"Dashboard at http://{self.host}:{self.port}/?{params}")
         if background:
             _thread.start_new_thread(self._serve_loop, ())
             print("Dashboard running in background thread")

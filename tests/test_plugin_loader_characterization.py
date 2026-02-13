@@ -11,7 +11,6 @@ Captures pre-migration behavior of:
   im_func/im_self/im_class, operator.isCallable, dict.iteritems, reload()
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -69,7 +68,7 @@ class TestPluginRegistry:
 
     def test_register_and_get(self):
         """Captures: register a class by name and retrieve it."""
-        class FakePlugin(object):
+        class FakePlugin:
             pass
         PluginRegistry.register("fake", FakePlugin)
         assert PluginRegistry.get("fake") is FakePlugin
@@ -80,9 +79,9 @@ class TestPluginRegistry:
 
     def test_all_plugins_preserves_order(self):
         """Captures: all_plugins returns (name, cls) in registration order."""
-        class A(object): pass
-        class B(object): pass
-        class C(object): pass
+        class A: pass
+        class B: pass
+        class C: pass
         PluginRegistry.register("alpha", A)
         PluginRegistry.register("beta", B)
         PluginRegistry.register("gamma", C)
@@ -104,8 +103,8 @@ class TestPluginRegistry:
 
     def test_register_replaces_existing(self):
         """Captures: re-registering same name replaces the class."""
-        class Old(object): pass
-        class New(object): pass
+        class Old: pass
+        class New: pass
         PluginRegistry.register("dup", Old)
         PluginRegistry.register("dup", New)
         assert PluginRegistry.get("dup") is New

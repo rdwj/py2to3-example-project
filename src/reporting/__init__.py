@@ -9,7 +9,6 @@ to distribution lists on alarm conditions, and viewed in a browser
 through the built-in dashboard server.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from .report_generator import ReportGenerator, ReportTemplate, ReportSection
 from .email_sender import EmailSender, EmailAlert, AlertThreshold

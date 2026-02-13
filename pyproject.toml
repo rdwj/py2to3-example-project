@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=69.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "legacy-industrial-platform"
+version = "2.4.1"
+description = "Industrial sensor data collection, processing, and reporting platform"
+requires-python = ">=3.12"
+license = "Proprietary"
+authors = [
+    { name = "Acme Industrial Systems, Inc.", email = "platform-dev@acme-industrial.example.com" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Manufacturing",
+    "License :: Other/Proprietary License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Interface Engine/Protocol Translator",
+]
+dependencies = [
+    "pyserial>=3.5",
+    "paho-mqtt>=1.6.1",
+    "pymodbus>=3.6.0",
+    "lxml>=5.1.0",
+    "opcua>=0.98.13",
+    "SQLAlchemy>=1.4.54",
+    "simplejson>=3.19.0",
+    "Jinja2>=3.1.0",
+    "MarkupSafe>=2.1.0",
+    "chardet>=5.2.0",
+    "pycryptodome>=3.20.0",
+    "requests>=2.31.0",
+]
+
+[project.urls]
+Homepage = "http://intranet.acme-industrial.example.com/platform"
+
+[tool.setuptools.packages]
+find = { where = ["."], include = ["src", "src.*"] }
+
+[tool.setuptools]
+script-files = [
+    "scripts/run_platform.py",
+    "scripts/batch_import.py",
+    "scripts/sensor_monitor.py",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "py2_behavior: Tests that document behavior differences between Python 2 and Python 3",
+]

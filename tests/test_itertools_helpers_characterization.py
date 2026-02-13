@@ -9,7 +9,6 @@ Captures pre-migration behavior of:
 - iterator .next() method (renamed __next__ in Py3)
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys

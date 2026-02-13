@@ -4,7 +4,6 @@ OPC-UA client for the Legacy Industrial Data Platform.
 HTTP/SOAP transport with XML-RPC fallback for legacy gateways.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import time
 import socket
@@ -27,7 +26,7 @@ ATTR_VALUE = 13
 _ENC_FALLBACKS = ["utf-8", "latin-1", "shift_jis", "cp1252"]
 
 
-class OpcUaNode(object):
+class OpcUaNode:
     """OPC-UA node."""
 
     def __init__(self, node_id, browse_name=None, display_name=None):
@@ -59,7 +58,7 @@ class OpcUaNode(object):
         return "OpcUaNode(%r)" % self.node_id
 
 
-class OpcUaSubscription(object):
+class OpcUaSubscription:
     """Data-change subscription with queue.Queue() buffer."""
 
     def __init__(self, sid, interval_ms=1000, max_queue_size=5000):
@@ -101,7 +100,7 @@ class OpcUaSubscription(object):
             self._queue.put_nowait(n)
 
 
-class OpcUaClient(object):
+class OpcUaClient:
     """HTTP-based OPC-UA client with XML-RPC fallback."""
 
     def __init__(self, endpoint, auth_token=None, timeout=10.0):

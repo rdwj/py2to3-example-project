@@ -13,7 +13,6 @@ The mainframe job ERPX400 transmits via Connect:Direct every night at
 picked up by the batch scheduler.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import struct
@@ -50,7 +49,7 @@ MAX_RECORD_LENGTH = 32768
 # CopybookLayout -- describes the fixed-width field positions in a record
 # ---------------------------------------------------------------------------
 
-class CopybookLayout(object):
+class CopybookLayout:
     """Describes the fixed-width field positions from a COBOL copybook.
 
     Each field is a tuple of (name, start_offset, length, field_type)
@@ -103,7 +102,7 @@ class CopybookLayout(object):
 # MainframeRecord -- a single parsed record
 # ---------------------------------------------------------------------------
 
-class MainframeRecord(object):
+class MainframeRecord:
     """A single record extracted from a mainframe batch file."""
 
     def __init__(self, record_number, raw_bytes, layout):
@@ -224,7 +223,7 @@ def decode_zoned_decimal(raw_bytes):
 # MainframeParser -- orchestrates the parsing of a batch file
 # ---------------------------------------------------------------------------
 
-class MainframeParser(object):
+class MainframeParser:
     """Parse mainframe batch files using a COBOL copybook layout definition.
 
     Usage::

@@ -10,7 +10,6 @@ Captures pre-migration behavior of:
 - Py2-specific: unicode isinstance checks, str.decode(), dict.has_key()
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
@@ -30,16 +29,16 @@ class TestUnescapeHtmlEntities:
 
     def test_named_entity(self):
         """Captures: &amp; -> &."""
-        assert unescape_html_entities(u"A &amp; B") == u"A & B"
+        assert unescape_html_entities("A &amp; B") == "A & B"
 
     def test_numeric_entity(self):
         """Captures: &#176; -> degree symbol."""
-        result = unescape_html_entities(u"100&#176;C")
-        assert u"\u00b0" in result
+        result = unescape_html_entities("100&#176;C")
+        assert "\u00b0" in result
 
     def test_no_entities(self):
         """Captures: plain text returned unchanged."""
-        assert unescape_html_entities(u"plain text") == u"plain text"
+        assert unescape_html_entities("plain text") == "plain text"
 
     @pytest.mark.py2_behavior
     def test_byte_string_decoded(self):
@@ -127,7 +126,7 @@ class TestXmlTransformer:
         mapper.map_text("Root/Description", "description")
 
         transformer = XmlTransformer(node_mapper=mapper)
-        xml = u'<Root><Description>\u6e29\u5ea6\u30bb\u30f3\u30b5\u30fc</Description></Root>'
+        xml = '<Root><Description>\u6e29\u5ea6\u30bb\u30f3\u30b5\u30fc</Description></Root>'
         records = transformer.transform_string(xml)
         found = [r for r in records if "description" in r]
         assert len(found) >= 1

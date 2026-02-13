@@ -11,7 +11,6 @@ Most of the functions here use Python 2-specific iterator APIs
 method) that changed in Python 3.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import itertools
 

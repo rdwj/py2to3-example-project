@@ -17,20 +17,20 @@ import os
 import sys
 import time
 
-# Ensure src/ is on the import path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir, "src"))
+# Ensure project root is on the import path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 
-from core.config_loader import load_platform_config
-from core.exceptions import PlatformError, ProtocolError, DataError
-from core.types import DataPoint
-from io_protocols.serial_sensor import SerialSensorReader
-from io_protocols.mqtt_listener import MqttListener
-from data_processing.mainframe_parser import MainframeParser, CopybookLayout
-from data_processing.csv_processor import CsvProcessor
-from storage.database import DatabaseManager
-from storage.cache import CacheManager
-from reporting.report_generator import ReportGenerator
-from automation.scheduler import TaskScheduler, ScheduledTask
+from src.core.config_loader import load_platform_config
+from src.core.exceptions import PlatformError, ProtocolError, DataError
+from src.core.types import DataPoint
+from src.io_protocols.serial_sensor import SerialSensorReader
+from src.io_protocols.mqtt_listener import MqttListener
+from src.data_processing.mainframe_parser import MainframeParser, CopybookLayout
+from src.data_processing.csv_processor import CsvProcessor
+from src.storage.database import DatabaseManager
+from src.storage.cache import CacheManager
+from src.reporting.report_generator import ReportGenerator
+from src.automation.scheduler import TaskScheduler, ScheduledTask
 
 
 BANNER = (

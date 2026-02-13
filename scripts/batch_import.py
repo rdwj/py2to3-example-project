@@ -20,13 +20,13 @@ import os
 import sys
 import time
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir, "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 
-from data_processing.mainframe_parser import (
+from src.data_processing.mainframe_parser import (
     MainframeParser, CopybookLayout, EBCDIC_CODEC,
 )
-from core.exceptions import PlatformError, DataError, ParseError
-from core.config_loader import load_platform_config
+from src.core.exceptions import PlatformError, DataError, ParseError
+from src.core.config_loader import load_platform_config
 
 
 # ERPX400 transaction record layout -- 40 bytes per record

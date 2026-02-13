@@ -46,9 +46,9 @@ def build_packet(sensor_id, sensor_type, payload):
     plen = len(body) + 3  # +3 for SYNC, LEN, CHK
     chk = SYNC_ORD ^ plen
     for b in body:
-        chk ^= ord(b)
+        chk ^= b
     chk &= 0xFF
-    return chr(SYNC_ORD) + chr(plen) + body + chr(chk)
+    return bytes([SYNC_ORD, plen]) + body + bytes([chk])
 
 
 def build_temp_packet(sensor_id=0x0001, temp_tenths=235):
@@ -70,6 +70,8 @@ def build_pressure_packet(sensor_id=0x0002, pressure_pa=101325):
 class ByteSource(object):
     """File-like object that returns bytes from a buffer."""
     def __init__(self, data):
+        if isinstance(data, str):
+            data = data.encode("latin-1")
         self._data = data
         self._pos = 0
 
@@ -88,10 +90,10 @@ class TestSensorPacket:
 
     def test_construction(self):
         """Captures: packet holds sensor_id, type, payload, timestamp."""
-        pkt = SensorPacket(0x0001, 0x01, "\x00\xEB", timestamp=1000.0)
+        pkt = SensorPacket(0x0001, 0x01, b"\x00\xEB", timestamp=1000.0)
         assert pkt.sensor_id == 0x0001
         assert pkt.sensor_type == 0x01
-        assert pkt.payload == "\x00\xEB"
+        assert pkt.payload == b"\x00\xEB"
         assert pkt.timestamp == 1000.0
 
     @pytest.mark.py2_behavior
@@ -99,13 +101,13 @@ class TestSensorPacket:
         """Captures: payload_hex calls ord() on each byte character.
         Py2 str iteration yields single-char strings needing ord().
         Py3 bytes iteration yields ints directly."""
-        pkt = SensorPacket(0x0001, 0x01, "\xAA\xBB\xCC")
+        pkt = SensorPacket(0x0001, 0x01, b"\xAA\xBB\xCC")
         hex_str = pkt.payload_hex()
         assert hex_str == "AA BB CC"
 
     def test_repr(self):
         """Captures: __repr__ format string."""
-        pkt = SensorPacket(0x1234, 0x02, "\x00\x01\x00\x02")
+        pkt = SensorPacket(0x1234, 0x02, b"\x00\x01\x00\x02")
         r = repr(pkt)
         assert "0x1234" in r
         assert "0x02" in r
@@ -113,7 +115,7 @@ class TestSensorPacket:
 
     def test_as_data_point_unknown_type(self):
         """Captures: unknown sensor type returns DataPoint with value=None, quality=0."""
-        pkt = SensorPacket(0x0001, 0xFF, "\x00\x00")
+        pkt = SensorPacket(0x0001, 0xFF, b"\x00\x00")
         dp = pkt.as_data_point()
         assert dp.value is None
         assert dp.quality == 0
@@ -142,7 +144,7 @@ class TestSensorPacketStream:
         raw = build_temp_packet(0x0001, 235)
         source = ByteSource(raw)
         stream = SensorPacketStream(source)
-        pkt = stream.next()
+        pkt = next(stream)
         assert pkt.sensor_id == 0x0001
         assert pkt.sensor_type == 0x01
 
@@ -162,46 +164,46 @@ class TestSensorPacketStream:
         raw = build_temp_packet()
         source = ByteSource(raw)
         stream = SensorPacketStream(source)
-        pkt = stream.next()
+        pkt = next(stream)
         assert pkt is not None
 
     def test_empty_source_raises_stop_iteration(self):
         """Captures: empty source raises StopIteration from .next()."""
-        source = ByteSource("")
+        source = ByteSource(b"")
         stream = SensorPacketStream(source)
         with pytest.raises(StopIteration):
-            stream.next()
+            next(stream)
 
     def test_checksum_error_in_strict_mode(self):
         """Captures: bad checksum in strict mode raises ParseError."""
         raw = build_temp_packet(0x0001, 235)
         # Corrupt the checksum (last byte)
-        raw = raw[:-1] + chr(ord(raw[-1]) ^ 0xFF)
-        source = ByteSource(raw + "\x00")  # extra padding to avoid StopIteration before check
+        raw = raw[:-1] + bytes([raw[-1] ^ 0xFF])
+        source = ByteSource(raw + b"\x00")  # extra padding to avoid StopIteration before check
         stream = SensorPacketStream(source, strict=True)
         with pytest.raises(ParseError, match="Checksum mismatch"):
-            stream.next()
+            next(stream)
 
     def test_checksum_error_non_strict_skips(self):
         """Captures: bad checksum in non-strict mode skips packet."""
         good = build_temp_packet(0x0001, 235)
         bad = build_temp_packet(0x0002, 100)
-        bad = bad[:-1] + chr(ord(bad[-1]) ^ 0xFF)  # corrupt checksum
+        bad = bad[:-1] + bytes([bad[-1] ^ 0xFF])  # corrupt checksum
         raw = bad + good
         source = ByteSource(raw)
         stream = SensorPacketStream(source, strict=False)
-        pkt = stream.next()
+        pkt = next(stream)
         # Should skip the bad packet and return the good one
         assert pkt.sensor_id == 0x0001
 
     def test_invalid_length_skipped(self):
         """Captures: packets with length < MIN_PACKET_LEN are skipped."""
         # Build a fake sync + short length
-        bad = chr(SYNC_ORD) + chr(2)  # length 2, below minimum
+        bad = bytes([SYNC_ORD, 2])  # length 2, below minimum
         good = build_temp_packet(0x0001, 235)
         source = ByteSource(bad + good)
         stream = SensorPacketStream(source)
-        pkt = stream.next()
+        pkt = next(stream)
         assert pkt.sensor_id == 0x0001
 
 
@@ -217,7 +219,7 @@ class TestSerialSensorEncodingBoundaries:
     def test_ord_on_boundary_bytes(self, byte_val):
         """Captures: ord() on various byte values at encoding boundaries.
         In Py2, ord(chr(x)) == x for all 0-255. Py3 bytes[i] already int."""
-        pkt = SensorPacket(0x0001, 0x01, chr(byte_val) + chr(byte_val))
+        pkt = SensorPacket(0x0001, 0x01, bytes([byte_val, byte_val]))
         hex_str = pkt.payload_hex()
         expected = "%02X %02X" % (byte_val, byte_val)
         assert hex_str == expected
@@ -225,13 +227,13 @@ class TestSerialSensorEncodingBoundaries:
     def test_sync_byte_is_str(self):
         """Captures: SYNC_BYTE is a str (byte) literal in Py2.
         After migration, should be bytes b'\\xAA'."""
-        assert SYNC_BYTE == "\xAA"
-        assert isinstance(SYNC_BYTE, str)
+        assert SYNC_BYTE == b"\xAA"
+        assert isinstance(SYNC_BYTE, bytes)
 
     @pytest.mark.py2_behavior
     def test_packet_with_all_high_bytes(self):
         """Captures: payload containing only high bytes (0x80-0xFF)."""
-        payload = "".join(chr(b) for b in range(0x80, 0x88))
+        payload = bytes(range(0x80, 0x88))
         pkt = SensorPacket(0x0001, 0x01, payload)
         hex_str = pkt.payload_hex()
         assert "80" in hex_str

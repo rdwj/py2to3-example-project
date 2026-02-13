@@ -39,7 +39,7 @@ class CacheEntry:
         self.fingerprint = self._compute_fingerprint(value)
 
     def is_expired(self):
-        return (int(time.time()) - self.created_at) > self.ttl
+        return (int(time.time()) - self.created_at) >= self.ttl
 
     def touch(self):
         self.last_access = int(time.time())

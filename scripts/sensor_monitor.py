@@ -21,12 +21,12 @@ import time
 import _thread
 import queue
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir, "src"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 
-from io_protocols.serial_sensor import SerialSensorReader, SensorPacket
-from io_protocols.mqtt_listener import MqttListener, MqttSubscription
-from core.exceptions import PlatformError, ProtocolError
-from core.config_loader import load_platform_config
+from src.io_protocols.serial_sensor import SerialSensorReader, SensorPacket
+from src.io_protocols.mqtt_listener import MqttListener, MqttSubscription
+from src.core.exceptions import PlatformError, ProtocolError
+from src.core.config_loader import load_platform_config
 
 # Shared queue for all incoming sensor data
 _reading_queue = queue.Queue(maxsize=50000)

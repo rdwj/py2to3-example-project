@@ -33,9 +33,9 @@ class TestExceptionHierarchy:
     """Characterize the exception class hierarchy."""
 
     @pytest.mark.py2_behavior
-    def test_platform_error_inherits_standard_error(self):
-        """Captures: PlatformError(StandardError). StandardError removed in Py3."""
-        assert issubclass(PlatformError, StandardError)
+    def test_platform_error_inherits_exception(self):
+        """Captures: PlatformError(Exception). StandardError was merged into
+        Exception in Py3."""
         assert issubclass(PlatformError, Exception)
 
     def test_protocol_layer(self):

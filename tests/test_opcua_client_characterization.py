@@ -129,7 +129,7 @@ class TestOpcUaSubscription:
     def test_queue_overflow(self):
         """Captures: when queue is full, oldest entry is dropped."""
         sub = OpcUaSubscription(1)
-        sub._queue = __import__("Queue").Queue(maxsize=2)
+        sub._queue = __import__("queue").Queue(maxsize=2)
         sub._push("n1", 1.0, 0, 1.0)
         sub._push("n2", 2.0, 0, 2.0)
         sub._push("n3", 3.0, 0, 3.0)  # should evict n1

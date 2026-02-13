@@ -62,11 +62,16 @@ class OpcUaNode(object):
 class OpcUaSubscription(object):
     """Data-change subscription with queue.Queue() buffer."""
 
-    def __init__(self, sid, interval_ms=1000):
+    def __init__(self, sid, interval_ms=1000, max_queue_size=5000):
         self.subscription_id = sid
         self.interval_ms = interval_ms
         self._items = {}
-        self._queue = queue.Queue(maxsize=5000)
+        self._queue = queue.Queue(maxsize=max_queue_size)
+
+    @property
+    def data_queue(self):
+        """Public access to the underlying data queue."""
+        return self._queue
 
     def add_monitored_item(self, node_id, sampling_ms=500):
         iid = len(self._items) + 1

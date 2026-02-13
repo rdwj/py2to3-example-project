@@ -16,9 +16,9 @@ import socket
 import smtplib
 from email.mime.text import MIMEText
 
-from core.config_loader import load_platform_config
-from core.exceptions import PlatformError
-from core.string_helpers import safe_encode, safe_decode
+from src.core.config_loader import load_platform_config
+from src.core.exceptions import PlatformError
+from src.core.string_helpers import safe_encode, safe_decode
 
 
 class EmailError(PlatformError):

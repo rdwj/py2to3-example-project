@@ -49,7 +49,7 @@ class TestDetectEncoding:
         (b"plain ascii", u"utf-8"),
         (u"caf\u00e9".encode("utf-8"), u"utf-8"),
         (b"\xe9\xe8\xea", u"latin-1"),  # not valid UTF-8
-        (u"\u6e29\u5ea6".encode("shift_jis"), u"shift_jis"),
+        (u"\u6e29\u5ea6".encode("shift_jis"), u"latin-1"),  # latin-1 precedes shift_jis and decodes any bytes
     ])
     @pytest.mark.py2_behavior
     def test_byte_string_detection(self, raw, expected_enc):
@@ -119,17 +119,16 @@ class TestSafeEncode:
 
     @pytest.mark.py2_behavior
     def test_unicode_encoded(self):
-        """Captures: unicode encoded to bytes with given encoding."""
+        """Captures: str encoded to bytes with given encoding."""
         text = u"caf\u00e9"
         result = safe_encode(text)
-        assert isinstance(result, str)
-        assert not isinstance(result, str)
+        assert isinstance(result, bytes)
         assert result == u"caf\u00e9".encode("utf-8")
 
     @pytest.mark.py2_behavior
     def test_non_string_uses_str(self):
-        """Captures: non-string types converted via str()."""
-        assert safe_encode(42) == "42"
+        """Captures: non-string types converted via str() then encoded to bytes."""
+        assert safe_encode(42) == b"42"
 
 
 # ---------------------------------------------------------------------------
@@ -140,19 +139,19 @@ class TestToPlatformString:
     """Characterize I/O boundary string normalization."""
 
     @pytest.mark.py2_behavior
-    def test_unicode_to_bytes(self):
-        """Captures: unicode encoded to bytes for platform str (Py2 str = bytes)."""
+    def test_unicode_to_str(self):
+        """Captures: str input returned as-is (Py3 platform str is text)."""
         result = to_platform_string(u"caf\u00e9")
         assert isinstance(result, str)
-        assert not isinstance(result, str)
+        assert result == u"caf\u00e9"
 
     @pytest.mark.py2_behavior
-    def test_byte_string_passthrough(self):
-        """Captures: basestring that is str passes through.
-        isinstance(value, basestring) check; basestring removed in Py3."""
+    def test_byte_string_decoded(self):
+        """Captures: bytes decoded to str (Py3 platform str is text)."""
         raw = b"bytes"
         result = to_platform_string(raw)
-        assert result is raw
+        assert isinstance(result, str)
+        assert result == "bytes"
 
     @pytest.mark.py2_behavior
     def test_non_string_uses_str(self):

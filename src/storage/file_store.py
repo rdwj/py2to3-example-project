@@ -131,13 +131,16 @@ class FileStore:
         except IOError as e:
             raise StorageError("export failed for %s: %s" % (filename, e))
 
-    def read_report(self, filename):
-        """Returns the report content as a string."""
+    def read_report(self, filename, encoding="utf-8"):
+        """Returns the report content as a string, decoded with the
+        given *encoding* (default ``'utf-8'``).  Callers that wrote
+        with a non-UTF-8 encoding must pass the matching encoding here
+        to avoid ``UnicodeDecodeError``."""
         src = self._path.resolve(_DIR_REPORTS, filename)
         if not os.path.isfile(src):
             return None
         try:
-            with open(src, "r") as f:
+            with open(src, "r", encoding=encoding) as f:
                 return f.read()
         except IOError as e:
             raise StorageError("cannot read report %s: %s" % (filename, e))

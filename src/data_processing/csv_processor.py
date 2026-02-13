@@ -17,9 +17,9 @@ import csv
 import codecs
 import io
 
-from core.exceptions import DataError, EncodingError, ParseError
-from core.string_helpers import safe_decode, safe_encode, detect_encoding
-from core.config_loader import load_platform_config
+from src.core.exceptions import DataError, EncodingError, ParseError
+from src.core.string_helpers import safe_decode, safe_encode, detect_encoding
+from src.core.config_loader import load_platform_config
 
 
 # In Python 3 the csv module works with text mode, not binary.

@@ -20,9 +20,9 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 import reprlib as reprlib_module
 
-from core.exceptions import ParseError, DataError
-from core.string_helpers import safe_decode, normalise_sensor_label
-from core.config_loader import load_platform_config
+from src.core.exceptions import ParseError, DataError
+from src.core.string_helpers import safe_decode, normalise_sensor_label
+from src.core.config_loader import load_platform_config
 
 
 # ---------------------------------------------------------------------------

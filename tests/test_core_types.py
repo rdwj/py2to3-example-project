@@ -55,10 +55,10 @@ class TestDataPointCmpAndSorting(unittest.TestCase):
         self.assertTrue(bool(DataPoint("T", 1.0, quality=192)))
         self.assertFalse(bool(DataPoint("T", 1.0, quality=0)))
 
-    def test_div_and_integer_truncation(self):
+    def test_div_true_division(self):
         self.assertAlmostEqual((DataPoint("P", 1000.0) / 10).value, 100.0)
-        self.assertEqual((DataPoint("C", 7) / 2).value, 3)
-        print("Py2 integer division: 7/2 = 3")
+        self.assertEqual((DataPoint("C", 7) / 2).value, 3.5)
+        print("Py3 true division: 7/2 = 3.5")
 
 
 class TestLargeCounter(unittest.TestCase):

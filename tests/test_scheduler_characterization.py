@@ -16,7 +16,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import sys
 import time
-import Queue
+import queue
 
 import pytest
 
@@ -118,36 +118,36 @@ class TestTaskStream:
 
     def test_yields_from_queue(self):
         """Captures: task_stream yields items from the queue."""
-        q = Queue.Queue()
+        q = queue.Queue()
         task = ScheduledTask("t", lambda: None)
         q.put(task)
         gen = task_stream(q, poll_interval=0.1)
-        result = gen.next()
+        result = next(gen)
         assert result is task
 
     def test_yields_none_on_timeout(self):
         """Captures: empty queue yields None after poll interval."""
-        q = Queue.Queue()
+        q = queue.Queue()
         gen = task_stream(q, poll_interval=0.1)
-        result = gen.next()
+        result = next(gen)
         assert result is None
 
     @pytest.mark.py2_behavior
     def test_throw_cancellation(self):
         """Captures: throw(PlatformError, msg) for task cancellation (C8).
         Generator throw() API changed subtly in Py3."""
-        q = Queue.Queue()
+        q = queue.Queue()
         gen = task_stream(q, poll_interval=0.1)
-        gen.next()  # prime the generator
+        next(gen)  # prime the generator
         # Throw a cancellation signal
         result = gen.throw(PlatformError, "Task cancelled")
         assert result is None
 
     def test_close_generator(self):
         """Captures: GeneratorExit handling on close()."""
-        q = Queue.Queue()
+        q = queue.Queue()
         gen = task_stream(q, poll_interval=0.1)
-        gen.next()  # prime
+        next(gen)  # prime
         gen.close()  # should not raise
 
 
@@ -227,8 +227,8 @@ class TestTaskWorkerExecution:
 
     def test_execute_successful_task(self):
         """Captures: successful execution sets status=done, increments run_count."""
-        task_q = Queue.Queue()
-        result_q = Queue.Queue()
+        task_q = queue.Queue()
+        result_q = queue.Queue()
         worker = TaskWorker(0, task_q, result_q)
 
         task = ScheduledTask("test", lambda: 42)
@@ -244,8 +244,8 @@ class TestTaskWorkerExecution:
     def test_execute_failing_task_uses_sys_exc_type(self):
         """Captures: failed task uses sys.exc_type/sys.exc_value (G2).
         Removed in Py3; use sys.exc_info() instead."""
-        task_q = Queue.Queue()
-        result_q = Queue.Queue()
+        task_q = queue.Queue()
+        result_q = queue.Queue()
         worker = TaskWorker(0, task_q, result_q)
 
         def failing():

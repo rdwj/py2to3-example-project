@@ -146,9 +146,9 @@ class TestDatabaseManagerReadings:
         assert rows[0][5] is not None
 
     @pytest.mark.py2_behavior
-    def test_get_raw_frame_returns_str(self, db_manager, sample_data_point):
-        """Captures: get_raw_frame calls str() on buffer, producing bytes in Py2.
-        In Py3, buffer -> memoryview/bytes, str() produces different output."""
+    def test_get_raw_frame_returns_bytes(self, db_manager, sample_data_point):
+        """Captures: get_raw_frame returns bytes in Py3 (was str in Py2).
+        In Py3, BLOB data is retrieved as bytes via bytes(row[0])."""
         raw = b"\x01\x02\x03\x04"
         db_manager.store_reading("S002", sample_data_point, raw_frame=raw)
         # Need to get the reading_id
@@ -156,7 +156,7 @@ class TestDatabaseManagerReadings:
         # fetch by id=1 (first inserted)
         result = db_manager.get_raw_frame(1)
         assert result is not None
-        assert isinstance(result, str)
+        assert isinstance(result, bytes)
 
     def test_fetch_readings_respects_limit(self, db_manager):
         """Captures: LIMIT clause applied to reading queries."""

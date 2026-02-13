@@ -22,8 +22,8 @@ import http.cookies
 import http.cookiejar
 import xmlrpc.client
 
-from core.exceptions import PlatformError
-from core.string_helpers import safe_decode, safe_encode
+from src.core.exceptions import PlatformError
+from src.core.string_helpers import safe_decode, safe_encode
 
 
 class DashboardError(PlatformError):

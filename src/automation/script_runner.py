@@ -15,7 +15,7 @@ import sys
 import time
 import subprocess
 
-from core.exceptions import PlatformError
+from src.core.exceptions import PlatformError
 
 SCRIPT_TIMEOUT_DEFAULT = 300
 ALLOWED_BUILTINS = [

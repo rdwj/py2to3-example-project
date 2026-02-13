@@ -15,7 +15,7 @@ import importlib
 import importlib.util
 import time
 
-from core.exceptions import PlatformError
+from src.core.exceptions import PlatformError
 
 
 class PluginRegistry:

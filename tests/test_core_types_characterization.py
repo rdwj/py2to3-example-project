@@ -46,19 +46,20 @@ class TestDataPoint:
 
     @pytest.mark.py2_behavior
     def test_cmp_by_timestamp(self):
-        """Captures: __cmp__ orders by timestamp then tag.
-        cmp() builtin and __cmp__ removed in Py3; use __lt__/__eq__."""
+        """Captures: ordering by timestamp then tag.
+        cmp() removed in Py3; uses __lt__/__eq__ via @total_ordering."""
         dp1 = DataPoint("A", 1, timestamp=100.0)
         dp2 = DataPoint("B", 2, timestamp=200.0)
-        assert cmp(dp1, dp2) < 0
-        assert cmp(dp2, dp1) > 0
+        assert dp1 < dp2
+        assert dp2 > dp1
 
     @pytest.mark.py2_behavior
     def test_cmp_same_timestamp_by_tag(self):
-        """Captures: same timestamp falls through to tag comparison."""
+        """Captures: same timestamp falls through to tag comparison.
+        cmp() removed in Py3; uses comparison operators."""
         dp1 = DataPoint("A", 1, timestamp=100.0)
         dp2 = DataPoint("B", 2, timestamp=100.0)
-        assert cmp(dp1, dp2) < 0
+        assert dp1 < dp2
 
     @pytest.mark.py2_behavior
     def test_nonzero_good_quality(self):
@@ -213,20 +214,19 @@ class TestSortingAndTypeChecks:
 
     @pytest.mark.py2_behavior
     def test_is_text(self):
-        """Captures: isinstance(value, unicode). unicode removed in Py3."""
+        """Captures: isinstance(value, str). In Py3, all str literals are text."""
         assert is_text(u"text") is True
-        assert is_text("bytes") is False
+        assert is_text("bytes") is True
 
     @pytest.mark.py2_behavior
     def test_is_binary(self):
-        """Captures: isinstance(value, str) and not isinstance(value, unicode)."""
-        assert is_binary("bytes") is True
+        """Captures: isinstance(value, bytes). In Py3, str is not bytes."""
+        assert is_binary(b"bytes") is True
         assert is_binary(u"text") is False
 
     @pytest.mark.py2_behavior
     def test_register_view(self):
-        """Captures: buffer() builtin for zero-copy views.
-        buffer() -> memoryview() in Py3."""
-        data = "\x00\x01\x02\x03\x04\x05"
+        """Captures: memoryview() for zero-copy views (was buffer() in Py2)."""
+        data = b"\x00\x01\x02\x03\x04\x05"
         view = register_view(data, 2, 3)
-        assert str(view) == "\x02\x03\x04"
+        assert bytes(view) == b"\x02\x03\x04"

@@ -187,10 +187,9 @@ class TestModuleLevelHelpers:
     """Characterize module-level convenience functions."""
 
     @pytest.mark.py2_behavior
-    def test_default_max_is_sys_maxint(self):
-        """Captures: DEFAULT_MAX = sys.maxint.
-        sys.maxint removed in Py3; use sys.maxsize."""
-        assert DEFAULT_MAX == sys.maxint
+    def test_default_max_is_sys_maxsize(self):
+        """Captures: DEFAULT_MAX = sys.maxsize (was sys.maxint in Py2)."""
+        assert DEFAULT_MAX == sys.maxsize
         assert DEFAULT_MAX > 0
 
     @pytest.mark.py2_behavior

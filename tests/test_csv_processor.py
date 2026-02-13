@@ -30,7 +30,7 @@ class TestUnicodeCsvReader(unittest.TestCase):
 
     def test_latin1_degree_sign(self):
         csv_bytes = (u"Tag,Temp\u00b0C\nT-01,23.5\n").encode("latin-1")
-        rows = list(unicode_csv_reader(StringIO(csv_bytes), encoding="latin-1"))
+        rows = list(unicode_csv_reader(StringIO(csv_bytes.decode("latin-1"))))
         self.assertIn(u"\u00b0", rows[0][1])
 
     def test_empty(self):
@@ -38,7 +38,7 @@ class TestUnicodeCsvReader(unittest.TestCase):
 
     def test_japanese(self):
         text = u"sensor,label\nS1,\u6e29\u5ea6\n"
-        rows = list(unicode_csv_reader(StringIO(text.encode("utf-8"))))
+        rows = list(unicode_csv_reader(StringIO(text)))
         self.assertEqual(rows[1][1], u"\u6e29\u5ea6")
 
     def test_quoted(self):

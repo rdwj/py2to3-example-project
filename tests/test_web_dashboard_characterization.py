@@ -121,11 +121,13 @@ class TestDashboardServer:
         assert len(server.alarm_history) == 1
 
     def test_alarm_history_truncation(self):
-        """Captures: alarm history truncated to last 500 when exceeding 1000."""
+        """Captures: alarm history truncated to last 500 when exceeding 1000.
+        After adding 1010 items, truncation fires at 1001 (keeping 500),
+        then 9 more items are added, yielding 509 total."""
         server = DashboardServer()
         for i in range(1010):
             server.add_alarm({"tag": "T%d" % i, "severity": 1})
-        assert len(server.alarm_history) <= 500
+        assert len(server.alarm_history) <= 510
 
     def test_default_port(self):
         """Captures: default port is 8080."""

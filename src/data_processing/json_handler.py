@@ -20,8 +20,8 @@ import time
 import pickle
 import io
 
-from core.exceptions import DataError, ParseError
-from core.config_loader import load_platform_config
+from src.core.exceptions import DataError, ParseError
+from src.core.config_loader import load_platform_config
 
 
 # Maximum size of a JSON document we will attempt to parse in one shot.

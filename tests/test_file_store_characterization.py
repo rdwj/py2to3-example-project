@@ -96,13 +96,13 @@ class TestFileStoreText:
 
     @pytest.mark.py2_behavior
     def test_store_report_unicode_encoded(self, store):
-        """Captures: unicode content encoded to UTF-8 bytes before writing.
-        isinstance(content, unicode) check changes meaning in Py3."""
+        """Captures: unicode content written as text in Py3.
+        read_report returns str (text) in Py3, not bytes."""
         store.store_report("unicode.txt", u"caf\u00e9 r\u00e9sum\u00e9")
         content = store.read_report("unicode.txt")
         assert content is not None
-        # In Py2, read_report returns str (bytes); contains UTF-8
-        assert b"caf" in content
+        # In Py3, read_report returns str (text)
+        assert "caf" in content
 
     def test_read_report_nonexistent_returns_none(self, store):
         """Captures: reading a missing file returns None."""
@@ -186,10 +186,10 @@ class TestFileStoreEncodingBoundaries:
     def test_store_report_latin1_encoding(self, store):
         """Captures: store_report with explicit latin-1 encoding."""
         store.store_report("latin.txt", u"\u00e9\u00e8\u00ea", encoding="latin-1")
-        content = store.read_report("latin.txt")
+        content = store.read_report("latin.txt", encoding="latin-1")
         assert content is not None
-        # latin-1 encoded e-acute is single byte 0xe9
-        assert b"\xe9" in content
+        # In Py3, read_report returns str (text); verify the accented chars
+        assert u"\u00e9" in content
 
     @pytest.mark.py2_behavior
     def test_store_binary_with_null_bytes(self, store):

@@ -184,46 +184,45 @@ class TestMqttListenerPacketConstruction:
 
     @pytest.mark.py2_behavior
     def test_mk_connect_structure(self, listener):
-        """Captures: CONNECT packet structure with str concatenation.
-        In Py2, struct.pack returns str; Py3 returns bytes."""
+        """Captures: CONNECT packet structure. struct.pack returns bytes in Py3."""
         pkt = listener._mk_connect()
-        assert isinstance(pkt, str)
+        assert isinstance(pkt, bytes)
         # First byte should be CONNECT type
-        assert ord(pkt[0]) == CONNECT
+        assert pkt[0] == CONNECT
 
     @pytest.mark.py2_behavior
     def test_mk_connect_contains_client_id(self, listener):
-        """Captures: CONNECT packet embeds the client_id string."""
+        """Captures: CONNECT packet embeds the client_id as bytes."""
         pkt = listener._mk_connect()
-        assert "test_client" in pkt
+        assert b"test_client" in pkt
 
     @pytest.mark.py2_behavior
     def test_mk_connect_contains_mqtt_protocol(self, listener):
-        """Captures: CONNECT packet contains 'MQTT' protocol name."""
+        """Captures: CONNECT packet contains b'MQTT' protocol name."""
         pkt = listener._mk_connect()
-        assert "MQTT" in pkt
+        assert b"MQTT" in pkt
 
     @pytest.mark.py2_behavior
     def test_mk_pub_structure(self, listener):
-        """Captures: PUBLISH packet with topic and payload."""
+        """Captures: PUBLISH packet with topic and payload. Returns bytes in Py3."""
         pkt = listener._mk_pub("sensors/temp", '{"value": 42}')
-        assert isinstance(pkt, str)
-        assert ord(pkt[0]) == PUBLISH
+        assert isinstance(pkt, bytes)
+        assert pkt[0] == PUBLISH
 
     @pytest.mark.py2_behavior
     def test_mk_sub_structure(self, listener):
-        """Captures: SUBSCRIBE packet with topic filter."""
+        """Captures: SUBSCRIBE packet with topic filter. Returns bytes in Py3."""
         pkt = listener._mk_sub("sensors/#", 0)
-        assert isinstance(pkt, str)
-        assert ord(pkt[0]) == (SUBSCRIBE | 2)
+        assert isinstance(pkt, bytes)
+        assert pkt[0] == (SUBSCRIBE | 2)
 
     @pytest.mark.py2_behavior
     def test_variable_length_encoding_small(self, listener):
         """Captures: _el encodes small lengths (< 128) as single byte."""
         encoded = listener._el(10)
-        assert isinstance(encoded, str)
+        assert isinstance(encoded, bytes)
         assert len(encoded) == 1
-        assert ord(encoded[0]) == 10
+        assert encoded[0] == 10
 
     @pytest.mark.py2_behavior
     def test_variable_length_encoding_medium(self, listener):
@@ -231,14 +230,14 @@ class TestMqttListenerPacketConstruction:
         encoded = listener._el(200)
         assert len(encoded) == 2
         # First byte has continuation bit set
-        assert ord(encoded[0]) & 0x80 != 0
+        assert encoded[0] & 0x80 != 0
 
     @pytest.mark.py2_behavior
     def test_variable_length_encoding_zero(self, listener):
         """Captures: _el(0) produces a single zero byte."""
         encoded = listener._el(0)
         assert len(encoded) == 1
-        assert ord(encoded[0]) == 0
+        assert encoded[0] == 0
 
 
 # ---------------------------------------------------------------------------

@@ -21,9 +21,9 @@ import subprocess
 import builtins
 import functools
 
-from core.exceptions import DataError
-from core.string_helpers import safe_decode, safe_encode, detect_encoding
-from core.config_loader import load_platform_config
+from src.core.exceptions import DataError
+from src.core.string_helpers import safe_decode, safe_encode, detect_encoding
+from src.core.config_loader import load_platform_config
 
 
 # ---------------------------------------------------------------------------

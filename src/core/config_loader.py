@@ -43,7 +43,13 @@ class PlatformConfig(object):
     # ---------------------------------------------------------------
 
     def load(self, path=None):
-        """Read the INI file from *path* or search the default locations."""
+        """Read the INI file from *path* or search the default locations.
+
+        When an explicit *path* is given (either here or via the
+        constructor) and that file does not exist, the method returns
+        immediately without searching fallback directories -- the caller
+        deliberately asked for a specific file.
+        """
         if path is not None:
             self._path = path
 
@@ -51,6 +57,12 @@ class PlatformConfig(object):
             print("Loading config from", self._path)
             self._parser.read(self._path)
             self._loaded = True
+            return
+
+        # An explicit path was provided but the file doesn't exist --
+        # do not fall through to the search-path discovery loop.
+        if self._path:
+            print("WARNING: config file not found: %s" % self._path)
             return
 
         for search_dir in CONFIG_SEARCH_PATHS:

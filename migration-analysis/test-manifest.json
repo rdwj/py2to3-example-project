@@ -1,0 +1,362 @@
+{
+  "generated": "2026-02-18T00:00:00Z",
+  "framework": "pytest",
+  "target_version": "3.12",
+  "status": "partial_implementation",
+  "note": "Test generation was limited by context; 4 critical modules completed, remaining 17 modules require implementation following same patterns",
+  "tests_generated": [
+    {
+      "file": "tests/test_database.py",
+      "module_under_test": "src/storage/database.py",
+      "test_count": 25,
+      "types": ["characterization", "encoding_boundary", "roundtrip"],
+      "risk_level": "critical",
+      "key_patterns_tested": [
+        "sqlite3 BLOB handling (bytes/buffer boundary)",
+        "cPickle protocol 2 serialization",
+        "copy_reg custom reducers",
+        "Transaction context manager",
+        "QueryBuilder fluent API",
+        "except StandardError, e syntax",
+        "print statement"
+      ],
+      "status": "complete"
+    },
+    {
+      "file": "tests/test_plugin_loader.py",
+      "module_under_test": "src/automation/plugin_loader.py",
+      "test_count": 28,
+      "types": ["characterization", "metaclass_behavior", "function_introspection"],
+      "risk_level": "critical",
+      "key_patterns_tested": [
+        "__metaclass__ attribute (A12)",
+        "reload() builtin (B10)",
+        "operator.isCallable() (H1)",
+        "func_name, func_defaults, func_closure (F1-F3)",
+        "im_func, im_self, im_class (F4-F6)",
+        "dict.iteritems(), dict.has_key()",
+        "imp.load_source module loading"
+      ],
+      "status": "complete"
+    },
+    {
+      "file": "tests/test_serial_sensor.py",
+      "module_under_test": "src/io_protocols/serial_sensor.py",
+      "test_count": 18,
+      "types": ["characterization", "encoding_boundary", "iterator_protocol"],
+      "risk_level": "critical",
+      "key_patterns_tested": [
+        "struct pack/unpack with binary data",
+        "cStringIO for buffering",
+        "Iterator .next() method (Py2 protocol)",
+        "dict.iteritems(), dict.has_key()",
+        "bytes/str at serial boundary",
+        "Checksum validation with binary data"
+      ],
+      "status": "complete"
+    },
+    {
+      "file": "tests/test_string_helpers.py",
+      "module_under_test": "src/core/string_helpers.py",
+      "test_count": 32,
+      "types": ["characterization", "encoding_boundary", "unicode_handling"],
+      "risk_level": "high",
+      "key_patterns_tested": [
+        "unicode/str/basestring type checks",
+        "StringIO/cStringIO usage",
+        "Encoding detection and conversion",
+        "Unicode NFC normalization",
+        "safe_decode/safe_encode with error handling",
+        "Mixed encoding concatenation",
+        "CSV building with unicode"
+      ],
+      "status": "complete"
+    }
+  ],
+  "tests_to_implement": [
+    {
+      "file": "tests/test_mqtt_listener.py",
+      "module_under_test": "src/io_protocols/mqtt_listener.py",
+      "estimated_test_count": 22,
+      "risk_level": "critical",
+      "key_patterns": [
+        "socket send/recv with str (bytes)",
+        "json.loads() with encoding parameter",
+        "Queue.Queue() and Queue.Empty/Full",
+        "thread.start_new_thread()",
+        "Integer division / vs //",
+        "xrange() usage",
+        "dict.iteritems()"
+      ]
+    },
+    {
+      "file": "tests/test_utils.py",
+      "module_under_test": "src/core/utils.py",
+      "estimated_test_count": 18,
+      "risk_level": "high",
+      "key_patterns": [
+        "apply() builtin",
+        "reduce() builtin",
+        "intern() builtin",
+        "has_key() dict method",
+        "backtick repr operator",
+        "<> inequality operator",
+        "xrange() iterator",
+        "raw_input() function",
+        "sets.Set class"
+      ]
+    },
+    {
+      "file": "tests/test_config_loader.py",
+      "module_under_test": "src/core/config_loader.py",
+      "estimated_test_count": 15,
+      "risk_level": "high",
+      "key_patterns": [
+        "ConfigParser.SafeConfigParser",
+        "sys.maxint constant",
+        "__builtin__ module",
+        "print statement",
+        "Environment variable interpolation"
+      ]
+    },
+    {
+      "file": "tests/test_exceptions.py",
+      "module_under_test": "src/core/exceptions.py",
+      "estimated_test_count": 16,
+      "risk_level": "high",
+      "key_patterns": [
+        "StandardError base class",
+        "except Exception, e syntax",
+        "raise ExcClass, value, tb (3-arg)",
+        "sys.exc_type, sys.exc_value",
+        "Exception hierarchy with StandardError"
+      ]
+    },
+    {
+      "file": "tests/test_itertools_helpers.py",
+      "module_under_test": "src/core/itertools_helpers.py",
+      "estimated_test_count": 24,
+      "risk_level": "high",
+      "key_patterns": [
+        "itertools.izip, imap, ifilter",
+        "dict.iterkeys(), itervalues(), iteritems()",
+        "dict.viewkeys(), viewvalues(), viewitems()",
+        "generator .next() method",
+        "xrange() usage",
+        "map/filter/zip as list producers"
+      ]
+    },
+    {
+      "file": "tests/test_opcua_client.py",
+      "module_under_test": "src/io_protocols/opcua_client.py",
+      "estimated_test_count": 20,
+      "risk_level": "high",
+      "key_patterns": [
+        "httplib.HTTPConnection",
+        "urllib2.Request and urlopen",
+        "xmlrpclib.ServerProxy",
+        "Queue.Queue()",
+        "thread.start_new_thread()",
+        "dict.has_key()",
+        "XML parsing with mixed encodings"
+      ]
+    },
+    {
+      "file": "tests/test_xml_transformer.py",
+      "module_under_test": "src/data_processing/xml_transformer.py",
+      "estimated_test_count": 18,
+      "risk_level": "high",
+      "key_patterns": [
+        "HTMLParser module for entity unescaping",
+        "repr module (renamed reprlib)",
+        "dict.has_key()",
+        "except Exception, e syntax",
+        "u\"\" string literals",
+        "XML with encoding declarations",
+        "Non-ASCII attributes"
+      ]
+    },
+    {
+      "file": "tests/test_json_handler.py",
+      "module_under_test": "src/data_processing/json_handler.py",
+      "estimated_test_count": 20,
+      "risk_level": "high",
+      "key_patterns": [
+        "json.loads() with bytes in Py2",
+        "json.dumps() encoding parameter",
+        "cPickle for serialization fallback",
+        "cStringIO for buffering",
+        "dict.has_key()",
+        "dict.iteritems(), iterkeys()",
+        "JSON round-trips with unicode"
+      ]
+    },
+    {
+      "file": "tests/test_text_analyzer.py",
+      "module_under_test": "src/data_processing/text_analyzer.py",
+      "estimated_test_count": 16,
+      "risk_level": "high",
+      "key_patterns": [
+        "hashlib.md5(\"string\") with str",
+        "re.UNICODE flag",
+        "commands.getoutput()",
+        "reduce() builtin",
+        "map/filter as list producers",
+        "dict.has_key(), iteritems()",
+        "xrange() usage",
+        "__builtin__ module checks"
+      ]
+    },
+    {
+      "file": "tests/test_log_parser.py",
+      "module_under_test": "src/data_processing/log_parser.py",
+      "estimated_test_count": 18,
+      "risk_level": "high",
+      "key_patterns": [
+        "file.xreadlines() method",
+        "commands.getstatusoutput()",
+        "os.popen() for piped commands",
+        "dict.has_key()",
+        "except Exception, e syntax",
+        "Regex pattern matching",
+        "Timestamp parsing edge cases"
+      ]
+    },
+    {
+      "file": "tests/test_file_store.py",
+      "module_under_test": "src/storage/file_store.py",
+      "estimated_test_count": 16,
+      "risk_level": "high",
+      "key_patterns": [
+        "file() builtin (not open())",
+        "os.getcwdu() for unicode cwd",
+        "Octal literals 0644, 0755",
+        "except IOError, e syntax",
+        "struct.pack/unpack for binary data",
+        "long type (0L literal)",
+        "Binary vs text file modes"
+      ]
+    },
+    {
+      "file": "tests/test_cache.py",
+      "module_under_test": "src/storage/cache.py",
+      "estimated_test_count": 20,
+      "risk_level": "high",
+      "key_patterns": [
+        "md5.new() and sha.new() (legacy modules)",
+        "cPickle with protocol 2",
+        "long type and 0L literals",
+        "Integer division / vs //",
+        "hashlib.md5(string) with str",
+        "dict.iteritems()",
+        "except StandardError, e syntax",
+        "LRU eviction algorithm"
+      ]
+    },
+    {
+      "file": "tests/test_email_sender.py",
+      "module_under_test": "src/reporting/email_sender.py",
+      "estimated_test_count": 14,
+      "risk_level": "high",
+      "key_patterns": [
+        "smtplib exception handling",
+        "email.mime.text with bytes/str",
+        "except smtplib.SMTPException, e syntax",
+        "String encoding for email bodies",
+        "SMTP authentication flow"
+      ]
+    },
+    {
+      "file": "tests/test_web_dashboard.py",
+      "module_under_test": "src/reporting/web_dashboard.py",
+      "estimated_test_count": 18,
+      "risk_level": "high",
+      "key_patterns": [
+        "BaseHTTPServer.BaseHTTPRequestHandler",
+        "Cookie.SimpleCookie",
+        "cookielib.CookieJar",
+        "xmlrpclib.ServerProxy",
+        "urllib.quote/unquote",
+        "thread.start_new_thread()",
+        "dict.iteritems()",
+        "HTML generation with unicode"
+      ]
+    },
+    {
+      "file": "tests/test_scheduler.py",
+      "module_under_test": "src/automation/scheduler.py",
+      "estimated_test_count": 20,
+      "risk_level": "high",
+      "key_patterns": [
+        "thread.start_new_thread()",
+        "Queue.Queue, Queue.Empty, Queue.Full",
+        "sys.exitfunc cleanup hook",
+        "sys.exc_type, sys.exc_value",
+        "generator.throw() method",
+        "long type (0L literal)",
+        "dict.iteritems(), itervalues()",
+        "xrange() usage",
+        "except Exception, e syntax"
+      ]
+    },
+    {
+      "file": "tests/test_script_runner.py",
+      "module_under_test": "src/automation/script_runner.py",
+      "estimated_test_count": 18,
+      "risk_level": "high",
+      "key_patterns": [
+        "exec statement (not function)",
+        "execfile() builtin",
+        "commands.getoutput()",
+        "operator.isSequenceType()",
+        "operator.isMappingType()",
+        "operator.sequenceIncludes()",
+        "Tuple parameter unpacking in functions",
+        "dict.iteritems()",
+        "Sandboxed namespace execution"
+      ]
+    },
+    {
+      "file": "tests/test_compat.py",
+      "module_under_test": "src/compat.py",
+      "estimated_test_count": 12,
+      "risk_level": "medium",
+      "key_patterns": [
+        "Compatibility layer imports",
+        "string_types tuple",
+        "integer_types with long",
+        "OrderedDict fallback",
+        "ConfigParser import alias",
+        "Queue import alias",
+        "cPickle import alias",
+        "ensure_bytes/ensure_text helpers"
+      ]
+    }
+  ],
+  "total_tests_generated": 103,
+  "total_tests_planned": 421,
+  "modules_covered": 4,
+  "modules_remaining": 17,
+  "existing_tests_preserved": [
+    "test_core_types.py",
+    "test_modbus.py",
+    "test_mainframe_parser.py",
+    "test_csv_processor.py",
+    "test_report_generator.py"
+  ],
+  "implementation_notes": {
+    "test_structure": "Each test file follows the pattern: characterization + encoding_boundary + roundtrip tests",
+    "mocking_strategy": "Mock external I/O (sockets, serial, files, DB, SMTP) but test module logic",
+    "encoding_tests": "Include non-ASCII data (UTF-8, Latin-1, Japanese) for bytes/str boundary testing",
+    "py2_compatibility": "All tests use from __future__ imports and are valid Python 3.12 syntax",
+    "fixtures": "Use pytest fixtures for temporary resources (files, DB connections)",
+    "patterns_per_module": "Each test captures 5-10 Py2-specific patterns from the migration analysis"
+  },
+  "next_steps": [
+    "Complete remaining 17 test files following the established patterns",
+    "Run full test suite under Python 2.7 to establish baseline",
+    "Document test coverage metrics",
+    "Create test execution guide for migration team",
+    "Set up CI pipeline to run characterization tests on both Py2 and Py3"
+  ]
+}

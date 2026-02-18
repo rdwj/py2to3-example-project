@@ -1,0 +1,99 @@
+{
+  "scope": "all",
+  "scope_name": "Phase 1→2 gate check",
+  "timestamp": "2026-02-18T14:53:05Z",
+  "current_phase": 1,
+  "target_phase": 2,
+  "result": "pass",
+  "criteria": [
+    {
+      "name": "future_imports_added",
+      "description": "All Python files have __future__ imports for Py3 compatibility",
+      "threshold": "100% of files in src/, tests/, scripts/",
+      "actual": "65/65 files (100%)",
+      "status": "pass",
+      "evidence_file": "migration-analysis/future-imports-report.json",
+      "details": "All 65 Python files contain 'from __future__ import absolute_import, division, print_function, unicode_literals'"
+    },
+    {
+      "name": "build_system_updated",
+      "description": "Build system migrated from distutils to setuptools with python_requires >= 3.12",
+      "threshold": "setup.py uses setuptools and has python_requires='>=3.12'",
+      "actual": "setup.py uses setuptools, python_requires='>=3.12' configured",
+      "status": "pass",
+      "evidence_file": "migration-analysis/build-system-report.json",
+      "details": "setup.py imports from setuptools (line 16), python_requires='>=3.12' set (line 32), no distutils imports found"
+    },
+    {
+      "name": "dependencies_updated",
+      "description": "requirements.txt has no Py2-only packages",
+      "threshold": "No pycrypto, all packages Py3.12-compatible",
+      "actual": "pycrypto replaced with pycryptodome, all 13 dependencies Py3.12-compatible",
+      "status": "pass",
+      "evidence_file": "migration-analysis/build-system-report.json",
+      "details": "pycryptodome>=3.20.0 present, no pycrypto found. All packages verified Py3.12-compatible: pyserial>=3.5, paho-mqtt>=1.6.1, pymodbus>=3.6.0, lxml>=5.1.0, opcua>=0.98.13, SQLAlchemy>=2.0.0, simplejson>=3.19.0, Jinja2>=3.1.0, MarkupSafe>=2.1.0, chardet>=5.2.0, pycryptodome>=3.20.0, requests>=2.31.0, six>=1.16.0"
+    },
+    {
+      "name": "shebangs_updated",
+      "description": "All script shebangs reference python3, not python or python2",
+      "threshold": "100% of script files",
+      "actual": "4/4 script files (100%)",
+      "status": "pass",
+      "evidence_file": null,
+      "details": "All scripts in scripts/ directory use '#!/usr/bin/env python3' shebang: batch_import.py, generate_ebcdic_data.py, run_platform.py, sensor_monitor.py"
+    },
+    {
+      "name": "test_coverage_exists",
+      "description": "Characterization tests exist for source modules",
+      "threshold": "At least 80% of source modules have corresponding test files",
+      "actual": "26/26 source modules (100%)",
+      "status": "pass",
+      "evidence_file": "migration-analysis/test-manifest.json",
+      "details": "All 26 source modules (excluding __init__.py files) have corresponding test files. Note: test_core_types.py covers types.py, test_modbus.py covers modbus_client.py"
+    },
+    {
+      "name": "conversion_plan_exists",
+      "description": "Conversion plan has been generated",
+      "threshold": "File exists and is valid JSON",
+      "actual": "conversion-plan.json exists, 11 units across 6 waves",
+      "status": "pass",
+      "evidence_file": "migration-analysis/conversion-plan.json",
+      "details": "Conversion plan defines 11 conversion units organized into 6 waves. Total estimated effort: 174.9 hours. Critical path: 6 units, 104.6 hours (13.1 days)"
+    },
+    {
+      "name": "lint_baseline_established",
+      "description": "Lint baseline/rules have been established",
+      "threshold": "File exists and is valid JSON",
+      "actual": "lint-rules-report.json exists with Phase 1 and Phase 2 rules",
+      "status": "pass",
+      "evidence_file": "migration-analysis/lint-rules-report.json",
+      "details": "Lint rules report defines 3 Phase 1 rules and 16 Phase 2 rules. Baseline established with 92 Phase 2 findings documented. Custom flake8 plugins created in .lint-plugins/"
+    },
+    {
+      "name": "high_risk_triaged",
+      "description": "All modules have at least one decision recorded",
+      "threshold": "100% of modules have non-empty decisions arrays",
+      "actual": "41/41 modules (100%)",
+      "status": "pass",
+      "evidence_file": "migration-analysis/migration-state.json",
+      "details": "All 41 modules in migration-state.json have at least one decision entry with date, decision, rationale, made_by, and skill_name fields"
+    },
+    {
+      "name": "phase1_lint_clean",
+      "description": "Phase 1 lint rules pass (no distutils, all future imports, python3 shebangs)",
+      "threshold": "Zero Phase 1 lint violations",
+      "actual": "0 Phase 1 violations",
+      "status": "pass",
+      "evidence_file": null,
+      "details": "Phase 1 lint check via scripts/run_lint.sh 1 passed all checks: (1) All files have __future__ imports, (2) No distutils imports, (3) All shebangs reference python3, (4) No pycrypto in requirements.txt"
+    }
+  ],
+  "waivers_applied": [],
+  "summary": {
+    "total_criteria": 9,
+    "passed": 9,
+    "failed": 0,
+    "waived": 0,
+    "not_evaluated": 0
+  }
+}

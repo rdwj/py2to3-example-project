@@ -1,0 +1,77 @@
+{
+  "timestamp": "2026-02-18T14:36:51Z",
+  "skill": "py2to3-custom-lint-rules",
+  "target_version": "3.12",
+  "rules_generated": {
+    "phase1": {
+      "count": 3,
+      "rules": [
+        {"code": "PY2001", "message": "Missing __future__ imports", "severity": "error", "automatable": true},
+        {"code": "PY2002", "message": "distutils import found", "severity": "error", "automatable": true},
+        {"code": "PY2003", "message": "Shebang references python not python3", "severity": "warning", "automatable": true}
+      ]
+    },
+    "phase2": {
+      "count": 16,
+      "rules": [
+        {"code": "PY2010", "message": "print statement", "severity": "error", "automatable": true},
+        {"code": "PY2011", "message": "print >> redirect syntax", "severity": "error", "automatable": true},
+        {"code": "PY2012", "message": "except comma syntax", "severity": "error", "automatable": true},
+        {"code": "PY2013", "message": "dict.has_key()", "severity": "error", "automatable": true},
+        {"code": "PY2014", "message": "xrange()", "severity": "error", "automatable": true},
+        {"code": "PY2015", "message": "raw_input()", "severity": "error", "automatable": true},
+        {"code": "PY2016", "message": "execfile()", "severity": "error", "automatable": true},
+        {"code": "PY2017", "message": "basestring", "severity": "error", "automatable": true},
+        {"code": "PY2018", "message": "unicode type", "severity": "error", "automatable": true},
+        {"code": "PY2019", "message": "long type", "severity": "error", "automatable": true},
+        {"code": "PY2020", "message": "dict.iter*()", "severity": "error", "automatable": true},
+        {"code": "PY2021", "message": "dict.view*()", "severity": "error", "automatable": true},
+        {"code": "PY2022", "message": "old-style raise", "severity": "error", "automatable": true},
+        {"code": "PY2023", "message": "<> operator", "severity": "error", "automatable": true},
+        {"code": "PY2024", "message": "backtick repr", "severity": "error", "automatable": true},
+        {"code": "PY2025", "message": "old-style octal literal", "severity": "error", "automatable": true}
+      ]
+    }
+  },
+  "baseline_findings": {
+    "total": 92,
+    "by_rule": {
+      "PY2024": 40,
+      "PY2018": 27,
+      "PY2021": 7,
+      "PY2013": 5,
+      "PY2020": 4,
+      "PY2017": 4,
+      "PY2014": 3,
+      "PY2025": 1,
+      "PY2019": 1,
+      "PY2010": 0,
+      "PY2011": 0,
+      "PY2012": 0,
+      "PY2015": 0,
+      "PY2016": 0,
+      "PY2022": 0,
+      "PY2023": 0
+    }
+  },
+  "phase1_status": {
+    "gate_passed": true,
+    "all_files_have_future_imports": true,
+    "no_distutils_imports": true,
+    "shebangs_use_python3": true,
+    "no_pycrypto_in_requirements": true
+  },
+  "plugins_created": [
+    ".lint-plugins/flake8_phase1_checker.py",
+    ".lint-plugins/flake8_phase2_checker.py",
+    ".lint-plugins/setup.py",
+    ".lint-plugins/__init__.py"
+  ],
+  "scripts_created": [
+    "scripts/run_lint.sh"
+  ],
+  "documentation_created": [
+    "migration-analysis/lint-rules-documentation.md",
+    "migration-analysis/lint-rules-report.json"
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "timestamp": "2026-02-18T08:35:57.986571Z",
+  "target_version": "3.12",
+  "total_modules": 33,
+  "total_units": 11,
+  "total_waves": 6,
+  "waves": [
+    {
+      "wave": 1,
+      "description": "Core foundation - gateway modules with highest fan-out",
+      "units": [
+        {
+          "unit_id": "CU-01-core-foundation",
+          "name": "core-foundation",
+          "description": "Core foundation modules - gateway exceptions and shared types",
+          "modules": [
+            "src/core/exceptions.py",
+            "src/core/types.py",
+            "src/core/utils.py"
+          ],
+          "dependencies": [],
+          "risk_score": "high",
+          "risk_factors": [
+            "gateway_module",
+            "19_dependents",
+            "high_risk_modules",
+            "high_py2ism_count"
+          ],
+          "py2_ism_count": 24,
+          "lines_of_code": 450,
+          "estimated_effort_hours": 21.0,
+          "automatable_percent": 57.5,
+          "languages": [
+            "python"
+          ]
+        },
+        {
+          "unit_id": "CU-02-core-helpers",
+          "name": "core-helpers",
+          "description": "Core helper modules - string processing, config, itertools",
+          "modules": [
+            "src/core/string_helpers.py",
+            "src/core/config_loader.py",
+            "src/core/itertools_helpers.py",
+            "src/compat.py"
+          ],
+          "dependencies": [],
+          "risk_score": "high",
+          "risk_factors": [
+            "high_risk_modules",
+            "high_py2ism_count"
+          ],
+          "py2_ism_count": 21,
+          "lines_of_code": 380,
+          "estimated_effort_hours": 18.1,
+          "automatable_percent": 31.4,
+          "languages": [
+            "python"
+          ]
+        }
+      ]
+    },
+    {
+      "wave": 2,
+      "description": "Protocol and data processing layers - depend on core",
+      "units": [
+        {
+          "unit_id": "CU-03-io-protocols",
+          "name": "io-protocols",
+          "description": "I/O protocol clients - MODBUS, OPC-UA, Serial, MQTT",
+          "modules": [
+            "src/io_protocols/modbus_client.py",
+            "src/io_protocols/opcua_client.py",
+            "src/io_protocols/serial_sensor.py",
+            "src/io_protocols/mqtt_listener.py"
+          ],
+          "dependencies": [
+            "core-foundation"
+          ],
+          "risk_score": "critical",
+          "risk_factors": [
+            "critical_risk_modules",
+            "high_py2ism_count"
+          ],
+          "py2_ism_count": 26,
+          "lines_of_code": 810,
+          "estimated_effort_hours": 29.2,
+          "automatable_percent": 22.3,
+          "languages": [
+            "python"
+          ]
+        },
+        {
+          "unit_id": "CU-04-data-processing-core",
+          "name": "data-processing-core",
+          "description": "Core data processing - mainframe, CSV, XML parsers",
+          "modules": [
+            "src/data_processing/mainframe_parser.py",
+            "src/data_processing/csv_processor.py",
+            "src/data_processing/xml_transformer.py"
+          ],
+          "dependencies": [
+            "core-foundation",
+            "core-helpers"
+          ],
+          "risk_score": "critical",
+          "risk_factors": [
+            "critical_risk_modules",
+            "high_py2ism_count"
+          ],
+          "py2_ism_count": 21,
+          "lines_of_code": 590,
+          "estimated_effort_hours": 22.3,
+          "automatable_percent": 31.4,
+          "languages": [
+            "python"
+          ]
+        },
+        {
+          "unit_id": "CU-05-data-processing-secondary",
+          "name": "data-processing-secondary",
+          "description": "Secondary data processing - JSON, text, log handlers",
+          "modules": [
+            "src/data_processing/json_handler.py",
+            "src/data_processing/text_analyzer.py",
+            "src/data_processing/log_parser.py"
+          ],
+          "dependencies": [
+            "core-foundation",
+            "core-helpers"
+          ],
+          "risk_score": "high",
+          "risk_factors": [
+            "high_risk_modules"
+          ],
+          "py2_ism_count": 17,
+          "lines_of_code": 410,
+          "estimated_effort_hours": 16.7,
+          "automatable_percent": 23.5,
+          "languages": [
+            "python"
+          ]
+        }
+      ]
+    },
+    {
+      "wave": 3,
+      "description": "Storage and reporting layers - depend on core",
+      "units": [
+        {
+          "unit_id": "CU-06-storage",
+          "name": "storage",
+          "description": "Storage layer - database, file store, cache",
+          "modules": [
+            "src/storage/database.py",
+            "src/storage/file_store.py",
+            "src/storage/cache.py"
+          ],
+          "dependencies": [
+            "core-foundation"
+          ],
+          "risk_score": "critical",
+          "risk_factors": [
+            "critical_risk_modules"
+          ],
+          "py2_ism_count": 14,
+          "lines_of_code": 480,
+          "estimated_effort_hours": 16.6,
+          "automatable_percent": 28.6,
+          "languages": [
+            "python"
+          ]
+        },
+        {
+          "unit_id": "CU-07-reporting",
+          "name": "reporting",
+          "description": "Reporting layer - report generator, email, dashboard",
+          "modules": [
+            "src/reporting/report_generator.py",
+            "src/reporting/email_sender.py",
+            "src/reporting/web_dashboard.py"
+          ],
+          "dependencies": [
+            "core-foundation",
+            "core-helpers"
+          ],
+          "risk_score": "high",
+          "risk_factors": [
+            "high_risk_modules"
+          ],
+          "py2_ism_count": 20,
+          "lines_of_code": 540,
+          "estimated_effort_hours": 20.8,
+          "automatable_percent": 44.0,
+          "languages": [
+            "python"
+          ]
+        }
+      ]
+    },
+    {
+      "wave": 4,
+      "description": "Automation layer - orchestration and plugins",
+      "units": [
+        {
+          "unit_id": "CU-08-automation",
+          "name": "automation",
+          "description": "Automation layer - scheduler, script runner, plugin loader",
+          "modules": [
+            "src/automation/scheduler.py",
+            "src/automation/script_runner.py",
+            "src/automation/plugin_loader.py"
+          ],
+          "dependencies": [
+            "core-foundation"
+          ],
+          "risk_score": "critical",
+          "risk_factors": [
+            "critical_risk_modules"
+          ],
+          "py2_ism_count": 11,
+          "lines_of_code": 540,
+          "estimated_effort_hours": 16.3,
+          "automatable_percent": 41.8,
+          "languages": [
+            "python"
+          ]
+        }
+      ]
+    },
+    {
+      "wave": 5,
+      "description": "Package structure and tests - integration layer",
+      "units": [
+        {
+          "unit_id": "CU-09-package-init",
+          "name": "package-init",
+          "description": "Package __init__.py files",
+          "modules": [
+            "src/__init__.py",
+            "src/core/__init__.py",
+            "src/io_protocols/__init__.py",
+            "src/data_processing/__init__.py",
+            "src/storage/__init__.py",
+            "src/reporting/__init__.py",
+            "src/automation/__init__.py"
+          ],
+          "dependencies": [
+            "core-foundation",
+            "io-protocols",
+            "data-processing-core",
+            "data-processing-secondary",
+            "storage",
+            "reporting",
+            "automation"
+          ],
+          "risk_score": "low",
+          "risk_factors": [],
+          "py2_ism_count": 0,
+          "lines_of_code": 35,
+          "estimated_effort_hours": 0.7,
+          "automatable_percent": 100,
+          "languages": [
+            "python"
+          ]
+        },
+        {
+          "unit_id": "CU-10-tests",
+          "name": "tests",
+          "description": "Test suite",
+          "modules": [
+            "tests/test_types.py",
+            "tests/test_utils.py",
+            "tests/test_config_loader.py",
+            "tests/test_mainframe_parser.py",
+            "tests/test_database.py"
+          ],
+          "dependencies": [
+            "core-foundation",
+            "core-helpers",
+            "data-processing-core",
+            "storage"
+          ],
+          "risk_score": "low",
+          "risk_factors": [],
+          "py2_ism_count": 0,
+          "lines_of_code": 500,
+          "estimated_effort_hours": 10.0,
+          "automatable_percent": 100,
+          "languages": [
+            "python"
+          ]
+        }
+      ]
+    },
+    {
+      "wave": 6,
+      "description": "Utility scripts - independent tooling",
+      "units": [
+        {
+          "unit_id": "CU-11-scripts",
+          "name": "scripts",
+          "description": "Utility scripts - lint, test runner, docs generator",
+          "modules": [
+            "scripts/lint.py",
+            "scripts/test_runner.py",
+            "scripts/docs_generator.py"
+          ],
+          "dependencies": [],
+          "risk_score": "medium",
+          "risk_factors": [],
+          "py2_ism_count": 0,
+          "lines_of_code": 160,
+          "estimated_effort_hours": 3.2,
+          "automatable_percent": 100,
+          "languages": [
+            "python"
+          ]
+        }
+      ]
+    }
+  ],
+  "critical_path": {
+    "length": 6,
+    "units": [
+      "core-foundation",
+      "io-protocols",
+      "storage",
+      "reporting",
+      "automation",
+      "package-init"
+    ],
+    "estimated_hours": 104.6,
+    "estimated_days": 13.1
+  },
+  "gateway_units": [
+    {
+      "name": "core-foundation",
+      "fan_in": 19,
+      "wave": 1,
+      "risk_score": "high",
+      "notes": "Contains src/core/exceptions.py (19 dependents). Must be converted first with comprehensive testing."
+    }
+  ],
+  "summary": {
+    "total_py2_isms": 154,
+    "total_loc": 4895,
+    "total_effort_hours": 174.9,
+    "avg_automatable_percent": 52.8
+  }
+}

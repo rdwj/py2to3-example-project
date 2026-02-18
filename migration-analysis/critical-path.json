@@ -1,0 +1,228 @@
+{
+  "timestamp": "2026-02-18T08:35:57.986571Z",
+  "target_version": "3.12",
+  "critical_path": {
+    "description": "The longest dependency chain through the codebase. All units on this path must be completed sequentially.",
+    "total_units": 6,
+    "total_estimated_hours": 104.6,
+    "total_estimated_days": 13.1,
+    "units": [
+      {
+        "sequence": 1,
+        "name": "core-foundation",
+        "description": "Core foundation modules - gateway exceptions and shared types",
+        "modules": [
+          "src/core/exceptions.py",
+          "src/core/types.py",
+          "src/core/utils.py"
+        ],
+        "dependencies": [],
+        "risk_score": "high",
+        "estimated_effort_hours": 21.0,
+        "cumulative_hours": 21.0,
+        "blockers": [],
+        "notes": [
+          "GATEWAY MODULE: 19 dependents. Must complete before any Wave 2+ work.",
+          "Contains exception hierarchy with StandardError (removed in Py3)",
+          "Requires comprehensive testing before proceeding"
+        ]
+      },
+      {
+        "sequence": 2,
+        "name": "io-protocols",
+        "description": "I/O protocol clients - MODBUS, OPC-UA, Serial, MQTT",
+        "modules": [
+          "src/io_protocols/modbus_client.py",
+          "src/io_protocols/opcua_client.py",
+          "src/io_protocols/serial_sensor.py",
+          "src/io_protocols/mqtt_listener.py"
+        ],
+        "dependencies": [
+          "core-foundation"
+        ],
+        "risk_score": "critical",
+        "estimated_effort_hours": 29.2,
+        "cumulative_hours": 50.2,
+        "blockers": [
+          "core-foundation"
+        ],
+        "notes": [
+          "Real-time binary protocols - critical for production",
+          "Thread and Queue module renames"
+        ]
+      },
+      {
+        "sequence": 3,
+        "name": "storage",
+        "description": "Storage layer - database, file store, cache",
+        "modules": [
+          "src/storage/database.py",
+          "src/storage/file_store.py",
+          "src/storage/cache.py"
+        ],
+        "dependencies": [
+          "core-foundation"
+        ],
+        "risk_score": "critical",
+        "estimated_effort_hours": 16.6,
+        "cumulative_hours": 66.8,
+        "blockers": [
+          "core-foundation"
+        ],
+        "notes": [
+          "Data persistence layer - pickle serialization issues",
+          "Binary data handling requires careful testing"
+        ]
+      },
+      {
+        "sequence": 4,
+        "name": "reporting",
+        "description": "Reporting layer - report generator, email, dashboard",
+        "modules": [
+          "src/reporting/report_generator.py",
+          "src/reporting/email_sender.py",
+          "src/reporting/web_dashboard.py"
+        ],
+        "dependencies": [
+          "core-foundation",
+          "core-helpers"
+        ],
+        "risk_score": "high",
+        "estimated_effort_hours": 20.8,
+        "cumulative_hours": 87.6,
+        "blockers": [
+          "core-foundation",
+          "core-helpers"
+        ],
+        "notes": [
+          "String encoding in email and web output"
+        ]
+      },
+      {
+        "sequence": 5,
+        "name": "automation",
+        "description": "Automation layer - scheduler, script runner, plugin loader",
+        "modules": [
+          "src/automation/scheduler.py",
+          "src/automation/script_runner.py",
+          "src/automation/plugin_loader.py"
+        ],
+        "dependencies": [
+          "core-foundation"
+        ],
+        "risk_score": "critical",
+        "estimated_effort_hours": 16.3,
+        "cumulative_hours": 103.89999999999999,
+        "blockers": [
+          "core-foundation"
+        ],
+        "notes": [
+          "Plugin system - dynamic imports and metaclasses"
+        ]
+      },
+      {
+        "sequence": 6,
+        "name": "package-init",
+        "description": "Package __init__.py files",
+        "modules": [
+          "src/__init__.py",
+          "src/core/__init__.py",
+          "src/io_protocols/__init__.py",
+          "src/data_processing/__init__.py",
+          "src/storage/__init__.py",
+          "src/reporting/__init__.py",
+          "src/automation/__init__.py"
+        ],
+        "dependencies": [
+          "core-foundation",
+          "io-protocols",
+          "data-processing-core",
+          "data-processing-secondary",
+          "storage",
+          "reporting",
+          "automation"
+        ],
+        "risk_score": "low",
+        "estimated_effort_hours": 0.7,
+        "cumulative_hours": 104.6,
+        "blockers": [
+          "core-foundation",
+          "io-protocols",
+          "data-processing-core",
+          "data-processing-secondary",
+          "storage",
+          "reporting",
+          "automation"
+        ],
+        "notes": [
+          "Integration layer - verifies all imports work"
+        ]
+      }
+    ]
+  },
+  "milestones": [
+    {
+      "milestone": 1,
+      "unit": "core-foundation",
+      "cumulative_hours": 21.0,
+      "cumulative_days": 2.6,
+      "description": "Complete core-foundation conversion and testing"
+    },
+    {
+      "milestone": 2,
+      "unit": "io-protocols",
+      "cumulative_hours": 50.2,
+      "cumulative_days": 6.3,
+      "description": "Complete io-protocols conversion and testing"
+    },
+    {
+      "milestone": 3,
+      "unit": "storage",
+      "cumulative_hours": 66.8,
+      "cumulative_days": 8.4,
+      "description": "Complete storage conversion and testing"
+    },
+    {
+      "milestone": 4,
+      "unit": "reporting",
+      "cumulative_hours": 87.6,
+      "cumulative_days": 11.0,
+      "description": "Complete reporting conversion and testing"
+    },
+    {
+      "milestone": 5,
+      "unit": "automation",
+      "cumulative_hours": 103.9,
+      "cumulative_days": 13.0,
+      "description": "Complete automation conversion and testing"
+    },
+    {
+      "milestone": 6,
+      "unit": "package-init",
+      "cumulative_hours": 104.6,
+      "cumulative_days": 13.1,
+      "description": "Complete package-init conversion and testing"
+    }
+  ],
+  "parallelization_opportunities": {
+    "wave_2": {
+      "units": [
+        "io-protocols",
+        "data-processing-core",
+        "data-processing-secondary"
+      ],
+      "description": "These units can run in parallel after Wave 1 completes",
+      "potential_time_savings_hours": 15.2,
+      "note": "Not on critical path but can accelerate overall migration"
+    },
+    "wave_3": {
+      "units": [
+        "storage",
+        "reporting"
+      ],
+      "description": "These units can run in parallel",
+      "potential_time_savings_hours": 8.4,
+      "note": "Storage IS on critical path, but reporting can run parallel"
+    }
+  }
+}

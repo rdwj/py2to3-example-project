@@ -12,12 +12,13 @@ The mainframe job ERPX400 transmits via Connect:Direct every night at
 02:00 UTC.  Files land in /opt/platform/incoming/mainframe/ and are
 picked up by the batch scheduler.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import struct
 import codecs
 import time
-import cPickle
+import pickle
 
 from core.types import LargeCounter
 from core.exceptions import ParseError, DataError
@@ -38,7 +39,7 @@ _COMP3_NEGATIVE = (0x0D, 0x0B)
 
 # Output file permissions -- the batch scheduler runs as a service
 # account and the reporting subsystem needs group read access.
-OUTPUT_FILE_MODE = 0755
+OUTPUT_FILE_MODE = 0o755
 
 # Maximum record length we will accept before assuming corruption
 MAX_RECORD_LENGTH = 32768
@@ -81,7 +82,7 @@ class CopybookLayout(object):
 
     def get_field(self, name):
         """Look up a field definition by name."""
-        if not self._field_index.has_key(name):
+        if name not in self._field_index:
             raise ParseError("Unknown field '%s' in layout '%s'" % (name, self.layout_name))
         return self._field_index[name]
 
@@ -112,7 +113,7 @@ class MainframeRecord(object):
         self._parse_errors = []
 
     def get(self, field_name, default=None):
-        if self._parsed_fields.has_key(field_name):
+        if field_name in self._parsed_fields:
             return self._parsed_fields[field_name]
         return default
 
@@ -152,20 +153,20 @@ def decode_comp3(raw_bytes):
     if not raw_bytes:
         raise ParseError("Empty COMP-3 field")
 
-    result = 0L
+    result = 0
     byte_array = [ord(b) for b in raw_bytes]
 
     # Process all bytes except the last -- each byte has two BCD digits
-    for i in xrange(len(byte_array) - 1):
+    for i in range(len(byte_array) - 1):
         high_nibble = (byte_array[i] >> 4) & 0x0F
         low_nibble = byte_array[i] & 0x0F
-        result = result * 100L + long(high_nibble * 10 + low_nibble)
+        result = result * 100 + int(high_nibble * 10 + low_nibble)
 
     # Last byte: high nibble is the final digit, low nibble is the sign
     last_byte = byte_array[-1]
     final_digit = (last_byte >> 4) & 0x0F
     sign_nibble = last_byte & 0x0F
-    result = result * 10L + long(final_digit)
+    result = result * 10 + int(final_digit)
 
     if sign_nibble in _COMP3_NEGATIVE:
         result = -result
@@ -198,20 +199,20 @@ def decode_zoned_decimal(raw_bytes):
     the zone (0xF for digits, 0xC/0xD for the sign on the last byte).
     """
     if not raw_bytes:
-        return 0L
+        return 0
 
-    result = 0L
+    result = 0
     byte_array = [ord(b) for b in raw_bytes]
 
-    for i in xrange(len(byte_array) - 1):
+    for i in range(len(byte_array) - 1):
         digit = byte_array[i] & 0x0F
-        result = result * 10L + long(digit)
+        result = result * 10 + int(digit)
 
     # Last byte carries the sign in the zone nibble
     last_byte = byte_array[-1]
     digit = last_byte & 0x0F
     zone = (last_byte >> 4) & 0x0F
-    result = result * 10L + long(digit)
+    result = result * 10 + int(digit)
 
     if zone == 0x0D:
         result = -result
@@ -238,33 +239,33 @@ class MainframeParser(object):
     """
 
     # Account number mask for routing -- high 4 bits encode the region
-    ACCOUNT_REGION_MASK = 0xFFFFFFFFL
+    ACCOUNT_REGION_MASK = 0xFFFFFFFF
 
     def __init__(self, layout, cache_dir=None):
         self._layout = layout
         self._cache_dir = cache_dir
-        self._record_count = LargeCounter(0L)
-        self._error_count = LargeCounter(0L)
+        self._record_count = LargeCounter(0)
+        self._error_count = LargeCounter(0)
         self._config = load_platform_config()
 
     def parse_file(self, file_path):
         """Parse all records from a mainframe batch file.
 
-        Uses the ``file()`` builtin to open in binary mode.  The file is
-        read as raw bytes, then each record is sliced according to the
-        copybook layout and decoded from EBCDIC.
+        Opens the file in binary mode.  The file is read as raw bytes,
+        then each record is sliced according to the copybook layout and
+        decoded from EBCDIC.
         """
         # Check for a cached parse result first
         cached = self._load_cache(file_path)
         if cached is not None:
-            print "Loaded %d cached records for %s" % (len(cached), file_path)
+            print("Loaded %d cached records for %s" % (len(cached), file_path))
             return cached
 
-        print "Parsing mainframe file: %s" % file_path
+        print("Parsing mainframe file: %s" % file_path)
         start_time = time.time()
         records = []
 
-        f = file(file_path, "rb")
+        f = open(file_path, "rb")
         try:
             record_num = 0
             while True:
@@ -272,9 +273,9 @@ class MainframeParser(object):
                 if not raw:
                     break
                 if len(raw) < self._layout.record_length:
-                    print "WARNING: Truncated record #%d (%d bytes, expected %d)" % (
+                    print("WARNING: Truncated record #%d (%d bytes, expected %d)" % (
                         record_num, len(raw), self._layout.record_length,
-                    )
+                    ))
                     self._error_count.increment()
                     break
 
@@ -284,14 +285,14 @@ class MainframeParser(object):
                 self._record_count.increment()
 
                 if record_num % 10000 == 0:
-                    print "  ... parsed %d records" % record_num
+                    print("  ... parsed %d records" % record_num)
         finally:
             f.close()
 
         elapsed = time.time() - start_time
-        print "Parsed %d records in %.2f seconds (%d errors)" % (
-            len(records), elapsed, long(self._error_count.value),
-        )
+        print("Parsed %d records in %.2f seconds (%d errors)" % (
+            len(records), elapsed, int(self._error_count.value),
+        ))
 
         self._save_cache(file_path, records)
         self._write_summary(file_path, records)
@@ -309,8 +310,7 @@ class MainframeParser(object):
             ftype = field_def["type"]
             decimals = field_def["decimal_places"]
 
-            # Fixed-width byte slicing -- str is bytes in Python 2 so
-            # this extracts a byte substring directly
+            # Fixed-width byte slicing -- extracts a byte substring
             field_bytes = raw_bytes[offset:offset + length]
 
             try:
@@ -322,7 +322,7 @@ class MainframeParser(object):
                     if decimals > 0:
                         value = float(raw_value) / (10 ** decimals)
                     else:
-                        value = long(raw_value)
+                        value = int(raw_value)
                 elif ftype == CopybookLayout.FIELD_BINARY:
                     value = decode_binary_field(field_bytes)
                 elif ftype == CopybookLayout.FIELD_ZONED:
@@ -330,21 +330,21 @@ class MainframeParser(object):
                     if decimals > 0:
                         value = float(raw_value) / (10 ** decimals)
                     else:
-                        value = long(raw_value)
+                        value = int(raw_value)
                 else:
                     value = field_bytes
                     record.add_error("Unknown field type '%s' for %s" % (ftype, name))
 
                 record.set_field(name, value)
 
-            except Exception, e:
+            except Exception as e:
                 record.add_error("Error parsing field %s: %s" % (name, str(e)))
                 self._error_count.increment()
 
         # Post-parse: mask account numbers for region routing
         account_raw = record.get("ACCOUNT-NO")
-        if account_raw is not None and isinstance(account_raw, (int, long)):
-            region_code = long(account_raw) & self.ACCOUNT_REGION_MASK
+        if account_raw is not None and isinstance(account_raw, int):
+            region_code = int(account_raw) & self.ACCOUNT_REGION_MASK
             record.set_field("_REGION_CODE", region_code)
 
         return record
@@ -371,14 +371,14 @@ class MainframeParser(object):
         if cache_file is None or not os.path.exists(cache_file):
             return None
         try:
-            f = file(cache_file, "rb")
+            f = open(cache_file, "rb")
             try:
-                data = cPickle.load(f)
+                data = pickle.load(f)
             finally:
                 f.close()
             return data
-        except (cPickle.UnpicklingError, IOError, EOFError), e:
-            print "Cache read failed for %s: %s" % (file_path, str(e))
+        except (pickle.UnpicklingError, IOError, EOFError) as e:
+            print("Cache read failed for %s: %s" % (file_path, str(e)))
             return None
 
     def _save_cache(self, file_path, records):
@@ -387,15 +387,15 @@ class MainframeParser(object):
         if cache_file is None:
             return
         try:
-            f = file(cache_file, "wb")
+            f = open(cache_file, "wb")
             try:
-                cPickle.dump(records, f, cPickle.HIGHEST_PROTOCOL)
+                pickle.dump(records, f, pickle.HIGHEST_PROTOCOL)
             finally:
                 f.close()
             os.chmod(cache_file, OUTPUT_FILE_MODE)
-            print "Cached %d records to %s" % (len(records), cache_file)
-        except (IOError, cPickle.PicklingError), e:
-            print "Cache write failed: %s" % str(e)
+            print("Cached %d records to %s" % (len(records), cache_file))
+        except (IOError, pickle.PicklingError) as e:
+            print("Cache write failed: %s" % str(e))
 
     # ---------------------------------------------------------------
     # Summary output
@@ -403,18 +403,18 @@ class MainframeParser(object):
 
     def _write_summary(self, source_path, records):
         """Write a parse summary file alongside the input."""
-        output_dir = os.getcwdu()
+        output_dir = os.getcwd()
         summary_path = os.path.join(
             output_dir,
             os.path.basename(source_path) + ".summary.txt",
         )
         try:
-            f = file(summary_path, "w")
+            f = open(summary_path, "w")
             try:
                 f.write("Source: %s\n" % source_path)
                 f.write("Layout: %s\n" % self._layout.layout_name)
                 f.write("Records parsed: %d\n" % len(records))
-                f.write("Total errors: %d\n" % long(self._error_count.value))
+                f.write("Total errors: %d\n" % int(self._error_count.value))
 
                 error_records = [r for r in records if r.has_errors()]
                 f.write("Records with errors: %d\n" % len(error_records))
@@ -424,15 +424,15 @@ class MainframeParser(object):
             finally:
                 f.close()
             os.chmod(summary_path, OUTPUT_FILE_MODE)
-        except IOError, e:
-            print "Could not write summary: %s" % str(e)
+        except IOError as e:
+            print("Could not write summary: %s" % str(e))
 
     # ---------------------------------------------------------------
     # Statistics
     # ---------------------------------------------------------------
 
     def records_parsed(self):
-        return long(self._record_count.value)
+        return int(self._record_count.value)
 
     def errors_encountered(self):
-        return long(self._error_count.value)
+        return int(self._error_count.value)

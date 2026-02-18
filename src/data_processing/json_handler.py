@@ -12,12 +12,13 @@ The handler also provides a fallback serialization path using cPickle
 for internal record caching when JSON round-trip fidelity is not
 required (e.g. temporary inter-process data passing via shared NFS).
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import json
 import time
-import cPickle
-from cStringIO import StringIO
+import pickle
+from io import BytesIO as StringIO
 
 from core.exceptions import DataError, ParseError
 from core.config_loader import load_platform_config
@@ -61,7 +62,7 @@ class JsonRecordSet(object):
         return iter(self.records)
 
     def get_metadata(self, key, default=None):
-        if self.metadata.has_key(key):
+        if key in self.metadata:
             return self.metadata[key]
         return default
 
@@ -131,8 +132,8 @@ class JsonHandler(object):
         constructor.  In Python 3 this must be ``str`` (text).
         """
         try:
-            data = json.loads(raw_bytes, encoding=self._default_encoding)
-        except (ValueError, TypeError), e:
+            data = json.loads(raw_bytes)
+        except (ValueError, TypeError) as e:
             raise ParseError("JSON parse error from %s: %s" % (source_id, str(e)))
 
         return self._build_record_set(data, source_id)
@@ -167,7 +168,6 @@ class JsonHandler(object):
 
         kwargs = {
             "ensure_ascii": False,
-            "encoding": self._default_encoding,
         }
         if pretty:
             kwargs["indent"] = 2
@@ -175,8 +175,8 @@ class JsonHandler(object):
 
         json_str = json.dumps(data, **kwargs)
 
-        # json.dumps with ensure_ascii=False may return unicode in Python 2
-        if isinstance(json_str, unicode):
+        # json.dumps with ensure_ascii=False may return str in Python 3
+        if isinstance(json_str, str):
             json_str = json_str.encode(self._default_encoding)
 
         f = open(file_path, "wb")
@@ -186,18 +186,17 @@ class JsonHandler(object):
             f.close()
 
     def dump_to_stream(self, record_set, pretty=False):
-        """Serialize a JsonRecordSet to a cStringIO buffer and return it."""
+        """Serialize a JsonRecordSet to a BytesIO buffer and return it."""
         data = record_set.to_dict()
 
         kwargs = {
             "ensure_ascii": False,
-            "encoding": self._default_encoding,
         }
         if pretty:
             kwargs["indent"] = 2
 
         json_str = json.dumps(data, **kwargs)
-        if isinstance(json_str, unicode):
+        if isinstance(json_str, str):
             json_str = json_str.encode(self._default_encoding)
 
         buf = StringIO()
@@ -210,22 +209,22 @@ class JsonHandler(object):
     # ---------------------------------------------------------------
 
     def pickle_record_set(self, record_set, file_path):
-        """Serialize a JsonRecordSet using cPickle for fast inter-process
+        """Serialize a JsonRecordSet using pickle for fast inter-process
         caching.  This is used for the temporary staging area on the
         shared NFS mount where the batch processor and the real-time
         engine exchange data.
         """
         f = open(file_path, "wb")
         try:
-            cPickle.dump(record_set, f, cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(record_set, f, pickle.HIGHEST_PROTOCOL)
         finally:
             f.close()
 
     def unpickle_record_set(self, file_path):
-        """Deserialize a cPickle'd JsonRecordSet from the staging area."""
+        """Deserialize a pickle'd JsonRecordSet from the staging area."""
         f = open(file_path, "rb")
         try:
-            data = cPickle.load(f)
+            data = pickle.load(f)
         finally:
             f.close()
 
@@ -247,7 +246,7 @@ class JsonHandler(object):
         for idx, record in enumerate(record_set.iter_records()):
             missing = []
             for field in required_fields:
-                if not record.has_key(field):
+                if field not in record:
                     missing.append(field)
             if missing:
                 self._validation_errors.append(
@@ -272,13 +271,13 @@ class JsonHandler(object):
 
         for record in record_set.iter_records():
             new_record = {}
-            for key, value in record.iteritems():
+            for key, value in record.items():
                 new_key = field_map.get(key, key)
 
-                if value_transforms.has_key(new_key):
+                if new_key in value_transforms:
                     try:
                         value = value_transforms[new_key](value)
-                    except Exception, e:
+                    except Exception as e:
                         self._validation_errors.append(
                             "Transform error for %s: %s" % (new_key, str(e))
                         )
@@ -301,7 +300,7 @@ class JsonHandler(object):
                 record_set.add_record(item)
         elif isinstance(data, dict):
             # Extract metadata from envelope
-            for key in data.iterkeys():
+            for key in data.keys():
                 if key == "records":
                     continue
                 record_set.set_metadata(key, data[key])

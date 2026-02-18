@@ -12,12 +12,13 @@ wrapper that decodes rows after reading.
 The processor also maps historian-specific column names to the platform's
 internal field names via a configurable CsvFieldMapper.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import csv
 import codecs
 
-from StringIO import StringIO
+from io import StringIO
 
 from core.exceptions import DataError, EncodingError, ParseError
 from core.string_helpers import safe_decode, safe_encode, detect_encoding
@@ -68,9 +69,9 @@ def unicode_csv_writer(file_obj, encoding="utf-8", dialect=csv.excel, **kwargs):
         def writerow(self, row):
             encoded_row = []
             for cell in row:
-                if isinstance(cell, unicode):
+                if isinstance(cell, str):
                     encoded_row.append(cell.encode(encoding, "replace"))
-                elif isinstance(cell, str):
+                elif isinstance(cell, bytes):
                     encoded_row.append(cell)
                 else:
                     encoded_row.append(str(cell))
@@ -117,11 +118,11 @@ class CsvFieldMapper(object):
         """
         result = []
         for col in header_row:
-            if isinstance(col, unicode):
+            if isinstance(col, str):
                 key = col.lower().strip()
             else:
                 key = col.decode("utf-8", "replace").lower().strip()
-            if self._mappings.has_key(key):
+            if key in self._mappings:
                 result.append(self._mappings[key])
             else:
                 result.append(col)
@@ -129,7 +130,7 @@ class CsvFieldMapper(object):
 
     def transform_value(self, internal_name, raw_value):
         """Apply the registered transform function for a field, if any."""
-        if self._transforms.has_key(internal_name):
+        if internal_name in self._transforms:
             return self._transforms[internal_name](raw_value)
         return raw_value
 
@@ -178,7 +179,7 @@ class CsvProcessor(object):
                     record = self._build_record(header, row, row_num)
                     records.append(record)
                     self._processed_count += 1
-                except DataError, e:
+                except DataError as e:
                     self._error_count += 1
         finally:
             f.close()
@@ -188,11 +189,11 @@ class CsvProcessor(object):
     def read_csv_string(self, csv_text, encoding="utf-8", has_header=True):
         """Parse CSV data from an in-memory string.
 
-        Uses StringIO to wrap the text for the csv reader.  The input
-        must be a byte string (str) since the csv module requires it.
+        Uses StringIO to wrap the text for the csv reader.  In Python 3,
+        StringIO expects text (str), not bytes.
         """
-        if isinstance(csv_text, unicode):
-            csv_text = csv_text.encode(encoding)
+        if isinstance(csv_text, str):
+            csv_text = csv_text
 
         buf = StringIO(csv_text)
         reader = unicode_csv_reader(buf, encoding=encoding)
@@ -208,7 +209,7 @@ class CsvProcessor(object):
             try:
                 record = self._build_record(header, row, row_num)
                 records.append(record)
-            except DataError, e:
+            except DataError as e:
                 self._error_count += 1
 
         return records
@@ -233,9 +234,9 @@ class CsvProcessor(object):
                 cells = []
                 for name in field_names:
                     value = record.get(name, u"")
-                    if isinstance(value, unicode):
+                    if isinstance(value, str):
                         cells.append(value.encode(encoding, "replace"))
-                    elif isinstance(value, str):
+                    elif isinstance(value, bytes):
                         cells.append(value)
                     else:
                         cells.append(str(value))

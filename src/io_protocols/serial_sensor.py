@@ -3,9 +3,11 @@
 RS-485 serial sensor reader for the Legacy Industrial Data Platform.
 Packet format: [SYNC 0xAA] [LEN] [ID_HI] [ID_LO] [TYPE] [PAYLOAD...] [CHK]
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import struct
 import time
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 from src.core.types import DataPoint, SensorReading, get_sensor_class
 from src.core.exceptions import SerialError, ParseError
@@ -39,8 +41,8 @@ class SensorPacket(object):
                                 self.payload, self.timestamp)
             return self._reading
         except KeyError:
-            print "SERIAL: unknown type 0x%02X sensor %04X" % (
-                self.sensor_type, self.sensor_id)
+            print("SERIAL: unknown type 0x%02X sensor %04X" % (
+                self.sensor_type, self.sensor_id))
             return None
 
     def as_data_point(self):
@@ -59,8 +61,7 @@ class SensorPacket(object):
 
 
 class SensorPacketStream(object):
-    """Iterator yielding SensorPackets from a raw byte source.
-    Uses .next() method (Py2 iterator protocol; Py3 uses __next__)."""
+    """Iterator yielding SensorPackets from a raw byte source."""
 
     def __init__(self, source, strict=False):
         self._source = source
@@ -72,7 +73,7 @@ class SensorPacketStream(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         while True:
             b = self._source.read(1)
             if not b:
@@ -100,12 +101,12 @@ class SensorPacketStream(object):
                 if self._strict:
                     raise ParseError("Checksum mismatch sensor 0x%04X: "
                                      "exp 0x%02X got 0x%02X" % (sid, chk, rxchk))
-                print "SERIAL: chksum error 0x%04X (exp %02X got %02X)" % (
-                    sid, chk, rxchk)
+                print("SERIAL: chksum error 0x%04X (exp %02X got %02X)" % (
+                    sid, chk, rxchk))
                 continue
             self._read += 1
-            print "SERIAL: pkt #%d sensor 0x%04X (%s) %d bytes" % (
-                self._read, sid, _TYPE_NAMES.get(stype, "?"), len(payload))
+            print("SERIAL: pkt #%d sensor 0x%04X (%s) %d bytes" % (
+                self._read, sid, _TYPE_NAMES.get(stype, "?"), len(payload)))
             return SensorPacket(sid, stype, payload)
 
 
@@ -121,11 +122,11 @@ class SerialSensorReader(object):
         self._running = False
 
     def open(self):
-        """Open serial port.  Returns raw str in Py2 -- no encoding."""
-        print "SERIAL: opening %s at %d baud" % (self.port_path, self.baud_rate)
+        """Open serial port in binary mode."""
+        print("SERIAL: opening %s at %d baud" % (self.port_path, self.baud_rate))
         try:
             self._port = open(self.port_path, "rb")
-        except IOError, e:
+        except IOError as e:
             raise SerialError("Failed to open %s: %s" % (self.port_path, e))
 
     def close(self):
@@ -141,7 +142,7 @@ class SerialSensorReader(object):
     def read_one_packet(self):
         if not self._port:
             raise SerialError("Port not open")
-        pkt = SensorPacketStream(self._port).next()
+        pkt = next(SensorPacketStream(self._port))
         self._track(pkt)
         return pkt
 
@@ -162,14 +163,14 @@ class SerialSensorReader(object):
                 break
 
     def dump_registry(self):
-        """Uses dict.iteritems() -- lazy in Py2, removed in Py3."""
-        print "SERIAL: --- Registry ---"
-        for sid, info in self._registry.iteritems():
-            print "  0x%04X: tag=%s n=%d" % (sid, info["tag"], info["count"])
+        """Display sensor registry."""
+        print("SERIAL: --- Registry ---")
+        for sid, info in self._registry.items():
+            print("  0x%04X: tag=%s n=%d" % (sid, info["tag"], info["count"]))
 
     def _track(self, pkt):
         sid = pkt.sensor_id
-        if not self._registry.has_key(sid):
+        if sid not in self._registry:
             self._registry[sid] = {"tag": "SENSOR_%04X" % sid,
                                     "desc": "auto", "last": None, "count": 0}
         self._registry[sid]["last"] = pkt
@@ -177,6 +178,6 @@ class SerialSensorReader(object):
 
     def _log_summary(self):
         total = 0
-        for sid, info in self._registry.iteritems():
+        for sid, info in self._registry.items():
             total += info["count"]
-        print "SERIAL: %d sensors, %d reads" % (len(self._registry), total)
+        print("SERIAL: %d sensors, %d reads" % (len(self._registry), total))

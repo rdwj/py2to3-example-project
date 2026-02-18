@@ -3,12 +3,14 @@
 MQTT-like message listener for the Legacy Industrial Data Platform.
 Simplified MQTT v3.1.1 over raw TCP for IoT sensor gateway telemetry.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import socket
 import struct
 import time
 import json
-import Queue
-import thread
+import queue
+import _thread
 
 from src.core.types import DataPoint
 from src.core.exceptions import MqttError
@@ -38,16 +40,14 @@ class MqttMessage(object):
         self._json = None
 
     def json_payload(self):
-        """Decode JSON payload.  Uses ``json.loads()`` with the
-        ``encoding`` parameter, which tells the Py2 json module how
-        to decode byte strings.  This parameter was removed in Py3."""
+        """Decode JSON payload."""
         if self._json is not None:
             return self._json
         try:
-            self._json = json.loads(self.payload, encoding="utf-8")
+            self._json = json.loads(self.payload)
             return self._json
-        except (ValueError, TypeError), e:
-            print "MQTT: JSON error on %s -- %s" % (self.topic, e)
+        except (ValueError, TypeError) as e:
+            print("MQTT: JSON error on %s -- %s" % (self.topic, e))
             return None
 
     def as_data_point(self, vk="value", qk="quality"):
@@ -61,21 +61,21 @@ class MqttMessage(object):
 
 
 class MqttSubscription(object):
-    """Topic subscription with Queue.Queue() buffer."""
+    """Topic subscription with queue.Queue() buffer."""
 
     def __init__(self, topic_filter, qos=0, maxq=10000):
         self.topic_filter = topic_filter
         self.qos = qos
-        self._q = Queue.Queue(maxsize=maxq)
+        self._q = queue.Queue(maxsize=maxq)
         self._n = 0
 
     def enqueue(self, msg):
         try:
             self._q.put_nowait(msg)
-        except Queue.Full:
+        except queue.Full:
             try:
                 self._q.get_nowait()
-            except Queue.Empty:
+            except queue.Empty:
                 pass
             self._q.put_nowait(msg)
         self._n += 1
@@ -83,21 +83,21 @@ class MqttSubscription(object):
     def get_message(self, timeout=5.0):
         try:
             return self._q.get(block=True, timeout=timeout)
-        except Queue.Empty:
+        except queue.Empty:
             return None
 
     def drain(self, limit=100):
         out = []
-        for _ in xrange(limit):
+        for _ in range(limit):
             try:
                 out.append(self._q.get_nowait())
-            except Queue.Empty:
+            except queue.Empty:
                 break
         return out
 
     def matches(self, topic):
         fp, tp = self.topic_filter.split("/"), topic.split("/")
-        for i in xrange(len(fp)):
+        for i in range(len(fp)):
             if fp[i] == "#":
                 return True
             if i >= len(tp):
@@ -119,17 +119,17 @@ class MqttListener(object):
         self._up = False
         self._subs = []
         self._on = False
-        self._lock = thread.allocate_lock()
+        self._lock = _thread.allocate_lock()
         self._cnt = 0
 
     def connect(self):
-        """send()/recv() use str (not bytes) in Python 2."""
-        print "MQTT: connecting to %s:%d" % (self.host, self.port)
+        """Connect to MQTT broker."""
+        print("MQTT: connecting to %s:%d" % (self.host, self.port))
         try:
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._sock.settimeout(10.0)
             self._sock.connect((self.host, self.port))
-        except socket.error, e:
+        except socket.error as e:
             raise MqttError("Connect failed: %s" % e)
         self._sock.send(self._mk_connect())
         ack = self._rx()
@@ -139,7 +139,7 @@ class MqttListener(object):
         if rc != CONNACK_OK:
             raise MqttError("Refused: %s" % _CONNACK_MSG.get(rc, "%d" % rc))
         self._up = True
-        print "MQTT: connected"
+        print("MQTT: connected")
 
     def disconnect(self):
         self._on = False
@@ -154,7 +154,7 @@ class MqttListener(object):
                 pass
             self._sock = None
             self._up = False
-        print "MQTT: disconnected"
+        print("MQTT: disconnected")
 
     def subscribe(self, topic_filter, qos=0):
         if not self._up:
@@ -167,7 +167,7 @@ class MqttListener(object):
             self._rx()
         finally:
             self._lock.release()
-        print "MQTT: subscribed to %s" % topic_filter
+        print("MQTT: subscribed to %s" % topic_filter)
         return sub
 
     def publish(self, topic, payload):
@@ -178,13 +178,13 @@ class MqttListener(object):
             self._sock.send(self._mk_pub(topic, payload))
         finally:
             self._lock.release()
-        print "MQTT: published %d bytes to %s" % (len(payload), topic)
+        print("MQTT: published %d bytes to %s" % (len(payload), topic))
 
     def start_listener(self):
-        """Background via thread.start_new_thread()."""
+        """Background via _thread.start_new_thread()."""
         self._on = True
-        thread.start_new_thread(self._loop, ())
-        print "MQTT: listener started"
+        _thread.start_new_thread(self._loop, ())
+        print("MQTT: listener started")
 
     def stop_listener(self):
         self._on = False
@@ -204,11 +204,11 @@ class MqttListener(object):
         return struct.pack("B", PUBLISH) + self._el(len(vh) + len(payload)) + vh + payload
 
     def _el(self, n):
-        """MQTT variable-length encoding.  Uses / (integer division)."""
+        """MQTT variable-length encoding."""
         out = ""
         while True:
             b = n % 128
-            n = n / 128
+            n = n // 128
             if n > 0:
                 b |= 0x80
             out += struct.pack("B", b)
@@ -233,13 +233,13 @@ class MqttListener(object):
             return first + struct.pack("B", rem & 0x7F) + body
         except socket.timeout:
             return None
-        except socket.error, e:
-            print "MQTT: recv error -- %s" % e
+        except socket.error as e:
+            print("MQTT: recv error -- %s" % e)
             return None
 
     def _dl(self):
         m, v = 1, 0
-        for _ in xrange(4):
+        for _ in range(4):
             b = self._sock.recv(1)
             if not b:
                 return 0
@@ -274,8 +274,8 @@ class MqttListener(object):
                     for s in self._subs:
                         if s.matches(topic):
                             s.enqueue(msg)
-                except (struct.error, IndexError), e:
-                    print "MQTT: bad PUBLISH -- %s" % e
+                except (struct.error, IndexError) as e:
+                    print("MQTT: bad PUBLISH -- %s" % e)
             elif pt == DISCONNECT:
                 self._up = False
                 break

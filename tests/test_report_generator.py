@@ -3,13 +3,15 @@
 Tests for report generation: captured print output, exec templates,
 unicode content, reduce() aggregation, print >>sys.stderr.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import time
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
-from StringIO import StringIO
+from io import StringIO
 from src.reporting.report_generator import (
     ReportSection, ReportTemplate, ReportGenerator, ReportError,
 )
@@ -31,7 +33,7 @@ class TestReportSection(unittest.TestCase):
         sec = ReportSection(u"Test")
         sec.add_line(u"Line one")
         self.assertIn(u"=== Test ===", sec.render())
-        print "Section rendered"
+        print("Section rendered")
 
 
 class TestReportTemplate(unittest.TestCase):
@@ -54,7 +56,7 @@ class TestReportTemplate(unittest.TestCase):
             self.assertIn("fail", sys.stderr.getvalue())
         finally:
             sys.stderr = old
-        print "stderr captured"
+        print("stderr captured")
 
 
 class TestDailySummary(unittest.TestCase):
@@ -78,7 +80,7 @@ class TestDailySummary(unittest.TestCase):
             self.assertIn("Daily summary generated", sys.stdout.getvalue())
         finally:
             sys.stdout = old
-        print "stdout captured OK"
+        print("stdout captured OK")
 
 
 class TestAlarmReport(unittest.TestCase):
@@ -132,7 +134,7 @@ class TestReduceBuiltin(unittest.TestCase):
     def test_concat(self):
         result = reduce(lambda a, b: a + b, [u"A", u"|", u"B"])
         assert_unicode(self, result)
-        print "reduce() OK"
+        print("reduce() OK")
 
 
 if __name__ == "__main__":

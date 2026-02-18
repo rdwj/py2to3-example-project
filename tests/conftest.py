@@ -3,6 +3,8 @@
 Shared test fixtures and helpers for the platform test suite.
 These predate pytest adoption; plain functions called from setUp().
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import time
@@ -17,7 +19,7 @@ def make_data_point(tag="TEMP-001", value=23.5, timestamp=None, quality=192):
 
 
 def make_sensor_bytes(raw_hex):
-    return raw_hex.decode("hex")
+    return bytes.fromhex(raw_hex)
 
 
 def make_unicode_tag(base=u"Sensor", suffix=u"\u00b0C"):
@@ -31,26 +33,26 @@ def make_ebcdic_string(text):
 def make_comp3_bytes(value, num_bytes=4):
     digits = "%0*d" % ((num_bytes * 2) - 1, abs(value))
     sign = "c" if value >= 0 else "d"
-    return (digits + sign).decode("hex")
+    return bytes.fromhex(digits + sign)
 
 
 def setup_test_environment():
-    print "Setting up test environment"
+    print("Setting up test environment")
     os.environ.setdefault("PLATFORM_ENV", "test")
     os.environ.setdefault("PLATFORM_HOME", "/tmp/platform_test")
 
 
 def teardown_test_environment():
-    print "Tearing down test environment"
+    print("Tearing down test environment")
     for key in ("PLATFORM_ENV", "PLATFORM_HOME"):
         if key in os.environ:
             del os.environ[key]
 
 
 def assert_unicode(tc, value, msg=None):
-    tc.assertIsInstance(value, unicode, msg or "Expected unicode, got %s" % type(value))
+    tc.assertIsInstance(value, str, msg or "Expected str, got %s" % type(value))
 
 
 def assert_byte_string(tc, value, msg=None):
-    tc.assertIsInstance(value, str, msg or "Expected str, got %s" % type(value))
-    tc.assertNotIsInstance(value, unicode, msg or "Got unicode, expected plain str")
+    tc.assertIsInstance(value, bytes, msg or "Expected bytes, got %s" % type(value))
+    tc.assertNotIsInstance(value, str, msg or "Got str, expected bytes")

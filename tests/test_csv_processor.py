@@ -3,13 +3,15 @@
 Tests for CSV processor: unicode_csv_reader, CsvFieldMapper,
 StringIO-based parsing, encode/decode chains.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import os
 import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 
-from StringIO import StringIO
+from io import StringIO
 from src.data_processing.csv_processor import (
     unicode_csv_reader, unicode_csv_writer, CsvFieldMapper,
     _BOM_UTF8, _BOM_UTF16_LE,
@@ -24,7 +26,7 @@ class TestUnicodeCsvReader(unittest.TestCase):
         self.assertEqual(len(rows), 3)
         for cell in rows[1]:
             assert_unicode(self, cell)
-        print "UTF-8 CSV: %d rows" % len(rows)
+        print("UTF-8 CSV: %d rows" % len(rows))
 
     def test_latin1_degree_sign(self):
         csv_bytes = (u"Tag,Temp\u00b0C\nT-01,23.5\n").encode("latin-1")
@@ -50,7 +52,7 @@ class TestUnicodeCsvWriter(unittest.TestCase):
         buf = StringIO()
         unicode_csv_writer(buf).writerow([u"Tag", u"\u00b0C"])
         self.assertIsInstance(buf.getvalue(), str)
-        print "CSV written"
+        print("CSV written")
 
     def test_mixed_types(self):
         buf = StringIO()
@@ -99,7 +101,7 @@ class TestEncodingRoundtrips(unittest.TestCase):
     def test_utf8_roundtrip(self):
         original = u"caf\xe9"
         self.assertEqual(original.encode("utf-8").decode("utf-8"), original)
-        print "UTF-8 roundtrip OK"
+        print("UTF-8 roundtrip OK")
 
     def test_latin1_roundtrip(self):
         original = u"Stra\u00dfe"

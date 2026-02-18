@@ -10,11 +10,13 @@ one-shot deferred execution.
 Uses ``thread`` (renamed ``_thread`` in Py3) and ``Queue.Queue`` (renamed
 ``queue.Queue`` in Py3).
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 import time
-import thread
-import Queue
+import atexit
+import _thread
+import queue
 
 from core.exceptions import PlatformError
 
@@ -31,13 +33,13 @@ _STATUS_CANCELLED = "cancelled"
 class ScheduledTask(object):
     """A schedulable unit of work with timing and priority metadata."""
 
-    _next_id = 0L
+    _next_id = 0
 
     def __init__(self, name, callable_obj, args=None, kwargs=None,
                  interval_seconds=None, run_at_hour=None, run_at_minute=0,
                  days_of_week=None, priority=PRIORITY_NORMAL):
-        ScheduledTask._next_id += 1L
-        self.task_id = long(ScheduledTask._next_id)
+        ScheduledTask._next_id += 1
+        self.task_id = int(ScheduledTask._next_id)
         self.name = name
         self.callable_obj = callable_obj
         self.args = args or ()
@@ -92,13 +94,13 @@ def task_stream(task_queue, poll_interval=1.0):
         try:
             try:
                 yield task_queue.get(block=True, timeout=poll_interval)
-            except Queue.Empty:
+            except queue.Empty:
                 yield None
         except GeneratorExit:
-            print "Task stream shutting down"
+            print("Task stream shutting down")
             return
-        except PlatformError, e:
-            print "Task stream cancellation: %s" % e
+        except PlatformError as e:
+            print("Task stream cancellation: %s" % e)
             yield None
 
 
@@ -113,8 +115,8 @@ class TaskWorker(object):
 
     def start(self):
         self._running = True
-        thread.start_new_thread(self._run_loop, ())
-        print "Worker %d started" % self.worker_id
+        _thread.start_new_thread(self._run_loop, ())
+        print("Worker %d started" % self.worker_id)
 
     def stop(self):
         self._running = False
@@ -123,32 +125,33 @@ class TaskWorker(object):
         while self._running:
             try:
                 task = self.task_queue.get(block=True, timeout=2.0)
-            except Queue.Empty:
+            except queue.Empty:
                 continue
             if task is None:
                 break
             self._execute_task(task)
-        print "Worker %d exiting" % self.worker_id
+        print("Worker %d exiting" % self.worker_id)
 
     def _execute_task(self, task):
         task.status = _STATUS_RUNNING
         t0 = time.time()
-        print "Worker %d executing %r" % (self.worker_id, task.name)
+        print("Worker %d executing %r" % (self.worker_id, task.name))
         try:
             result = task.callable_obj(*task.args, **task.kwargs)
             task.status = _STATUS_DONE
             task.last_run = time.time()
             task.run_count += 1
             self.result_queue.put((task.task_id, True, result, time.time() - t0))
-        except Exception, e:
+        except Exception as e:
             task.status = _STATUS_FAILED
             task.error_count += 1
-            # Access exception details via legacy sys attributes (G2)
-            exc_name = sys.exc_type.__name__ if sys.exc_type else "Unknown"
-            exc_msg = str(sys.exc_value) if sys.exc_value else str(e)
+            # Access exception details via sys.exc_info()
+            exc_info = sys.exc_info()
+            exc_name = exc_info[0].__name__ if exc_info[0] else "Unknown"
+            exc_msg = str(exc_info[1]) if exc_info[1] else str(e)
             task.last_error = "%s: %s" % (exc_name, exc_msg)
             self.result_queue.put((task.task_id, False, task.last_error, time.time() - t0))
-            print "Task %r failed: %s" % (task.name, task.last_error)
+            print("Task %r failed: %s" % (task.name, task.last_error))
 
 
 class TaskScheduler(object):
@@ -156,23 +159,23 @@ class TaskScheduler(object):
     ``sys.exitfunc`` (G3) for graceful shutdown."""
 
     def __init__(self, num_workers=2, max_queue_size=500):
-        self.task_queue = Queue.Queue(maxsize=max_queue_size)
-        self.result_queue = Queue.Queue()
+        self.task_queue = queue.Queue(maxsize=max_queue_size)
+        self.result_queue = queue.Queue()
         self.workers = []
         self.registered_tasks = {}
         self._num_workers = num_workers
         self._running = False
-        self._lock = thread.allocate_lock()
+        self._lock = _thread.allocate_lock()
         # sys.exitfunc (G3) -- replaced by atexit.register() in Py3
-        sys.exitfunc = self._cleanup
+        atexit.register(self._cleanup)
 
     def start(self):
         self._running = True
-        for i in xrange(self._num_workers):
+        for i in range(self._num_workers):
             w = TaskWorker(i, self.task_queue, self.result_queue)
             w.start()
             self.workers.append(w)
-        print "Scheduler started with %d workers" % self._num_workers
+        print("Scheduler started with %d workers" % self._num_workers)
 
     def stop(self):
         self._running = False
@@ -189,7 +192,7 @@ class TaskScheduler(object):
             self.registered_tasks[task.task_id] = task
         finally:
             self._lock.release()
-        print "Scheduled collection %r every %ds" % (name, interval)
+        print("Scheduled collection %r every %ds" % (name, interval))
         return task.task_id
 
     def schedule_batch_job(self, name, func, run_at_hour, run_at_minute=0,
@@ -202,7 +205,7 @@ class TaskScheduler(object):
             self.registered_tasks[task.task_id] = task
         finally:
             self._lock.release()
-        print "Scheduled batch %r at %02d:%02d" % (name, run_at_hour, run_at_minute)
+        print("Scheduled batch %r at %02d:%02d" % (name, run_at_hour, run_at_minute))
         return task.task_id
 
     def schedule_report(self, name, func, run_at_hour, days_of_week=None):
@@ -219,7 +222,7 @@ class TaskScheduler(object):
             task = self.registered_tasks.get(task_id)
             if task is not None:
                 task.cancel()
-                print "Cancelled task %r" % task.name
+                print("Cancelled task %r" % task.name)
                 return True
             return False
         finally:
@@ -243,7 +246,7 @@ class TaskScheduler(object):
         finally:
             self._lock.release()
         stream.throw(PlatformError, "Task %d cancelled" % task_id)
-        print "Sent cancellation to stream for task %d" % task_id
+        print("Sent cancellation to stream for task %d" % task_id)
         return True
 
     def check_and_dispatch(self):
@@ -251,28 +254,28 @@ class TaskScheduler(object):
         now = time.time()
         self._lock.acquire()
         try:
-            due = [t for t in self.registered_tasks.itervalues() if t.is_due(now)]
+            due = [t for t in self.registered_tasks.values() if t.is_due(now)]
         finally:
             self._lock.release()
         for task in sorted(due, key=lambda t: t.priority):
             try:
                 self.task_queue.put(task, block=False)
                 task.compute_next_run(now)
-            except Queue.Full:
-                print "WARNING: queue full, deferring %r" % task.name
+            except queue.Full:
+                print("WARNING: queue full, deferring %r" % task.name)
 
     def collect_results(self, limit=50):
         results = []
-        for _ in xrange(limit):
+        for _ in range(limit):
             try:
                 results.append(self.result_queue.get(block=False))
-            except Queue.Empty:
+            except queue.Empty:
                 break
         return results
 
     def _cleanup(self):
         """Shutdown hook via ``sys.exitfunc``."""
-        print "Scheduler cleanup: stopping workers"
+        print("Scheduler cleanup: stopping workers")
         self.stop()
 
     def get_status(self):
@@ -280,7 +283,7 @@ class TaskScheduler(object):
         try:
             tasks = dict((tid, {"name": t.name, "status": t.status,
                                 "runs": t.run_count, "errors": t.error_count})
-                         for tid, t in self.registered_tasks.iteritems())
+                         for tid, t in self.registered_tasks.items())
         finally:
             self._lock.release()
         return {"running": self._running, "workers": len(self.workers),

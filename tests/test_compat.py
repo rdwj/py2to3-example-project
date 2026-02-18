@@ -18,14 +18,14 @@ import pytest
 
 def test_py26_flag():
     """Test PY26 version flag."""
-    from compat import PY26
+    from src.compat import PY26
     assert isinstance(PY26, bool)
     assert PY26 == (sys.version_info[:2] == (2, 6))
 
 
 def test_py27_flag():
     """Test PY27 version flag."""
-    from compat import PY27
+    from src.compat import PY27
     assert isinstance(PY27, bool)
     assert PY27 == (sys.version_info[:2] == (2, 7))
 
@@ -36,7 +36,7 @@ def test_py27_flag():
 
 def test_string_types_available():
     """Test string_types tuple is available."""
-    from compat import string_types
+    from src.compat import string_types
     assert isinstance(string_types, tuple)
     assert len(string_types) == 1
     assert str in string_types
@@ -44,7 +44,7 @@ def test_string_types_available():
 
 def test_string_types_usage():
     """Test string_types can be used for isinstance checks."""
-    from compat import string_types
+    from src.compat import string_types
 
     assert isinstance("byte string", string_types)
     assert isinstance(u"unicode string", string_types)
@@ -54,21 +54,21 @@ def test_string_types_usage():
 
 def test_text_type_alias():
     """Test text_type points to str."""
-    from compat import text_type
+    from src.compat import text_type
     assert text_type is str
     assert isinstance(u"text", text_type)
 
 
 def test_binary_type_alias():
     """Test binary_type points to bytes."""
-    from compat import binary_type
+    from src.compat import binary_type
     assert binary_type is bytes
     assert isinstance(b"binary", binary_type)
 
 
 def test_integer_types_available():
     """Test integer_types tuple."""
-    from compat import integer_types
+    from src.compat import integer_types
     assert isinstance(integer_types, tuple)
     assert len(integer_types) == 1
     assert int in integer_types
@@ -76,7 +76,7 @@ def test_integer_types_available():
 
 def test_integer_types_usage():
     """Test integer_types for isinstance checks."""
-    from compat import integer_types
+    from src.compat import integer_types
 
     assert isinstance(42, integer_types)
     assert isinstance(42, integer_types)
@@ -89,13 +89,13 @@ def test_integer_types_usage():
 
 def test_ordereddict_available():
     """Test OrderedDict is available."""
-    from compat import OrderedDict
+    from src.compat import OrderedDict
     assert OrderedDict is not None
 
 
 def test_ordereddict_functionality():
     """Test OrderedDict preserves insertion order (if available)."""
-    from compat import OrderedDict
+    from src.compat import OrderedDict
 
     od = OrderedDict()
     od["first"] = 1
@@ -115,14 +115,14 @@ def test_ordereddict_functionality():
 
 def test_json_available():
     """Test json module is available."""
-    from compat import json
+    from src.compat import json
     assert hasattr(json, "dumps")
     assert hasattr(json, "loads")
 
 
 def test_json_dumps():
     """Test json.dumps works."""
-    from compat import json
+    from src.compat import json
 
     data = {"key": "value", "number": 42}
     result = json.dumps(data)
@@ -134,7 +134,7 @@ def test_json_dumps():
 
 def test_json_loads():
     """Test json.loads works."""
-    from compat import json
+    from src.compat import json
 
     json_str = '{"name": "test", "value": 123}'
     result = json.loads(json_str)
@@ -146,7 +146,7 @@ def test_json_loads():
 
 def test_json_unicode_handling():
     """Test json handles unicode correctly."""
-    from compat import json
+    from src.compat import json
 
     data = {"message": u"Hello \u2014 World"}
     json_str = json.dumps(data)
@@ -161,13 +161,13 @@ def test_json_unicode_handling():
 
 def test_md5_available():
     """Test md5 function is available."""
-    from compat import md5
+    from src.compat import md5
     assert md5 is not None
 
 
 def test_md5_functionality():
     """Test md5 produces correct hash."""
-    from compat import md5
+    from src.compat import md5
 
     data = b"test data"
     hasher = md5(data)
@@ -179,13 +179,13 @@ def test_md5_functionality():
 
 def test_sha1_available():
     """Test sha1 function is available."""
-    from compat import sha1
+    from src.compat import sha1
     assert sha1 is not None
 
 
 def test_sha1_functionality():
     """Test sha1 produces correct hash."""
-    from compat import sha1
+    from src.compat import sha1
 
     data = b"test data"
     hasher = sha1(data)
@@ -201,13 +201,13 @@ def test_sha1_functionality():
 
 def test_configparser_available():
     """Test configparser module is available."""
-    from compat import configparser
+    from src.compat import configparser
     assert hasattr(configparser, "ConfigParser") or hasattr(configparser, "SafeConfigParser")
 
 
 def test_configparser_functionality():
     """Test configparser can parse config."""
-    from compat import configparser
+    from src.compat import configparser
     from io import StringIO
 
     config_str = u"""[section1]
@@ -233,7 +233,7 @@ key2 = value2
 
 def test_queue_available():
     """Test queue module is available."""
-    from compat import queue
+    from src.compat import queue
     assert hasattr(queue, "Queue")
     assert hasattr(queue, "Empty")
     assert hasattr(queue, "Full")
@@ -241,7 +241,7 @@ def test_queue_available():
 
 def test_queue_functionality():
     """Test Queue works correctly."""
-    from compat import queue
+    from src.compat import queue
 
     q = queue.Queue(maxsize=5)
     q.put(1)
@@ -255,7 +255,7 @@ def test_queue_functionality():
 
 def test_queue_empty_exception():
     """Test Queue.Empty exception."""
-    from compat import queue
+    from src.compat import queue
 
     q = queue.Queue()
 
@@ -269,14 +269,14 @@ def test_queue_empty_exception():
 
 def test_pickle_available():
     """Test pickle module is available."""
-    from compat import pickle
+    from src.compat import pickle
     assert hasattr(pickle, "dumps")
     assert hasattr(pickle, "loads")
 
 
 def test_pickle_dumps_loads():
     """Test pickle serialization."""
-    from compat import pickle
+    from src.compat import pickle
 
     data = {"key": "value", "numbers": [1, 2, 3]}
     serialized = pickle.dumps(data)
@@ -293,13 +293,13 @@ def test_pickle_dumps_loads():
 
 def test_bytesio_available():
     """Test BytesIO is available."""
-    from compat import BytesIO
+    from src.compat import BytesIO
     assert BytesIO is not None
 
 
 def test_bytesio_functionality():
     """Test BytesIO works as file-like object."""
-    from compat import BytesIO
+    from src.compat import BytesIO
 
     bio = BytesIO()
     bio.write(b"Hello")
@@ -314,13 +314,13 @@ def test_bytesio_functionality():
 
 def test_stringio_available():
     """Test StringIO is available."""
-    from compat import StringIO
+    from src.compat import StringIO
     assert StringIO is not None
 
 
 def test_stringio_functionality():
     """Test StringIO works with text."""
-    from compat import StringIO
+    from src.compat import StringIO
 
     sio = StringIO()
     sio.write(u"Unicode text")
@@ -336,7 +336,7 @@ def test_stringio_functionality():
 
 def test_ensure_bytes_from_unicode():
     """Test ensure_bytes converts unicode to bytes."""
-    from compat import ensure_bytes
+    from src.compat import ensure_bytes
 
     result = ensure_bytes(u"Hello World")
     assert isinstance(result, bytes)
@@ -345,7 +345,7 @@ def test_ensure_bytes_from_unicode():
 
 def test_ensure_bytes_from_str():
     """Test ensure_bytes converts str to bytes."""
-    from compat import ensure_bytes
+    from src.compat import ensure_bytes
 
     result = ensure_bytes("text string")
     assert isinstance(result, bytes)
@@ -354,7 +354,7 @@ def test_ensure_bytes_from_str():
 
 def test_ensure_bytes_from_other():
     """Test ensure_bytes converts other types."""
-    from compat import ensure_bytes
+    from src.compat import ensure_bytes
 
     result = ensure_bytes(123)
     assert isinstance(result, bytes)
@@ -363,7 +363,7 @@ def test_ensure_bytes_from_other():
 
 def test_ensure_bytes_encoding():
     """Test ensure_bytes respects encoding parameter."""
-    from compat import ensure_bytes
+    from src.compat import ensure_bytes
 
     result = ensure_bytes(u"café", encoding="utf-8")
     assert isinstance(result, bytes)
@@ -371,7 +371,7 @@ def test_ensure_bytes_encoding():
 
 def test_ensure_text_from_str():
     """Test ensure_text passes through str."""
-    from compat import ensure_text
+    from src.compat import ensure_text
 
     result = ensure_text("text string")
     assert isinstance(result, str)
@@ -379,7 +379,7 @@ def test_ensure_text_from_str():
 
 def test_ensure_text_from_unicode():
     """Test ensure_text passes through unicode."""
-    from compat import ensure_text
+    from src.compat import ensure_text
 
     result = ensure_text(u"already unicode")
     assert isinstance(result, str)
@@ -388,7 +388,7 @@ def test_ensure_text_from_unicode():
 
 def test_ensure_text_from_other():
     """Test ensure_text converts other types."""
-    from compat import ensure_text
+    from src.compat import ensure_text
 
     result = ensure_text(456)
     assert isinstance(result, str)
@@ -397,7 +397,7 @@ def test_ensure_text_from_other():
 
 def test_ensure_text_encoding():
     """Test ensure_text respects encoding parameter."""
-    from compat import ensure_text
+    from src.compat import ensure_text
 
     # UTF-8 encoded bytes of "café"
     utf8_bytes = b"caf\xc3\xa9"
@@ -409,7 +409,7 @@ def test_ensure_text_encoding():
 
 def test_ensure_bytes_ensure_text_roundtrip():
     """Test roundtrip conversion bytes -> text -> bytes."""
-    from compat import ensure_bytes, ensure_text
+    from src.compat import ensure_bytes, ensure_text
 
     original = u"Test string with unicode: \u2014"
     as_bytes = ensure_bytes(original, encoding="utf-8")

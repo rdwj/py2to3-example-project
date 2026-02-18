@@ -10,7 +10,7 @@ as list producers.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import pytest
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 from src.core.itertools_helpers import (
     batch_readings,

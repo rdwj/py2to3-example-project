@@ -19,8 +19,8 @@ import re
 import time
 import subprocess
 
-from core.exceptions import ParseError, DataError
-from core.config_loader import load_platform_config
+from src.core.exceptions import ParseError, DataError
+from src.core.config_loader import load_platform_config
 
 
 # ---------------------------------------------------------------------------

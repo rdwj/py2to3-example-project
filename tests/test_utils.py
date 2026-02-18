@@ -9,7 +9,7 @@ Critical Py2→3 issues: apply(), reduce(), intern(), has_key(), backtick repr,
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import pytest
-from mock import patch, MagicMock
+from unittest.mock import patch, MagicMock
 
 from src.core.utils import (
     call_with_args,

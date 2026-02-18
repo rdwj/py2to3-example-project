@@ -20,9 +20,9 @@ import codecs
 import time
 import pickle
 
-from core.types import LargeCounter
-from core.exceptions import ParseError, DataError
-from core.config_loader import load_platform_config
+from src.core.types import LargeCounter
+from src.core.exceptions import ParseError, DataError
+from src.core.config_loader import load_platform_config
 
 
 # ---------------------------------------------------------------------------

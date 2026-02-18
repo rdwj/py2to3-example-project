@@ -18,7 +18,7 @@ import atexit
 import _thread
 import queue
 
-from core.exceptions import PlatformError
+from src.core.exceptions import PlatformError
 
 PRIORITY_HIGH = 0
 PRIORITY_NORMAL = 5

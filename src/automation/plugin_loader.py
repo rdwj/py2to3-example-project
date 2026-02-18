@@ -19,7 +19,7 @@ import importlib.util
 import time
 import operator
 
-from core.exceptions import PlatformError
+from src.core.exceptions import PlatformError
 
 
 class PluginRegistry(object):

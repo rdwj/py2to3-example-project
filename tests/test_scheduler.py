@@ -315,10 +315,7 @@ def test_task_worker_execute_task_failure(capsys):
 
     task = ScheduledTask("fail_task", failing_func)
 
-    # Mock sys.exc_type and sys.exc_value for legacy exception access
-    with mock.patch("sys.exc_type", new=ValueError):
-        with mock.patch("sys.exc_value", new=ValueError("Intentional failure")):
-            worker._execute_task(task)
+    worker._execute_task(task)
 
     assert task.status == _STATUS_FAILED
     assert task.error_count == 1
@@ -344,16 +341,12 @@ def test_task_scheduler_init():
     assert len(scheduler.workers) == 0
 
 
-def test_task_scheduler_sys_exitfunc():
-    """Test that sys.exitfunc is set during init (G3 - legacy cleanup hook)."""
-    original_exitfunc = getattr(sys, "exitfunc", None)
-
-    scheduler = TaskScheduler()
-    assert sys.exitfunc == scheduler._cleanup
-
-    # Restore original
-    if original_exitfunc:
-        sys.exitfunc = original_exitfunc
+def test_task_scheduler_atexit_registration():
+    """Test that atexit.register() is called during init (G3 - Py3 cleanup hook)."""
+    import atexit
+    with mock.patch.object(atexit, "register") as mock_register:
+        scheduler = TaskScheduler()
+        mock_register.assert_called_once_with(scheduler._cleanup)
 
 
 @mock.patch("src.automation.scheduler.TaskWorker")

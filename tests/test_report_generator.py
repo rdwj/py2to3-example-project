@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import unittest
+from functools import reduce
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 from io import StringIO

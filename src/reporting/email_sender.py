@@ -7,6 +7,7 @@ and operations staff via the site's internal SMTP relay.  The distribution
 list is managed via the platform INI file because the original operators
 preferred editing a config section over using a web interface.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 import time
@@ -68,9 +69,9 @@ class EmailAlert(object):
 
     def to_mime_message(self):
         """Build a MIMEText message from the alert fields."""
-        body_str = safe_encode(self.body) if isinstance(self.body, unicode) else self.body
+        body_str = safe_encode(self.body) if isinstance(self.body, str) else self.body
         msg = MIMEText(body_str, "plain", "utf-8")
-        msg["Subject"] = safe_encode(self.subject) if isinstance(self.subject, unicode) else self.subject
+        msg["Subject"] = safe_encode(self.subject) if isinstance(self.subject, str) else self.subject
         msg["From"] = self.sender
         msg["To"] = ", ".join(self.recipients)
         msg["X-Priority"] = str(self.priority)
@@ -96,7 +97,7 @@ class EmailSender(object):
 
     def add_distribution_list(self, name, recipients):
         self._distribution_lists[name] = list(recipients)
-        print "Distribution list '%s': %d recipients" % (name, len(recipients))
+        print("Distribution list '%s': %d recipients" % (name, len(recipients)))
 
     def get_distribution_list(self, name):
         return self._distribution_lists.get(name, [])
@@ -109,7 +110,7 @@ class EmailSender(object):
             addrs = [a.strip() for a in value.split(",") if a.strip()]
             if addrs:
                 self._distribution_lists[key] = addrs
-        print "Loaded %d distribution lists" % len(self._distribution_lists)
+        print("Loaded %d distribution lists" % len(self._distribution_lists))
 
     def send_alert(self, alert):
         """Deliver a single EmailAlert via SMTP."""
@@ -125,24 +126,24 @@ class EmailSender(object):
                     conn.login(self.username, self.password)
                 conn.sendmail(alert.sender, alert.recipients, msg.as_string())
                 self._send_count += 1
-                print "Alert sent to %d recipients: %s" % (len(alert.recipients), alert.subject)
+                print("Alert sent to %d recipients: %s" % (len(alert.recipients), alert.subject))
             finally:
                 conn.quit()
-        except smtplib.SMTPAuthenticationError, e:
-            print "SMTP auth failed for %s: %s" % (self.smtp_host, e)
+        except smtplib.SMTPAuthenticationError as e:
+            print("SMTP auth failed for %s: %s" % (self.smtp_host, e))
             raise EmailError("SMTP auth failed: %s" % e)
-        except smtplib.SMTPRecipientsRefused, e:
-            print "Recipients refused: %s" % e
+        except smtplib.SMTPRecipientsRefused as e:
+            print("Recipients refused: %s" % e)
             raise EmailError("Recipients refused: %s" % e)
-        except (smtplib.SMTPException, socket.error), e:
-            print "SMTP error sending to %s: %s" % (self.smtp_host, e)
+        except (smtplib.SMTPException, socket.error) as e:
+            print("SMTP error sending to %s: %s" % (self.smtp_host, e))
             raise EmailError("Send failed: %s" % e)
 
     def send_to_list(self, list_name, subject, body, priority=3):
         """Compose and send an alert to a named distribution list."""
         recipients = self.get_distribution_list(list_name)
         if not recipients:
-            print "No recipients in list '%s', skipping" % list_name
+            print("No recipients in list '%s', skipping" % list_name)
             return
         alert = EmailAlert(subject, body, recipients, priority=priority)
         self.send_alert(alert)
@@ -172,7 +173,7 @@ class EmailSender(object):
     def send_daily_digest(self, list_name, report_content):
         """Send a daily summary report as an email digest."""
         subject = "Daily Platform Summary - %s" % time.strftime("%Y-%m-%d")
-        body = safe_encode(report_content) if isinstance(report_content, unicode) else report_content
+        body = safe_encode(report_content) if isinstance(report_content, str) else report_content
         self.send_to_list(list_name, subject, body, priority=5)
 
     @property

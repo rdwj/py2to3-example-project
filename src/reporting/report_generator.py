@@ -7,10 +7,12 @@ from sensor data.  Report templates are evaluated dynamically via
 ``exec`` so that plant engineers can customise output without modifying
 Python code -- a decision made in 2009 that nobody has revisited.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 import time
 import os
+from functools import reduce
 
 from core.types import DataPoint, is_string
 from core.string_helpers import safe_decode, safe_encode
@@ -27,18 +29,18 @@ class ReportSection(object):
     Carries a unicode title and a list of content lines."""
 
     def __init__(self, title, content_lines=None):
-        if isinstance(title, basestring):
-            self.title = safe_decode(title) if not isinstance(title, unicode) else title
+        if isinstance(title, (str, bytes)):
+            self.title = safe_decode(title) if not isinstance(title, str) else title
         else:
-            self.title = unicode(title)
+            self.title = str(title)
         self.content_lines = content_lines or []
         self.timestamp = time.time()
 
     def add_line(self, line):
-        if isinstance(line, basestring):
+        if isinstance(line, (str, bytes)):
             self.content_lines.append(safe_decode(line))
         else:
-            self.content_lines.append(unicode(line))
+            self.content_lines.append(str(line))
 
     def render(self):
         header = u"=== " + self.title + u" ==="
@@ -61,15 +63,15 @@ class ReportTemplate(object):
 
     def evaluate(self, context):
         """Execute the template code with *context* as the namespace."""
-        namespace = {"lines": [], "time": time, "unicode": unicode}
+        namespace = {"lines": [], "time": time, "unicode": str}
         namespace.update(context)
         try:
-            exec self.code_string in namespace
-        except SyntaxError, e:
-            print >>sys.stderr, "Template syntax error in '%s': %s" % (self.name, e)
+            exec(self.code_string, namespace)
+        except SyntaxError as e:
+            print("Template syntax error in '%s': %s" % (self.name, e), file=sys.stderr)
             raise ReportError("Bad template syntax: %s" % e)
-        except Exception, e:
-            print >>sys.stderr, "Template execution error in '%s': %s" % (self.name, e)
+        except Exception as e:
+            print("Template execution error in '%s': %s" % (self.name, e), file=sys.stderr)
             raise ReportError("Template failed: %s" % e)
         return namespace["lines"]
 
@@ -99,19 +101,19 @@ class ReportGenerator(object):
             report_date = time.strftime("%Y-%m-%d")
 
         sections = []
-        header = ReportSection(u"Daily Summary \u2014 " + unicode(report_date))
+        header = ReportSection(u"Daily Summary \u2014 " + str(report_date))
         header.add_line(u"Site: " + self._site_name)
-        header.add_line(u"Generated: " + unicode(time.strftime("%Y-%m-%d %H:%M:%S")))
+        header.add_line(u"Generated: " + time.strftime("%Y-%m-%d %H:%M:%S"))
         header.add_line(u"Total sensors reporting: %d" % len(sensor_data))
         sections.append(header)
 
         stats = ReportSection(u"Sensor Statistics")
-        for tag, readings in sensor_data.iteritems():
+        for tag, readings in sensor_data.items():
             values = []
             for r in readings:
                 if isinstance(r, DataPoint):
                     values.append(r.value)
-                elif isinstance(r, (int, float, long)):
+                elif isinstance(r, (int, float)):
                     values.append(r)
             if not values:
                 continue
@@ -121,13 +123,13 @@ class ReportGenerator(object):
             min_val = reduce(lambda a, b: a if a < b else b, values)
             max_val = reduce(lambda a, b: a if a > b else b, values)
 
-            tag_label = safe_decode(tag) if not isinstance(tag, unicode) else tag
+            tag_label = safe_decode(tag) if not isinstance(tag, str) else tag
             line = u"  " + tag_label + u": "
             line = line + u"avg=%.2f, min=%.2f, max=%.2f, n=%d" % (avg, min_val, max_val, len(values))
             stats.add_line(line)
 
         sections.append(stats)
-        print "Daily summary generated for %s (%d sensors)" % (report_date, len(sensor_data))
+        print("Daily summary generated for %s (%d sensors)" % (report_date, len(sensor_data)))
         return sections
 
     def generate_alarm_report(self, alarms, severity_filter=None):
@@ -135,7 +137,7 @@ class ReportGenerator(object):
         sections = []
         title_sec = ReportSection(u"Alarm Report")
         title_sec.add_line(u"Site: " + self._site_name)
-        title_sec.add_line(u"Report time: " + unicode(time.strftime("%Y-%m-%d %H:%M:%S")))
+        title_sec.add_line(u"Report time: " + time.strftime("%Y-%m-%d %H:%M:%S"))
         sections.append(title_sec)
 
         if severity_filter is not None:
@@ -144,9 +146,9 @@ class ReportGenerator(object):
         active = ReportSection(u"Active Alarms (%d)" % len(alarms))
         for alarm in alarms:
             msg = alarm.get("message", "")
-            if not isinstance(msg, basestring):
+            if not isinstance(msg, (str, bytes)):
                 msg = str(msg)
-            msg_text = unicode(msg, 'utf-8') if isinstance(msg, str) else msg
+            msg_text = msg.decode('utf-8') if isinstance(msg, bytes) else msg
             tag_text = safe_decode(alarm.get("tag", "UNKNOWN"))
             ts = alarm.get("timestamp", 0)
             ts_str = time.strftime("%H:%M:%S", time.localtime(ts)) if ts else u"--:--:--"
@@ -154,7 +156,7 @@ class ReportGenerator(object):
             active.add_line(line)
 
         sections.append(active)
-        print "Alarm report generated: %d alarms" % len(alarms)
+        print("Alarm report generated: %d alarms" % len(alarms))
         return sections
 
     def generate_trend_report(self, trend_data, period_label=u"Last 24h"):
@@ -165,10 +167,10 @@ class ReportGenerator(object):
         sections.append(header)
 
         trends = ReportSection(u"Per-Sensor Trends")
-        for tag, points in trend_data.iteritems():
+        for tag, points in trend_data.items():
             if len(points) < 2:
                 continue
-            tag_label = safe_decode(tag) if not isinstance(tag, unicode) else tag
+            tag_label = safe_decode(tag) if not isinstance(tag, str) else tag
             values = [p[1] for p in points]
             delta = values[-1] - values[0]
             pct = (delta / values[0] * 100.0) if values[0] != 0 else 0.0
@@ -179,7 +181,7 @@ class ReportGenerator(object):
             trends.add_line(u"    Average: %.2f, Samples: %d" % (avg, len(values)))
 
         sections.append(trends)
-        print "Trend report generated for %d sensors" % len(trend_data)
+        print("Trend report generated for %d sensors" % len(trend_data))
         return sections
 
     def render_report(self, sections, template_name=None):
@@ -190,23 +192,23 @@ class ReportGenerator(object):
                            "report_time": time.strftime("%Y-%m-%d %H:%M:%S")}
                 lines = self.templates[template_name].evaluate(context)
                 output = u"\n".join([safe_decode(l) for l in lines])
-                print "Report rendered via template '%s'" % template_name
+                print("Report rendered via template '%s'" % template_name)
                 return output
-            except ReportError, e:
-                print >>sys.stderr, "Template render failed, falling back: %s" % e
+            except ReportError as e:
+                print("Template render failed, falling back: %s" % e, file=sys.stderr)
 
         parts = [self.DEFAULT_TITLE, u""]
         for section in sections:
             parts.append(section.render())
         output = u"\n".join(parts)
-        print "Report rendered (%d sections, %d chars)" % (len(sections), len(output))
+        print("Report rendered (%d sections, %d chars)" % (len(sections), len(output)))
         return output
 
     def save_report(self, content, filename):
         """Write rendered report content to disk."""
-        if not isinstance(content, basestring):
+        if not isinstance(content, (str, bytes)):
             raise ReportError("Report content must be a string")
-        encoded = safe_encode(content) if isinstance(content, unicode) else content
+        encoded = safe_encode(content) if isinstance(content, str) else content
         filepath = os.path.join(self._output_dir, filename)
         try:
             fh = open(filepath, "wb")
@@ -214,7 +216,7 @@ class ReportGenerator(object):
                 fh.write(encoded)
             finally:
                 fh.close()
-            print "Report saved to %s (%d bytes)" % (filepath, len(encoded))
-        except IOError, e:
-            print >>sys.stderr, "Failed to save report to %s: %s" % (filepath, e)
+            print("Report saved to %s (%d bytes)" % (filepath, len(encoded)))
+        except IOError as e:
+            print("Failed to save report to %s: %s" % (filepath, e), file=sys.stderr)
             raise ReportError("Could not write report: %s" % e)

@@ -2,106 +2,76 @@
 """
 Internal compatibility layer for the Legacy Industrial Data Platform.
 
-Centralizes version-sensitive imports and type aliases so that other
-modules can import from here instead of scattering try/except blocks
-everywhere.  In practice this module was added late in the project
-lifecycle when someone floated the idea of a Python 3 port -- most of
-the codebase still uses Py2 idioms directly.
+This module has been converted to Python 3-only, but is retained for
+API compatibility. It provides type aliases and utility functions that
+other modules may still import. The Python 2 compatibility shims have
+been removed.
 """
-
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
 
-PY26 = sys.version_info[:2] == (2, 6)
-PY27 = sys.version_info[:2] == (2, 7)
+PY26 = False
+PY27 = False
 
 # ------------------------------------------------------------------
 # String / bytes type aliases
 # ------------------------------------------------------------------
-string_types = (str, unicode)
-text_type = unicode
-binary_type = str
-integer_types = (int, long)
+string_types = (str,)
+text_type = str
+binary_type = bytes
+integer_types = (int,)
 
 # ------------------------------------------------------------------
-# OrderedDict -- backported for 2.6, builtin in 2.7
+# OrderedDict -- builtin in Python 3
 # ------------------------------------------------------------------
-try:
-    from collections import OrderedDict
-except ImportError:
-    # Python 2.6 fallback -- use the ordereddict backport if installed,
-    # otherwise provide a minimal shim that just wraps a regular dict.
-    try:
-        from ordereddict import OrderedDict
-    except ImportError:
-        OrderedDict = dict
+from collections import OrderedDict
 
 # ------------------------------------------------------------------
-# json -- simplejson is faster and has better unicode handling on 2.6
+# json -- stdlib json module
 # ------------------------------------------------------------------
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 # ------------------------------------------------------------------
-# hashlib vs legacy md5/sha modules
+# hashlib
 # ------------------------------------------------------------------
-try:
-    from hashlib import md5, sha1
-except ImportError:
-    from md5 import new as md5
-    from sha import new as sha1
+from hashlib import md5, sha1
 
 # ------------------------------------------------------------------
-# ConfigParser -- capital-C in Py2, lowercase in Py3
+# configparser
 # ------------------------------------------------------------------
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
+import configparser
 
 # ------------------------------------------------------------------
-# Queue -- capital-Q in Py2
+# queue
 # ------------------------------------------------------------------
-try:
-    import Queue as queue
-except ImportError:
-    import queue
+import queue
 
 # ------------------------------------------------------------------
-# cPickle / pickle
+# pickle
 # ------------------------------------------------------------------
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 # ------------------------------------------------------------------
-# StringIO -- prefer the C implementation when available
+# StringIO / BytesIO
 # ------------------------------------------------------------------
-try:
-    from cStringIO import StringIO as BytesIO
-except ImportError:
-    from StringIO import StringIO as BytesIO
-
-from StringIO import StringIO
+from io import BytesIO
+from io import StringIO
 
 
 def ensure_bytes(value, encoding="utf-8"):
     """Coerce *value* to a byte string."""
-    if isinstance(value, unicode):
-        return value.encode(encoding)
     if isinstance(value, str):
+        return value.encode(encoding)
+    if isinstance(value, bytes):
         return value
-    return str(value)
+    return str(value).encode(encoding)
 
 
 def ensure_text(value, encoding="utf-8"):
-    """Coerce *value* to a unicode string."""
-    if isinstance(value, unicode):
-        return value
+    """Coerce *value* to a text string."""
     if isinstance(value, str):
+        return value
+    if isinstance(value, bytes):
         return value.decode(encoding)
-    return unicode(value)
+    return str(value)

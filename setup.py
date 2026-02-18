@@ -1,16 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Legacy Industrial Data Platform -- distutils setup script.
+Legacy Industrial Data Platform -- setuptools setup script.
 
 Install:
-    python setup.py install
+    python3 setup.py install
+    OR
+    pip install .
 
 Create source distribution:
-    python setup.py sdist
+    python3 setup.py sdist
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
-from distutils.core import setup
+from setuptools import setup, find_packages
+
+# Read requirements from requirements.txt
+def read_requirements():
+    with open('requirements.txt') as f:
+        return [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 setup(
     name="legacy-industrial-platform",
@@ -21,6 +29,7 @@ setup(
     url="http://intranet.acme-industrial.example.com/platform",
     license="Proprietary",
     platforms=["linux"],
+    python_requires='>=3.12',
     packages=[
         "src",
         "src.core",
@@ -30,6 +39,7 @@ setup(
         "src.reporting",
         "src.automation",
     ],
+    install_requires=read_requirements(),
     scripts=[
         "scripts/run_platform.py",
         "scripts/batch_import.py",
@@ -43,5 +53,16 @@ setup(
             "data/scada_config.xml",
             "data/sample_records.json",
         ]),
+    ],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Manufacturing',
+        'License :: Other/Proprietary License',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3 :: Only',
+        'Topic :: System :: Hardware',
+        'Topic :: System :: Monitoring',
     ],
 )

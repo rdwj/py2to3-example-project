@@ -13,6 +13,7 @@ is 40 bytes:
 Run once with Python 3 to produce the binary fixture:
     python3 scripts/generate_ebcdic_data.py
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import struct

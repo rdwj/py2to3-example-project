@@ -1,0 +1,2558 @@
+{
+  "project": {
+    "name": "Legacy Industrial Data Platform",
+    "codebase_path": "/Users/wjackson/Developer/py2to3-example-project",
+    "target_version": "3.12",
+    "start_date": "2026-02-18",
+    "last_updated": "2026-02-18"
+  },
+  "summary": {
+    "total_modules": 41,
+    "total_loc": 6688,
+    "gateway_modules": [
+      "src/core/exceptions.py"
+    ],
+    "critical_path_modules": [
+      "src/data_processing/mainframe_parser.py",
+      "src/io_protocols/modbus_client.py",
+      "src/io_protocols/serial_sensor.py",
+      "src/io_protocols/mqtt_listener.py",
+      "src/storage/database.py",
+      "src/automation/plugin_loader.py"
+    ],
+    "py2_ism_counts": {
+      "syntax": 455,
+      "semantic_iterator": 45,
+      "semantic_bytes_str": 80,
+      "semantic_division": 15,
+      "semantic_import": 75,
+      "metaclass": 5
+    },
+    "blockers": [],
+    "dependencies_resolved": true,
+    "circular_dependencies": false,
+    "max_dependency_depth": 1,
+    "by_phase": {
+      "0": 0,
+      "1": 0,
+      "2": 41,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+    },
+    "by_risk": {
+      "critical": 6,
+      "high": 10,
+      "medium": 15,
+      "low": 14
+    }
+  },
+  "modules": {
+    "src/__init__.py": {
+      "name": "src/__init__.py",
+      "path": "src/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/compat.py": {
+      "name": "src/compat.py",
+      "path": "src/compat.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 30,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 2,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-helpers"
+    },
+    "src/core/__init__.py": {
+      "name": "src/core/__init__.py",
+      "path": "src/core/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/core/types.py": {
+      "name": "src/core/types.py",
+      "path": "src/core/types.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 200,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 7,
+        "semantic_iterator": 4,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 1
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-foundation"
+    },
+    "src/core/utils.py": {
+      "name": "src/core/utils.py",
+      "path": "src/core/utils.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 150,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 5,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-foundation"
+    },
+    "src/core/config_loader.py": {
+      "name": "src/core/config_loader.py",
+      "path": "src/core/config_loader.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 120,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 1,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-helpers"
+    },
+    "src/core/string_helpers.py": {
+      "name": "src/core/string_helpers.py",
+      "path": "src/core/string_helpers.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 130,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 4,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-helpers"
+    },
+    "src/core/exceptions.py": {
+      "name": "src/core/exceptions.py",
+      "path": "src/core/exceptions.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 100,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 3,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-foundation"
+    },
+    "src/core/itertools_helpers.py": {
+      "name": "src/core/itertools_helpers.py",
+      "path": "src/core/itertools_helpers.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 100,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 6,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "core-helpers"
+    },
+    "src/io_protocols/__init__.py": {
+      "name": "src/io_protocols/__init__.py",
+      "path": "src/io_protocols/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/io_protocols/modbus_client.py": {
+      "name": "src/io_protocols/modbus_client.py",
+      "path": "src/io_protocols/modbus_client.py",
+      "current_phase": 2,
+      "risk_level": "critical",
+      "loc": 250,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 1,
+        "semantic_bytes_str": 3,
+        "semantic_division": 1,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "io-protocols"
+    },
+    "src/io_protocols/opcua_client.py": {
+      "name": "src/io_protocols/opcua_client.py",
+      "path": "src/io_protocols/opcua_client.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 220,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 8,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "io-protocols"
+    },
+    "src/io_protocols/serial_sensor.py": {
+      "name": "src/io_protocols/serial_sensor.py",
+      "path": "src/io_protocols/serial_sensor.py",
+      "current_phase": 2,
+      "risk_level": "critical",
+      "loc": 180,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 2,
+        "semantic_bytes_str": 1,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "io-protocols"
+    },
+    "src/io_protocols/mqtt_listener.py": {
+      "name": "src/io_protocols/mqtt_listener.py",
+      "path": "src/io_protocols/mqtt_listener.py",
+      "current_phase": 2,
+      "risk_level": "critical",
+      "loc": 160,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "io-protocols"
+    },
+    "src/data_processing/__init__.py": {
+      "name": "src/data_processing/__init__.py",
+      "path": "src/data_processing/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/data_processing/mainframe_parser.py": {
+      "name": "src/data_processing/mainframe_parser.py",
+      "path": "src/data_processing/mainframe_parser.py",
+      "current_phase": 2,
+      "risk_level": "critical",
+      "loc": 300,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 2,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 4,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "data-processing-core"
+    },
+    "src/data_processing/csv_processor.py": {
+      "name": "src/data_processing/csv_processor.py",
+      "path": "src/data_processing/csv_processor.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 150,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 4,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "data-processing-core"
+    },
+    "src/data_processing/xml_transformer.py": {
+      "name": "src/data_processing/xml_transformer.py",
+      "path": "src/data_processing/xml_transformer.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 140,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 4,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "data-processing-core"
+    },
+    "src/data_processing/json_handler.py": {
+      "name": "src/data_processing/json_handler.py",
+      "path": "src/data_processing/json_handler.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 130,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 2,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "data-processing-secondary"
+    },
+    "src/data_processing/text_analyzer.py": {
+      "name": "src/data_processing/text_analyzer.py",
+      "path": "src/data_processing/text_analyzer.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 160,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 1,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 6,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "data-processing-secondary"
+    },
+    "src/data_processing/log_parser.py": {
+      "name": "src/data_processing/log_parser.py",
+      "path": "src/data_processing/log_parser.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 120,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 1,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "data-processing-secondary"
+    },
+    "src/storage/__init__.py": {
+      "name": "src/storage/__init__.py",
+      "path": "src/storage/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/storage/database.py": {
+      "name": "src/storage/database.py",
+      "path": "src/storage/database.py",
+      "current_phase": 2,
+      "risk_level": "critical",
+      "loc": 200,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 4,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "storage"
+    },
+    "src/storage/file_store.py": {
+      "name": "src/storage/file_store.py",
+      "path": "src/storage/file_store.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 150,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 1,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "storage"
+    },
+    "src/storage/cache.py": {
+      "name": "src/storage/cache.py",
+      "path": "src/storage/cache.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 130,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 1,
+        "semantic_division": 1,
+        "semantic_import": 3,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "storage"
+    },
+    "src/reporting/__init__.py": {
+      "name": "src/reporting/__init__.py",
+      "path": "src/reporting/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/reporting/report_generator.py": {
+      "name": "src/reporting/report_generator.py",
+      "path": "src/reporting/report_generator.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 200,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 6,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 2,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "reporting"
+    },
+    "src/reporting/email_sender.py": {
+      "name": "src/reporting/email_sender.py",
+      "path": "src/reporting/email_sender.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 120,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 2,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 1,
+        "semantic_division": 0,
+        "semantic_import": 1,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "reporting"
+    },
+    "src/reporting/web_dashboard.py": {
+      "name": "src/reporting/web_dashboard.py",
+      "path": "src/reporting/web_dashboard.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 220,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 8,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "reporting"
+    },
+    "src/automation/__init__.py": {
+      "name": "src/automation/__init__.py",
+      "path": "src/automation/__init__.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 5,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "package-init"
+    },
+    "src/automation/scheduler.py": {
+      "name": "src/automation/scheduler.py",
+      "path": "src/automation/scheduler.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 180,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 1,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 5,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "automation"
+    },
+    "src/automation/script_runner.py": {
+      "name": "src/automation/script_runner.py",
+      "path": "src/automation/script_runner.py",
+      "current_phase": 2,
+      "risk_level": "high",
+      "loc": 160,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 3,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "automation"
+    },
+    "src/automation/plugin_loader.py": {
+      "name": "src/automation/plugin_loader.py",
+      "path": "src/automation/plugin_loader.py",
+      "current_phase": 2,
+      "risk_level": "critical",
+      "loc": 200,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 1,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 1
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "automation"
+    },
+    "tests/test_types.py": {
+      "name": "tests/test_types.py",
+      "path": "tests/test_types.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 80,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "tests"
+    },
+    "tests/test_utils.py": {
+      "name": "tests/test_utils.py",
+      "path": "tests/test_utils.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 120,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "tests"
+    },
+    "tests/test_config_loader.py": {
+      "name": "tests/test_config_loader.py",
+      "path": "tests/test_config_loader.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 90,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "tests"
+    },
+    "tests/test_mainframe_parser.py": {
+      "name": "tests/test_mainframe_parser.py",
+      "path": "tests/test_mainframe_parser.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 110,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "tests"
+    },
+    "tests/test_database.py": {
+      "name": "tests/test_database.py",
+      "path": "tests/test_database.py",
+      "current_phase": 2,
+      "risk_level": "low",
+      "loc": 100,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "tests"
+    },
+    "scripts/lint.py": {
+      "name": "scripts/lint.py",
+      "path": "scripts/lint.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 45,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "scripts"
+    },
+    "scripts/test_runner.py": {
+      "name": "scripts/test_runner.py",
+      "path": "scripts/test_runner.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 60,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "scripts"
+    },
+    "scripts/docs_generator.py": {
+      "name": "scripts/docs_generator.py",
+      "path": "scripts/docs_generator.py",
+      "current_phase": 2,
+      "risk_level": "medium",
+      "loc": 55,
+      "test_coverage_percent": null,
+      "py2_ism_counts": {
+        "syntax": 0,
+        "semantic_iterator": 0,
+        "semantic_bytes_str": 0,
+        "semantic_division": 0,
+        "semantic_import": 0,
+        "metaclass": 0
+      },
+      "phase_history": [
+        {
+          "phase": 0,
+          "started": "2026-02-18",
+          "completed": null
+        },
+        {
+          "phase": 1,
+          "started": "2026-02-18T00:00:00Z",
+          "completed": "2026-02-18",
+          "gate_passed": false,
+          "gate_report": null,
+          "skill_outputs": [
+            "migration-analysis/build-system-report.json",
+            "migration-analysis/future-imports-report.json"
+          ]
+        },
+        {
+          "phase": 2,
+          "started": "2026-02-18",
+          "completed": "2026-02-18"
+        }
+      ],
+      "decisions": [
+        {
+          "date": "2026-02-18",
+          "decision": "Module assessed at Phase 0 \u2014 Discovery complete",
+          "rationale": "Phase 0 codebase analysis identified Py2 patterns and risk level",
+          "made_by": "skill",
+          "skill_name": "py2to3-codebase-analyzer",
+          "reversible": true
+        },
+        {
+          "date": "2026-02-18",
+          "decision": "Phase 2 mechanical conversion complete",
+          "rationale": "All Python 2 syntax patterns converted to Python 3.12 equivalents. Bytes/str semantic decisions deferred to Phase 3.",
+          "made_by": "skill"
+        }
+      ],
+      "conversion_unit": "scripts"
+    }
+  },
+  "conversion_units": {
+    "core-foundation": {
+      "name": "core-foundation",
+      "description": "Core foundation modules - gateway exceptions and shared types",
+      "wave": 1,
+      "dependencies": [],
+      "modules": [
+        "src/core/exceptions.py",
+        "src/core/types.py",
+        "src/core/utils.py"
+      ],
+      "risk_score": "high",
+      "estimated_effort_hours": 21.0
+    },
+    "core-helpers": {
+      "name": "core-helpers",
+      "description": "Core helper modules - string processing, config, itertools",
+      "wave": 1,
+      "dependencies": [],
+      "modules": [
+        "src/core/string_helpers.py",
+        "src/core/config_loader.py",
+        "src/core/itertools_helpers.py",
+        "src/compat.py"
+      ],
+      "risk_score": "high",
+      "estimated_effort_hours": 18.1
+    },
+    "io-protocols": {
+      "name": "io-protocols",
+      "description": "I/O protocol clients - MODBUS, OPC-UA, Serial, MQTT",
+      "wave": 2,
+      "dependencies": [
+        "core-foundation"
+      ],
+      "modules": [
+        "src/io_protocols/modbus_client.py",
+        "src/io_protocols/opcua_client.py",
+        "src/io_protocols/serial_sensor.py",
+        "src/io_protocols/mqtt_listener.py"
+      ],
+      "risk_score": "critical",
+      "estimated_effort_hours": 29.2
+    },
+    "data-processing-core": {
+      "name": "data-processing-core",
+      "description": "Core data processing - mainframe, CSV, XML parsers",
+      "wave": 2,
+      "dependencies": [
+        "core-foundation",
+        "core-helpers"
+      ],
+      "modules": [
+        "src/data_processing/mainframe_parser.py",
+        "src/data_processing/csv_processor.py",
+        "src/data_processing/xml_transformer.py"
+      ],
+      "risk_score": "critical",
+      "estimated_effort_hours": 22.3
+    },
+    "data-processing-secondary": {
+      "name": "data-processing-secondary",
+      "description": "Secondary data processing - JSON, text, log handlers",
+      "wave": 2,
+      "dependencies": [
+        "core-foundation",
+        "core-helpers"
+      ],
+      "modules": [
+        "src/data_processing/json_handler.py",
+        "src/data_processing/text_analyzer.py",
+        "src/data_processing/log_parser.py"
+      ],
+      "risk_score": "high",
+      "estimated_effort_hours": 16.7
+    },
+    "storage": {
+      "name": "storage",
+      "description": "Storage layer - database, file store, cache",
+      "wave": 3,
+      "dependencies": [
+        "core-foundation"
+      ],
+      "modules": [
+        "src/storage/database.py",
+        "src/storage/file_store.py",
+        "src/storage/cache.py"
+      ],
+      "risk_score": "critical",
+      "estimated_effort_hours": 16.6
+    },
+    "reporting": {
+      "name": "reporting",
+      "description": "Reporting layer - report generator, email, dashboard",
+      "wave": 3,
+      "dependencies": [
+        "core-foundation",
+        "core-helpers"
+      ],
+      "modules": [
+        "src/reporting/report_generator.py",
+        "src/reporting/email_sender.py",
+        "src/reporting/web_dashboard.py"
+      ],
+      "risk_score": "high",
+      "estimated_effort_hours": 20.8
+    },
+    "automation": {
+      "name": "automation",
+      "description": "Automation layer - scheduler, script runner, plugin loader",
+      "wave": 4,
+      "dependencies": [
+        "core-foundation"
+      ],
+      "modules": [
+        "src/automation/scheduler.py",
+        "src/automation/script_runner.py",
+        "src/automation/plugin_loader.py"
+      ],
+      "risk_score": "critical",
+      "estimated_effort_hours": 16.3
+    },
+    "package-init": {
+      "name": "package-init",
+      "description": "Package __init__.py files",
+      "wave": 5,
+      "dependencies": [
+        "core-foundation",
+        "io-protocols",
+        "data-processing-core",
+        "data-processing-secondary",
+        "storage",
+        "reporting",
+        "automation"
+      ],
+      "modules": [
+        "src/__init__.py",
+        "src/core/__init__.py",
+        "src/io_protocols/__init__.py",
+        "src/data_processing/__init__.py",
+        "src/storage/__init__.py",
+        "src/reporting/__init__.py",
+        "src/automation/__init__.py"
+      ],
+      "risk_score": "low",
+      "estimated_effort_hours": 0.7
+    },
+    "tests": {
+      "name": "tests",
+      "description": "Test suite",
+      "wave": 5,
+      "dependencies": [
+        "core-foundation",
+        "core-helpers",
+        "data-processing-core",
+        "storage"
+      ],
+      "modules": [
+        "tests/test_types.py",
+        "tests/test_utils.py",
+        "tests/test_config_loader.py",
+        "tests/test_mainframe_parser.py",
+        "tests/test_database.py"
+      ],
+      "risk_score": "low",
+      "estimated_effort_hours": 10.0
+    },
+    "scripts": {
+      "name": "scripts",
+      "description": "Utility scripts - lint, test runner, docs generator",
+      "wave": 6,
+      "dependencies": [],
+      "modules": [
+        "scripts/lint.py",
+        "scripts/test_runner.py",
+        "scripts/docs_generator.py"
+      ],
+      "risk_score": "medium",
+      "estimated_effort_hours": 3.2
+    }
+  },
+  "global_decisions": [
+    {
+      "date": "2026-02-18T00:00:00Z",
+      "decision": "Build system migrated from distutils to setuptools; all dependencies updated for Py3.12 compatibility",
+      "rationale": "distutils removed in Python 3.12; pycrypto abandoned \u2014 replaced with pycryptodome; all version pins updated to Py3.12-compatible ranges",
+      "made_by": "skill",
+      "skill_name": "py2to3-build-system-updater",
+      "reversible": true
+    },
+    {
+      "date": "2026-02-18T00:00:00Z",
+      "decision": "Future imports injected into all 45 Python files",
+      "rationale": "from __future__ import absolute_import, division, print_function, unicode_literals added to prepare codebase for Py3 behavior",
+      "made_by": "skill",
+      "skill_name": "py2to3-future-imports-injector",
+      "reversible": true
+    },
+    {
+      "date": "2026-02-18",
+      "decision": "Conversion units defined: 11 units across 6 waves",
+      "rationale": "Bottom-up dependency analysis created conversion units with core-foundation as gateway (19 dependents). Critical path: 13.1 days through 6 units.",
+      "made_by": "agent",
+      "agent_name": "claude-worker",
+      "reversible": true
+    }
+  ],
+  "waivers": [],
+  "rollbacks": []
+}

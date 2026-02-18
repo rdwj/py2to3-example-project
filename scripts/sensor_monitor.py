@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 IoT sensor monitoring daemon for the Legacy Industrial Data Platform.
@@ -12,12 +12,13 @@ Usage:
 
 Runs until interrupted with Ctrl-C or SIGTERM.
 """
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 import sys
 import time
-import thread
-import Queue
+import _thread
+import queue
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir, "src"))
 
@@ -27,17 +28,17 @@ from core.exceptions import PlatformError, ProtocolError
 from core.config_loader import load_platform_config
 
 # Shared queue for all incoming sensor data
-_reading_queue = Queue.Queue(maxsize=50000)
+_reading_queue = queue.Queue(maxsize=50000)
 _running = True
-_stats_lock = thread.allocate_lock()
-_serial_count = 0L
-_mqtt_count = 0L
+_stats_lock = _thread.allocate_lock()
+_serial_count = 0
+_mqtt_count = 0
 
 
 def serial_poll_loop(reader):
     """Background thread: poll RS-485 serial sensors continuously."""
     global _serial_count, _running
-    print "MONITOR: serial poll thread started on %s" % reader.port_path
+    print("MONITOR: serial poll thread started on %s" % reader.port_path)
     try:
         reader.open()
         for pkt in reader.stream_packets():
@@ -46,24 +47,24 @@ def serial_poll_loop(reader):
             dp = pkt.as_data_point()
             try:
                 _reading_queue.put_nowait(dp)
-            except Queue.Full:
-                print "MONITOR: reading queue full, dropping serial packet"
+            except queue.Full:
+                print("MONITOR: reading queue full, dropping serial packet")
             _stats_lock.acquire()
             try:
-                _serial_count += 1L
+                _serial_count += 1
             finally:
                 _stats_lock.release()
-    except Exception, e:
-        print "MONITOR: serial thread error: %s" % str(e)
+    except Exception as e:
+        print("MONITOR: serial thread error: %s" % str(e))
     finally:
         reader.close()
-        print "MONITOR: serial poll thread exiting"
+        print("MONITOR: serial poll thread exiting")
 
 
 def mqtt_poll_loop(listener, subscription):
     """Background thread: drain MQTT subscription queue."""
     global _mqtt_count, _running
-    print "MONITOR: MQTT poll thread started"
+    print("MONITOR: MQTT poll thread started")
     while _running:
         msg = subscription.get_message(timeout=2.0)
         if msg is None:
@@ -71,14 +72,14 @@ def mqtt_poll_loop(listener, subscription):
         dp = msg.as_data_point()
         try:
             _reading_queue.put_nowait(dp)
-        except Queue.Full:
-            print "MONITOR: reading queue full, dropping MQTT message"
+        except queue.Full:
+            print("MONITOR: reading queue full, dropping MQTT message")
         _stats_lock.acquire()
         try:
-            _mqtt_count += 1L
+            _mqtt_count += 1
         finally:
             _stats_lock.release()
-    print "MONITOR: MQTT poll thread exiting"
+    print("MONITOR: MQTT poll thread exiting")
 
 
 def parse_args(argv):
@@ -103,8 +104,8 @@ def parse_args(argv):
 def main():
     global _running
 
-    print "MONITOR: Legacy Industrial Data Platform - Sensor Monitor"
-    print "MONITOR: Starting at %s" % time.strftime("%Y-%m-%d %H:%M:%S")
+    print("MONITOR: Legacy Industrial Data Platform - Sensor Monitor")
+    print("MONITOR: Starting at %s" % time.strftime("%Y-%m-%d %H:%M:%S"))
 
     config = load_platform_config()
     opts = parse_args(sys.argv)
@@ -118,7 +119,7 @@ def main():
 
     # Start serial polling thread
     reader = SerialSensorReader(serial_port, baud_rate=9600, timeout=2.0)
-    thread.start_new_thread(serial_poll_loop, (reader,))
+    _thread.start_new_thread(serial_poll_loop, (reader,))
 
     # Start MQTT listener and polling thread
     listener = MqttListener(mqtt_host, port=mqtt_port)
@@ -126,19 +127,19 @@ def main():
         listener.connect()
         sub = listener.subscribe("plant/sensors/#")
         listener.start_listener()
-        thread.start_new_thread(mqtt_poll_loop, (listener, sub))
-    except Exception, e:
-        print "MONITOR: MQTT connection failed: %s (continuing without MQTT)" % str(e)
+        _thread.start_new_thread(mqtt_poll_loop, (listener, sub))
+    except Exception as e:
+        print("MONITOR: MQTT connection failed: %s (continuing without MQTT)" % str(e))
 
     # Main loop: drain the shared queue and print periodic stats
-    print "MONITOR: Entering main loop (Ctrl-C to stop)"
+    print("MONITOR: Entering main loop (Ctrl-C to stop)")
     last_stats = time.time()
     try:
         while _running:
             try:
                 dp = _reading_queue.get(block=True, timeout=1.0)
-                print "  %s = %s  (q=%s)" % (dp.tag, dp.value, dp.quality)
-            except Queue.Empty:
+                print("  %s = %s  (q=%s)" % (dp.tag, dp.value, dp.quality))
+            except queue.Empty:
                 pass
 
             now = time.time()
@@ -149,18 +150,18 @@ def main():
                     m_cnt = _mqtt_count
                 finally:
                     _stats_lock.release()
-                print "MONITOR: stats -- serial=%d  mqtt=%d  queue=%d" % (
+                print("MONITOR: stats -- serial=%d  mqtt=%d  queue=%d" % (
                     s_cnt, m_cnt, _reading_queue.qsize(),
-                )
+                ))
                 last_stats = now
     except KeyboardInterrupt:
-        print ""
-        print "MONITOR: Interrupted, shutting down..."
+        print("")
+        print("MONITOR: Interrupted, shutting down...")
 
     _running = False
     reader.close()
     listener.disconnect()
-    print "MONITOR: Stopped at %s" % time.strftime("%Y-%m-%d %H:%M:%S")
+    print("MONITOR: Stopped at %s" % time.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 if __name__ == "__main__":
